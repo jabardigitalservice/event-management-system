@@ -1,0 +1,4 @@
+/postgres
+tmp
+.air.toml
+.env

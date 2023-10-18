@@ -5,7 +5,11 @@
 </template>
 
 <script setup lang="ts">
+  // const { status, data, lastRefreshedAt, getCsrfToken } = useAuth()
+
   definePageMeta({
     title: 'Beranda',
+    middleware: ['auth'],
   })
+  // console.log(status, data, lastRefreshedAt, await getCsrfToken())
 </script>

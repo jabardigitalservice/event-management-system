@@ -1,26 +1,14 @@
 <template>
-    <BaseDataTable :headers="headerTable" :items="itemTable"/>
+    <BaseDataTable :headers="headerTable" :path="urlAPI"/>
 </template>
 
 <script setup lang="ts">
-  import type { Header, Item } from "vue3-easy-data-table"
-  import { onMounted, ref } from 'vue'
+  import { onMounted} from 'vue'
   import { useActivePage } from '@/store/index'
-  import { organisasiHeaders } from "~/common/constant/organisasi";
+  import { organisasiHeaders } from "~/common/constant/organisasi"
 
-  const config = useRuntimeConfig()
-  const headerTable: Header[] = organisasiHeaders
-  const itemTable = ref<Item[]>([]);
-  
-  async function fetchData() {
-    await useFetch(`${config.public.baseURL}/users?page=1`, {
-      onResponse({ response }) {
-        itemTable.value = response._data.data.data as Item[];
-      }
-    });
-  }
-
-  fetchData();
+  const headerTable = organisasiHeaders
+  const urlAPI: string = "/users"
   
   onMounted(() => {
     const activePage = useActivePage()

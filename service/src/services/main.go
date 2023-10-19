@@ -20,10 +20,15 @@ import (
 
 func main() {
 	var (
-		app    = app.Init()
-		router = app.GetHttpRouter()
-		module = modules.Init(app)
+		app, initErr = app.Init()
 	)
+
+	if initErr != nil {
+		log.Panic(initErr)
+	}
+
+	router := app.GetHttpRouter()
+	module := modules.Init(app)
 
 	router.Use(cors.Handler(cors.Options{
 		AllowedOrigins: []string{"https://*", "http://*"},

@@ -7,5 +7,6 @@
 <script setup lang="ts">
   definePageMeta({
     title: 'Beranda',
+    middleware: ['auth'],
   })
 </script>

@@ -47,9 +47,6 @@ devDependencies:
   husky:
     specifier: ^8.0.0
     version: 8.0.3
-  next:
-    specifier: ^13.5.5
-    version: 13.5.5(@babel/core@7.23.0)(react-dom@18.2.0)(react@18.2.0)
   next-auth:
     specifier: 4.21.1
     version: 4.21.1(next@13.5.5)(react-dom@18.2.0)(react@18.2.0)

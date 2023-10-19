@@ -3,9 +3,7 @@ import { NuxtAuthHandler } from '#auth'
 import KeycloakProvider from 'next-auth/providers/keycloak'
 
 export default NuxtAuthHandler({
-  // secret: process.env.AUTH_SECRET,
   pages: {
-    // Change the default behavior to use `/login` as the path for the sign-in page
     signIn: '/login',
   },
   providers: [

@@ -1,5 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  typescript: {
+    strict: true,
+  },
   ssr: false,
   devtools: { enabled: true },
   modules: [
@@ -7,6 +10,7 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     'nuxt-icons',
     '@pinia/nuxt',
+    '@sidebase/nuxt-auth',
     [
       '@nuxtjs/google-fonts',
       {
@@ -19,6 +23,9 @@ export default defineNuxtConfig({
       },
     ],
   ],
+  auth: {
+    globalAppMiddleware: true,
+  },
   runtimeConfig: {
     // Public keys that are exposed to the client
     public: {

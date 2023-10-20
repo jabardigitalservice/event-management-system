@@ -49,7 +49,6 @@
               data-cy="header__setting-menu-button"
               :to="`${config.public.portalJabarCMSBaseURL}/pengaturan`"
               class="font-lato group flex w-full items-center gap-2 rounded-md p-2 text-sm font-medium text-gray-800 hover:bg-green-50 hover:text-green-700"
-              @click="navigate"
             >
               <NuxtIcon
                 name="navigation/account-settings-icon"
@@ -63,6 +62,7 @@
             <button
               data-cy="header__user-logout-button"
               class="group w-full rounded-md p-2 text-gray-800 hover:bg-green-50"
+              @click="signOut({ callbackUrl: '/login' })"
             >
               <p
                 class="font-lato flex items-center gap-2 text-sm font-medium group-hover:text-green-700"
@@ -82,8 +82,9 @@
   </Menu>
 </template>
 
-<script setup>
+<script setup lang="ts">
   import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
+  const { signOut } = useAuth()
 
   const userAvatar = 'https://placehold.co/34'
   const config = useRuntimeConfig()

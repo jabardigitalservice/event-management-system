@@ -17,12 +17,10 @@
         />
       </template>
     </UInput>
-    <div class="inline-block min-w-full rounded-lg overflow-hidden bg-white"
-       >
+    <div class="inline-block min-w-full rounded-lg overflow-hidden bg-white">
        <UTable 
          :columns="props.headers"
-         :rows="itemTable"
-        >
+         :rows="itemTable" >
           <template #photo-data="{ row }">
             <UButton  color="green" icon="i-heroicons-photo" variant="outline"> Lihat Gambar </UButton>
           </template>
@@ -34,7 +32,13 @@
         </UTable>
      </div>
      <span class="text-sm text-gray-700 dark:text-gray-400 float-left mt-5">
-        Showing <span class="font-semibold text-gray-900 dark:text-white">{{ from }}</span> to <span class="font-semibold text-gray-900 dark:text-white">{{ to }}</span> of <span class="font-semibold text-gray-900 dark:text-white">{{ total }}</span> Entries
+        Showing 
+        <span class="font-semibold text-gray-900 dark:text-white">{{ from }}</span> 
+        to 
+        <span class="font-semibold text-gray-900 dark:text-white">{{ to }}</span> 
+        of 
+        <span class="font-semibold text-gray-900 dark:text-white">{{ total }}</span> 
+        Entries
     </span>
      <UPagination 
      v-model="currentPage"

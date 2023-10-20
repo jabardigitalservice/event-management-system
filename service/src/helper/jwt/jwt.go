@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	jwtgo "github.com/dgrijalva/jwt-go"
+	jwtgo "github.com/golang-jwt/jwt/v5"
 	_error "github.com/jabardigitalservice/super-app-services/event/src/error"
 	"github.com/spf13/viper"
 )

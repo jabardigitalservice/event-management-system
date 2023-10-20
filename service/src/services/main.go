@@ -19,9 +19,7 @@ import (
 )
 
 func main() {
-	var (
-		app, initErr = app.Init()
-	)
+	app, initErr := app.Init()
 
 	if initErr != nil {
 		log.Panic(initErr)

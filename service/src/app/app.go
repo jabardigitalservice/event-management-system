@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"net/http"
 
-	"github.com/fazpass/goliath/v3/config"
 	"github.com/fazpass/goliath/v3/router"
 	"github.com/go-chi/chi"
 	"github.com/jabardigitalservice/golog/logger"
@@ -30,12 +29,21 @@ type (
 	}
 )
 
-func Init() *App {
+func Init() (*App, error) {
 	var ctx = context.Background()
 
-	_ = config.Init()
+	// Initialize the configuration.
+	appConfig, err := LoadConfig()
+	if err != nil {
+		return nil, err
+	}
 
+	// Initialize the logger.
 	log := logger.Init()
+
+	// Initialize the database connections.
+	masterDB := InitPgsqlMaster(ctx, appConfig)
+	slaveDB := InitPgsqlSlave(ctx, appConfig)
 
 	app := &App{
 		ctx: ctx,
@@ -44,12 +52,12 @@ func Init() *App {
 		}),
 		logger: log,
 		db: &DB{
-			Master: InitPgsqlMaster(ctx),
-			Slave:  InitPgsqlSlave(ctx),
+			Master: masterDB,
+			Slave:  slaveDB,
 		},
 	}
 
-	return app
+	return app, nil
 }
 
 func (app *App) Context() context.Context {

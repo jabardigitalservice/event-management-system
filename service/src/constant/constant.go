@@ -10,6 +10,8 @@ const (
 
 	ServiceName = "event"
 
+	ModuleNameEventManagement = "event-management"
+
 	ContextKeyToken    contextKey = "ck:token"
 	ContextKeyUserId   contextKey = "ck:user-id"
 	ContextKeyUserName contextKey = "ck:user-name"

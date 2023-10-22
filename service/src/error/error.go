@@ -3,6 +3,7 @@ package error
 import "errors"
 
 var (
+	ErrInvalidInput           = errors.New("Invalid input")
 	ErrPayloadValidation      = errors.New("error payload validation")
 	ErrQueryParam             = errors.New("error query param validation")
 	ErrDB                     = errors.New("error DB")

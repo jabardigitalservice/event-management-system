@@ -10,8 +10,7 @@
     "postinstall": "nuxt prepare",
     "lint:js": "eslint --ext \".js,.ts,.vue\" --ignore-path .gitignore .",
     "lint:fix": "eslint --ext \".js,.ts,.vue\" --ignore-path .gitignore . --fix",
-    "lint": "pnpm run lint:js",
-    "prepare": "husky install"
+    "lint": "pnpm run lint:js"
   },
   "devDependencies": {
     "@headlessui/vue": "^1.7.16",

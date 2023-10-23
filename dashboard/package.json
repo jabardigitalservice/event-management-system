@@ -27,7 +27,6 @@
     "eslint-plugin-nuxt": "^4.0.0",
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-vue": "^9.17.0",
-    "husky": "^8.0.0",
     "next-auth": "4.21.1",
     "nuxt": "^3.7.4",
     "nuxt-icons": "^3.2.1",

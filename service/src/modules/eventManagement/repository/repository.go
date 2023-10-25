@@ -3,6 +3,7 @@ package repository
 
 import (
 	"context"
+	"time"
 
 	"github.com/jabardigitalservice/super-app-services/event/src/app"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/eventManagement/entity"
@@ -11,6 +12,8 @@ import (
 type (
 	RepositoryInterface interface {
 		CreateOrganization(ctx context.Context, org entity.Organization) (uint64, error)
+		CreateObject(context.Context, entity.Object) (uint64, time.Time, time.Time, error)
+		GetObjects(ctx context.Context, page int, perPage int) ([]entity.Object, error)
 	}
 	Repository struct {
 		app *app.App

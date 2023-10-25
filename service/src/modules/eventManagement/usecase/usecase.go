@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"time"
 
 	"github.com/jabardigitalservice/super-app-services/event/src/app"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/eventManagement/entity"
@@ -11,6 +12,8 @@ import (
 type (
 	UsecaseInterface interface {
 		CreateOrganizations(ctx context.Context, orgData entity.Organization) (uint64, entity.Organization, error)
+		CreateObject(ctx context.Context, objData entity.Object) (uint64, entity.Object, time.Time, time.Time, error)
+		GetObjects(ctx context.Context, page int, perPage int) ([]entity.Object, error)
 	}
 
 	Usecase struct {

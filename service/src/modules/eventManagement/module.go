@@ -6,7 +6,7 @@ import (
 	"github.com/jabardigitalservice/super-app-services/event/src/app"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/eventManagement/endpoint"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/eventManagement/repository"
-	transporthttp "github.com/jabardigitalservice/super-app-services/event/src/modules/eventManagement/transport/http"
+	transporthttp "github.com/jabardigitalservice/super-app-services/event/src/modules/eventManagement/transport/handler/http"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/eventManagement/usecase"
 )
 

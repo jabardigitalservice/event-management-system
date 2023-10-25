@@ -2,7 +2,8 @@ package repository
 
 import (
 	"context"
-	"strings"
+	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/eventManagement/entity"
@@ -13,20 +14,16 @@ func (r *Repository) CreateObject(ctx context.Context, obj entity.Object) (uint6
 	var id uint64
 	var createdAt, updatedAt time.Time
 
-	// Create a slice of []interface{} to build the parameters for the query
-	// Ensure that the order of parameters matches the order in the SQL query
-	params := []interface{}{obj.Name, obj.Address, obj.Description, pq.Array(obj.Banner), obj.Logo}
-	var socialMediaArray pq.StringArray
-	for _, media := range obj.SocialMedia {
-		// Append each platform and link as a sub-array
-		socialMediaArray = append(socialMediaArray, media[0]+","+media[1])
+	// Convert the SocialMedia slice to a format compatible with PostgreSQL JSONB array.
+	socialMediaJSON, err := json.Marshal(obj.SocialMedia)
+	if err != nil {
+		return 0, time.Time{}, time.Time{}, err
 	}
-	params = append(params, pq.Array(socialMediaArray), obj.Organizer, obj.Status, time.Now(), time.Now())
+	fmt.Println("socialMediaJSON:", string(socialMediaJSON))
 
-	// Insert the object into the database.
-	err := r.db.Slave.QueryRowContext(ctx, `INSERT INTO "object" ("name", "address", "description", "banner", "logo", "social_media", "organizer", "status", "created_at", "updated_at")
+	err = r.db.Slave.QueryRowContext(ctx, `INSERT INTO "object" ("name", "address", "description", "banner", "logo", "social_media", "organizer", "status", "created_at", "updated_at")
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING "id", "created_at", "updated_at"`,
-		params...).Scan(&id, &createdAt, &updatedAt)
+		obj.Name, obj.Address, obj.Description, pq.Array(obj.Banner), obj.Logo, socialMediaJSON, obj.Organizer, obj.Status, time.Now(), time.Now()).Scan(&id, &createdAt, &updatedAt)
 
 	if err != nil {
 		return 0, time.Time{}, time.Time{}, err
@@ -53,23 +50,22 @@ func (r *Repository) GetObjects(ctx context.Context, page int, perPage int) ([]e
 
 		// Initialize the pq.StringArray for banners
 		var banners pq.StringArray
-		var socialMediaArray pq.StringArray
 
-		if err := rows.Scan(&obj.ID, &obj.Name, &obj.Address, &obj.Description, &banners, &obj.Logo, &socialMediaArray, &obj.Organizer, &obj.Status, &obj.CreatedAt, &obj.UpdatedAt); err != nil {
+		// Define a variable to scan the social_media data from the database
+		var socialMediaData []byte
+
+		if err := rows.Scan(&obj.ID, &obj.Name, &obj.Address, &obj.Description, &banners, &obj.Logo, &socialMediaData, &obj.Organizer, &obj.Status, &obj.CreatedAt, &obj.UpdatedAt); err != nil {
 			return nil, err
 		}
 
-		// Convert the pq.StringArray to a regular []string for banners
-		obj.Banner = []string(banners)
-
-		// Convert the pq.StringArray of arrays to the socialMedia field
-		for _, sm := range socialMediaArray {
-			// Split each sub-array on the comma to separate the platform and link
-			parts := strings.Split(sm, ",")
-			if len(parts) == 2 {
-				obj.SocialMedia = append(obj.SocialMedia, []string{parts[0], parts[1]})
-			}
+		// Unmarshal the JSONB data into the entity.SocialMedia slice
+		var socialMedia []entity.SocialMedia
+		if err := json.Unmarshal(socialMediaData, &socialMedia); err != nil {
+			return nil, err
 		}
+
+		// Assign the unmarshaled socialMedia data to the object
+		obj.SocialMedia = socialMedia
 
 		objects = append(objects, obj)
 	}

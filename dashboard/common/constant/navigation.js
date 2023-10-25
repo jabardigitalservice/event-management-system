@@ -1,7 +1,7 @@
 export const NAVIGATION_MENU = [
   {
-    link: '/statistik',
-    label: 'Statistik',
+    link: '/organisasi',
+    label: 'Organisasi',
     icon: 'navigation/statistic-menu-icon',
   },
   {

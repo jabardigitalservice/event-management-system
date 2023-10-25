@@ -15,6 +15,7 @@
   "devDependencies": {
     "@headlessui/vue": "^1.7.16",
     "@nuxt/devtools": "latest",
+    "@nuxt/ui": "^2.9.0",
     "@nuxtjs/google-fonts": "^3.0.2",
     "@nuxtjs/tailwindcss": "^6.8.0",
     "@pinia/nuxt": "^0.5.0",

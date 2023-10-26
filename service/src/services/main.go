@@ -57,7 +57,8 @@ func main() {
 		},
 	}))
 
-	router.Mount("/v1/ticket/ping", module.Ping.GetHttpRouter())
+	router.Mount("/v1/event/ping", module.Ping.GetHttpRouter())
+	router.Mount("/v1/event", module.Object.GetHttpRouter())
 
 	var err = app.RunHttp()
 	if err != nil {

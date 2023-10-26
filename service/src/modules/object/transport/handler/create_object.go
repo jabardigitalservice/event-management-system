@@ -5,13 +5,13 @@ import (
 	"net/http"
 
 	helperresponse "github.com/jabardigitalservice/super-app-services/event/src/helper/http/response"
-	"github.com/jabardigitalservice/super-app-services/event/src/modules/eventManagement/entity"
+	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/entity"
 	httpresponse "github.com/jabardigitalservice/super-app-services/event/src/response/http"
 )
 
-func (h *Handler) CreateOrganizations(w http.ResponseWriter, r *http.Request) {
-	var org entity.Organization
-	if err := json.NewDecoder(r.Body).Decode(&org); err != nil {
+func (h *Handler) CreateObject(w http.ResponseWriter, r *http.Request) {
+	var obj entity.Object
+	if err := json.NewDecoder(r.Body).Decode(&obj); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -19,12 +19,11 @@ func (h *Handler) CreateOrganizations(w http.ResponseWriter, r *http.Request) {
 	// Create a context for the request
 	ctx := r.Context()
 
-	_, orgData, err := h.endpoint.CreateOrganizations(ctx, org)
+	_, objData, _, _, err := h.endpoint.CreateObject(ctx, obj)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	// Respond with a success message using orgData
-	helperresponse.Render(w, r, h.responseMapping, httpresponse.Created, orgData, nil)
+	helperresponse.Render(w, r, h.responseMapping, httpresponse.Created, objData, nil)
 }

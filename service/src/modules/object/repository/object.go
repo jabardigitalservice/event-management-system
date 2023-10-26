@@ -8,7 +8,7 @@ import (
 	"time"
 
 	_errors "github.com/jabardigitalservice/super-app-services/event/src/error"
-	"github.com/jabardigitalservice/super-app-services/event/src/modules/eventManagement/entity"
+	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/entity"
 	"github.com/lib/pq"
 )
 

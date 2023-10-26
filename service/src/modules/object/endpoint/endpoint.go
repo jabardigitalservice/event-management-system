@@ -5,18 +5,13 @@ import (
 	"time"
 
 	"github.com/jabardigitalservice/super-app-services/event/src/app"
-	"github.com/jabardigitalservice/super-app-services/event/src/modules/eventManagement/entity"
-	"github.com/jabardigitalservice/super-app-services/event/src/modules/eventManagement/usecase"
+	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/entity"
+	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/usecase"
 )
 
 type (
 	EndpointInterface interface {
-		CreateOrganizations(ctx context.Context, orgData entity.Organization) (uint64, entity.Organization, error)
 		CreateObject(ctx context.Context, objData entity.Object) (uint64, entity.Object, time.Time, time.Time, error)
-		GetObjects(ctx context.Context, page int, perPage int) ([]entity.Object, error)
-		GetObjectByID(ctx context.Context, objectID uint64) (entity.Object, error)
-		UpdateObject(ctx context.Context, obj entity.Object) (entity.Object, error)
-		DeleteObject(ctx context.Context, id uint64) error
 	}
 
 	Endpoint struct {

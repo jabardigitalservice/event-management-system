@@ -1,13 +1,13 @@
-package eventManagement
+package object
 
 import (
 	"github.com/fazpass/goliath/v3/module"
 	"github.com/go-chi/chi"
 	"github.com/jabardigitalservice/super-app-services/event/src/app"
-	"github.com/jabardigitalservice/super-app-services/event/src/modules/eventManagement/endpoint"
-	"github.com/jabardigitalservice/super-app-services/event/src/modules/eventManagement/repository"
-	transporthttp "github.com/jabardigitalservice/super-app-services/event/src/modules/eventManagement/transport/handler/http"
-	"github.com/jabardigitalservice/super-app-services/event/src/modules/eventManagement/usecase"
+	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/endpoint"
+	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/repository"
+	transporthttp "github.com/jabardigitalservice/super-app-services/event/src/modules/object/transport/handler/http"
+	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/usecase"
 )
 
 type Module struct {

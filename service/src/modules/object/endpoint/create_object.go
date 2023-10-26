@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/jabardigitalservice/super-app-services/event/src/modules/eventManagement/entity"
+	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/entity"
 )
 
 func (e *Endpoint) CreateObject(ctx context.Context, objData entity.Object) (uint64, entity.Object, time.Time, time.Time, error) {

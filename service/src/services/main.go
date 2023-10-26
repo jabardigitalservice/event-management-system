@@ -19,11 +19,14 @@ import (
 )
 
 func main() {
-	var (
-		app    = app.Init()
-		router = app.GetHttpRouter()
-		module = modules.Init(app)
-	)
+	app, initErr := app.Init()
+
+	if initErr != nil {
+		log.Panic(initErr)
+	}
+
+	router := app.GetHttpRouter()
+	module := modules.Init(app)
 
 	router.Use(cors.Handler(cors.Options{
 		AllowedOrigins: []string{"https://*", "http://*"},
@@ -54,7 +57,8 @@ func main() {
 		},
 	}))
 
-	router.Mount("/v1/ticket/ping", module.Ping.GetHttpRouter())
+	router.Mount("/v1/event/ping", module.Ping.GetHttpRouter())
+	router.Mount("/v1/event", module.Object.GetHttpRouter())
 
 	var err = app.RunHttp()
 	if err != nil {

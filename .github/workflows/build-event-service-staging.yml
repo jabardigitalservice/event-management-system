@@ -65,4 +65,4 @@ jobs:
           git checkout -b superapp-service-event-release-${{ env.sha_short }}-staging
           git add .
           git commit -m "[release]: Superapp Service Event ${{ env.sha_short }} to staging"
-          git push origin superapp-service-user-release-${{ env.sha_short }}-production -o merge_request.description="${{ steps.description.outputs.description }}" -o merge_request.create
+          git push origin superapp-service-event-release-${{ env.sha_short }}-staging -o merge_request.description="${{ steps.description.outputs.description }}" -o merge_request.create

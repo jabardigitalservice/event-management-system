@@ -15,7 +15,7 @@ on:
       - service/**
 
 jobs:
-  ci-ticket:
+  ci-event:
     runs-on: self-hosted
     steps:
       - uses: actions/setup-go@v3

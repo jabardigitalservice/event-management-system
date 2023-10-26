@@ -29,13 +29,13 @@ func Init(app *app.App, usecase usecase.UsecaseInterface) EndpointInterface {
 
 type (
 	Organization struct {
-		Id          uint64    `json:"id"`
-		Name        string    `json:"name"`
-		Email       string    `json:"email"`
-		Address     string    `json:"address"`
-		PhoneNumber string    `json:"phone_number"`
-		Logo        string    `json:"logo"`
-		CreatedAt   time.Time `json:"created_at"`
-		UpdatedAt   time.Time `json:"updated_at"`
+		Id          uint64    `db:"id"`
+		Name        string    `db:"name"`
+		Email       string    `db:"email"`
+		Address     string    `db:"address"`
+		PhoneNumber string    `db:"phone_number"`
+		Logo        string    `db:"logo"`
+		CreatedAt   time.Time `db:"created_at"`
+		UpdatedAt   time.Time `db:"updated_at"`
 	}
 )

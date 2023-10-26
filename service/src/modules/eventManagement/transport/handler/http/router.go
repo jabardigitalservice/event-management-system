@@ -27,6 +27,8 @@ func Init(app *app.App, endpoint endpoint.EndpointInterface) *chi.Mux {
 	router.Post(newrelic.WrapHandleFunc(app.GetNewRelic(), "/organization", h.CreateOrganizations))
 	router.Post(newrelic.WrapHandleFunc(app.GetNewRelic(), "/object", h.CreateObject))
 	router.Get(newrelic.WrapHandleFunc(app.GetNewRelic(), "/object", h.GetObjects))
-
+	router.Get(newrelic.WrapHandleFunc(app.GetNewRelic(), "/object/{id}", h.GetObjectByID))
+	router.Put(newrelic.WrapHandleFunc(app.GetNewRelic(), "/object/{id}", h.UpdateObject))
+	router.Delete(newrelic.WrapHandleFunc(app.GetNewRelic(), "/object/{id}", h.DeleteObject))
 	return router
 }

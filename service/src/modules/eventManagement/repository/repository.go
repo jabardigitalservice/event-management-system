@@ -14,6 +14,9 @@ type (
 		CreateOrganization(ctx context.Context, org entity.Organization) (uint64, error)
 		CreateObject(context.Context, entity.Object) (uint64, time.Time, time.Time, error)
 		GetObjects(ctx context.Context, page int, perPage int) ([]entity.Object, error)
+		GetObjectByID(ctx context.Context, id uint64) (entity.Object, error)
+		UpdateObject(ctx context.Context, obj entity.Object) (entity.Object, error)
+		DeleteObject(ctx context.Context, objectID uint64) error
 	}
 	Repository struct {
 		app *app.App

@@ -16,7 +16,7 @@ on:
 
 jobs:
   ci-event:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-go@v3
         with:

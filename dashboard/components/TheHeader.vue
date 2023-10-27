@@ -20,12 +20,6 @@
 <script setup lang="ts">
   import { useActivePage } from '@/store/index'
   const activePage = useActivePage()
-  const pageTitle = ref('')
-
-  onMounted(() => {
-    const route = useRoute()
-    pageTitle.value = route.meta?.title ?? ''
-  })
  
 </script>
 

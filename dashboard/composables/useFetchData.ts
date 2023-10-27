@@ -5,10 +5,10 @@ export const useFetchData = async (path:string, page?: Ref<number>, search?: Ref
   const config = useRuntimeConfig();
   return new Promise(async (resolve, reject) => {
     try {
-      await useFetch(config.public.baseURL.concat(path), {
+      await useFetch(path, {
         query: { page: page?.value, q: search },
-        onRequestError({ request, response, options }) {
-          // TODO: remove dummy data after API read or integration with API finished
+        onResponse({ response }) {
+           // TODO: remove dummy data after API read or integration with API finished
           const responseOrganizer = {
             "current_page": 1,
             "data": [
@@ -113,9 +113,6 @@ export const useFetchData = async (path:string, page?: Ref<number>, search?: Ref
           }else{
             resolve(responseObject)
           }
-        },
-        onResponse({ response }) {
-          resolve(response._data.data)
         },
       });
     } catch (error) {

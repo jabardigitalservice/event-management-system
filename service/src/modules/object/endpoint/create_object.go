@@ -8,7 +8,7 @@ import (
 	"github.com/jinzhu/copier"
 )
 
-func (e *Endpoint) CreateObject(ctx context.Context, objData request.Object) (*response.Object, error) {
+func (e *Endpoint) CreateObject(ctx context.Context, objData request.Object) (interface{}, error) {
 	createdObj, err := e.usecase.CreateObject(ctx, objData)
 	if err != nil {
 		return nil, err

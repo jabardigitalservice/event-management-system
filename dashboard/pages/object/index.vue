@@ -11,7 +11,6 @@
 </template>
 
 <script setup lang="ts">
-  import { onMounted } from 'vue'
   import { useActivePage } from '@/store/index'
   import { objectHeaders } from "~/common/constant/object"
 

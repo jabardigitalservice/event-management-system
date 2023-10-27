@@ -19,7 +19,6 @@
 </template>
 
 <script setup lang="ts">
-  import { onMounted} from 'vue'
   import { useActivePage } from '@/store/index'
   import { organisasiHeaders } from "~/common/constant/organisasi"
 

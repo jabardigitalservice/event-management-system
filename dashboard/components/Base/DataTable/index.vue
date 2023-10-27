@@ -91,8 +91,6 @@
 </template>
   
 <script setup lang="ts">
-
-    import { ref, watch } from 'vue'
     import { useFetchData, useDeleteData } from "~/composables/useFetchData"
     import { useActivePage } from '@/store/index'
 

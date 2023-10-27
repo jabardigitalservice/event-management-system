@@ -19,7 +19,7 @@
           </div>
         </template>
         <iframe
-          v-if="props.mimeType === 'application/pdf'"
+          v-if="mimeType === 'application/pdf'"
           :src="fileDocument"
           class="min-h-[600px] w-full"
         />

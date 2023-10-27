@@ -175,8 +175,9 @@
       },
     ]
     data.status = 'draft'
+    
+    //still waiting for API
 
-    // console.log("waiting for API", data)
   }
 
   const handleBack = () => {

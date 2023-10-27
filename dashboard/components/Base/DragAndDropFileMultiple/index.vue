@@ -177,7 +177,6 @@
   const dragover = (e: Event): void => {
     let element = e.target as HTMLInputElement
 
-    // add style drag and drop
     if (!element.classList.contains('bg-gray-200')) {
       element.classList.remove('bg-gray-50')
       element.classList.add('bg-gray-200')
@@ -246,7 +245,6 @@
     responseImage.value = ''
     fileIsCorrect.value = false
     disabledButton.value = true
-    //   $emit('disabled-button', disabledButton.value);
     useDataImage().dataImageMultiple = []
   }
 
@@ -271,7 +269,6 @@
       if (FileSizeIsCompatible() && FormatFileIsCompatible()) {
         fileIsCorrect.value = true
         disabledButton.value = false
-        //   $emit('disabled-button', disabledButton.value);
       } else {
         fileIsCorrect.value = false
       }

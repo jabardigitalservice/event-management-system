@@ -52,7 +52,5 @@
     },
   })
 
-  // const name = toRef(props, 'name');
-
   const { value, errorMessage } = useField(() => props.name)
 </script>

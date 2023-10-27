@@ -158,8 +158,6 @@
   const fileIsCorrect = ref(false)
   const disabledButton = ref(true)
 
-  //   const router = useRouter();
-
   const onChangeUpload = (e) => {
     if (e.target.files[0]) {
       files.value = e.target.files[0]
@@ -171,8 +169,6 @@
       runProgressBar()
       checkFileValidation()
       dataFiles.value.fileCorrect = fileIsCorrect.value
-      // const imageFile = { ...dataFiles.value };
-      // imageFile.data = dataFiles.value.data;
       useDataImage().dataImage = JSON.parse(JSON.stringify(dataFiles.value))
     }
   }
@@ -244,7 +240,6 @@
     responseImage.value = ''
     fileIsCorrect.value = false
     disabledButton.value = true
-    //   $emit('disabled-button', disabledButton.value);
     useDataImage().dataImage = {}
   }
 
@@ -267,7 +262,6 @@
       if (FileSizeIsCompatible() && FormatFileIsCompatible()) {
         fileIsCorrect.value = true
         disabledButton.value = false
-        //   $emit('disabled-button', disabledButton.value);
       } else {
         fileIsCorrect.value = false
       }

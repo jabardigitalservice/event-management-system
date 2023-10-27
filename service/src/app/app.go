@@ -10,18 +10,16 @@ import (
 	"github.com/jabardigitalservice/golog/logger"
 	gologlogger "github.com/jabardigitalservice/golog/logger"
 	"github.com/jabardigitalservice/super-app-services/event/src/constant"
-	"github.com/newrelic/go-agent/v3/newrelic"
 	"github.com/spf13/viper"
 	"go.elastic.co/apm/module/apmhttp"
 )
 
 type (
 	App struct {
-		ctx         context.Context
-		router      *chi.Mux
-		logger      *logger.Logger
-		db          *DB
-		newrelicApp *newrelic.Application
+		ctx    context.Context
+		router *chi.Mux
+		logger *logger.Logger
+		db     *DB
 	}
 
 	DB struct {
@@ -80,10 +78,6 @@ func (app *App) GetVersion() string {
 
 func (app *App) GetDB() *DB {
 	return app.db
-}
-
-func (app *App) GetNewRelic() *newrelic.Application {
-	return app.newrelicApp
 }
 
 func (app *App) GetStorageBaseUrl() string {

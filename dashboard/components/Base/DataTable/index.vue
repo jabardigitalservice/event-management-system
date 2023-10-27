@@ -118,7 +118,7 @@
         },
         actions: {
           type: Object,
-          default: ()=>{}
+          default: () => ({})
         },
         path: {
             type: String,

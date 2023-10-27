@@ -8,9 +8,9 @@ export const useActivePage = defineStore('active-page', {
 
 export const useDataImage = defineStore('data-image', {
   state: () => {
-    return { 
+    return {
       dataImage: {},
-      dataImageMultiple: []
-      }
+      dataImageMultiple: [],
+    }
   },
 })

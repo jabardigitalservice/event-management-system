@@ -184,11 +184,9 @@
   }
 
   const postPhotoService = async () => {
-    const image = JSON.parse(
-      JSON.stringify(useDataImage().dataImage))
+    const image = JSON.parse(JSON.stringify(useDataImage().dataImage))
     const imageLength = Object.keys(image).length
-    
-    
+
     if (imageLength) {
       const result = await usePostServicePhoto(image)
       return result.path

@@ -5,10 +5,10 @@
     <div class="ml-7">
       <nav class="flex flex-wrap items-center">
         <div class="inline-block">
-          <NuxtLink
+          <div
             class="font-roboto text-blue-gray-800 mr-4 text-md font-bold">
             {{ activePage.page }}
-          </NuxtLink>
+          </div>
         </div>
       </nav>
       <p class="font-roboto text-blue-gray-600 mr-4 text-xs font-light ">{{ activePage.desc }}</p>

@@ -12,7 +12,7 @@
       </p>
       <div class="mt-2 flex w-full items-center justify-center">
         <label
-          :class="props.heightDragAndDrop"
+          :class="heightDragAndDrop"
           for="drag-and-drop-file-multiple"
           class="flex w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-4 hover:bg-gray-200"
           @dragover="dragover"
@@ -35,7 +35,7 @@
             ref="file"
             type="file"
             class="hidden"
-            :disabled="dataFilesMultiple.length == 0 ? false : true"
+            :disabled="dataFilesMultiple.length === 0 ? false : true"
             :accept="props.detailDragAndDrop.acceptFile"
             @change="onChangeUpload"
           />

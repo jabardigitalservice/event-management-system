@@ -16,7 +16,7 @@ type (
 	Status string
 
 	Object struct {
-		ID          uuid.UUID      `json:"id" validate:"required"`
+		ID          uuid.UUID      `json:"id"`
 		Name        string         `json:"name" validate:"required"`
 		Address     string         `json:"address" validate:"required"`
 		Description string         `json:"description" validate:"required"`

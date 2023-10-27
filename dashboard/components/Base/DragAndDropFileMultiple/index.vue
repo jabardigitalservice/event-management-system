@@ -36,7 +36,7 @@
             type="file"
             class="hidden"
             :disabled="dataFilesMultiple.length === 0 ? false : true"
-            :accept="props.detailDragAndDrop.acceptFile"
+            :accept="detailDragAndDrop.acceptFile"
             @change="onChangeUpload"
           />
         </label>
@@ -285,7 +285,7 @@
     return props.detailDragAndDrop.formatTypeFile.includes(files.value.type)
   }
 
-  const fileDocument = (file) => {
+  const fileDocument = (file: Array) => {
     return file.data ? base64ToBlobUrl(file.data, file.mimeType) : ''
   }
 

@@ -57,14 +57,14 @@
               v-if="!FileSizeIsCompatible()"
               class="font-lato text-[11px] font-bold text-red-600"
             >
-              {{ props.detailDragAndDrop.informationSizeCompatible }}
+              {{ detailDragAndDrop.informationSizeCompatible }}
             </p>
 
             <p
               v-if="!FormatFileIsCompatible()"
               class="font-lato text-[11px] font-bold text-red-600"
             >
-              {{ props.detailDragAndDrop.informationFormatCompatible }}.
+              {{ detailDragAndDrop.informationFormatCompatible }}.
             </p>
           </div>
 
@@ -107,7 +107,7 @@
           ref="file"
           type="file"
           class="hidden"
-          :accept="props.detailDragAndDrop.acceptFile"
+          :accept="detailDragAndDrop.acceptFile"
           @change="onChangeUpload"
         />
       </label>
@@ -173,31 +173,36 @@
     }
   }
 
-  const dragover = (e) => {
+  const dragover = (e: Event): void => {
+    let element = e.target as HTMLInputElement
+
     // add style drag and drop
-    if (!e.currentTarget.classList.contains('bg-gray-200')) {
-      e.currentTarget.classList.remove('bg-gray-50')
-      e.currentTarget.classList.add('bg-gray-200')
+    if (!element.classList.contains('bg-gray-200')) {
+      element.classList.remove('bg-gray-50')
+      element.classList.add('bg-gray-200')
     }
     e.preventDefault()
   }
 
-  const dragleave = (e) => {
+  const dragleave = (e: Event): void => {
+    let element = e.target as HTMLInputElement
     // clear style drag and drop
-    e.currentTarget.classList.add('bg-gray-50')
-    e.currentTarget.classList.remove('bg-gray-200')
+    element.classList.add('bg-gray-50')
+    element.classList.remove('bg-gray-200')
   }
 
-  const drop = (e) => {
+  const drop = (e: Event): void => {
     e.preventDefault()
-    e.target.files = e.dataTransfer.files
+    let element = e.target as HTMLInputElement
+
+    element.files = e?.dataTransfer.files
     onChangeUpload(e)
     // clear style drag and drop
-    e.currentTarget.classList.add('bg-gray-50')
-    e.currentTarget.classList.remove('bg-gray-200')
+    element.classList.add('bg-gray-50')
+    element.classList.remove('bg-gray-200')
   }
 
-  const convertSize = (sizeFile) => {
+  const convertSize = (sizeFile: string) => {
     if (sizeFile === 0) {
       return 'n/a'
     }
@@ -247,7 +252,7 @@
     emit('previewFile')
   }
 
-  const convertFileToBase64 = (FileObject) => {
+  const convertFileToBase64 = (FileObject: Blob) => {
     const reader = new FileReader()
     reader.onload = () => {
       dataFiles.value.data = reader.result.split(',')[1]

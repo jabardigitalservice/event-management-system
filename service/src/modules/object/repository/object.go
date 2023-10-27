@@ -10,28 +10,35 @@ import (
 )
 
 func (r *Repository) CreateObject(ctx context.Context, obj entity.Object) (entity.Object, error) {
-	var id uint64
-	var createdAt, updatedAt time.Time
-
 	// Convert the SocialMedia slice to a format compatible with PostgreSQL JSONB array.
 	socialMediaJSON, err := json.Marshal(obj.SocialMedia)
 	if err != nil {
 		return entity.Object{}, err
 	}
 
-	err = r.db.Slave.QueryRowContext(ctx, `INSERT INTO "object" ("name", "address", "description", "banner", "logo", "social_media", "organizer", "status", "created_at", "updated_at")
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING "id", "created_at", "updated_at"`,
+	// Define a query that inserts the data and returns the id, created_at, and updated_at.
+	query := `
+		INSERT INTO "object" ("name", "address", "description", "banner", "logo", "social_media", "organizer", "status", "created_at", "updated_at")
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+		RETURNING "id", "created_at", "updated_at"
+	`
+
+	// Prepare the statement.
+	stmt, err := r.db.Slave.PrepareContext(ctx, query)
+	if err != nil {
+		return entity.Object{}, err
+	}
+	defer stmt.Close()
+
+	// Execute the prepared statement and scan the result into the obj.
+	err = stmt.QueryRowContext(ctx,
 		obj.Name, obj.Address, obj.Description, pq.Array(obj.Banner), obj.Logo, socialMediaJSON, obj.Organizer, obj.Status, time.Now(), time.Now()).
-		Scan(&id, &createdAt, &updatedAt)
+		Scan(&obj.ID, &obj.CreatedAt, &obj.UpdatedAt)
 
 	if err != nil {
 		return entity.Object{}, err
 	}
 
-	// Assign the values to the original obj and return it
-	obj.ID = id
-	obj.CreatedAt = createdAt
-	obj.UpdatedAt = updatedAt
-
+	// Return the obj with the retrieved values.
 	return obj, nil
 }

@@ -70,7 +70,7 @@
      />
     <BaseModal
       :open-modal="isOpenDelete" 
-      title-modal="Delete Data ?" 
+      title-modal="Confirm to delete" 
       :desc-modal="descModalDelete"
       icon-modal = "i-heroicons-exclamation-triangle" 
       text-confirm = "Delete"
@@ -79,8 +79,8 @@
       @confirm="deleteData()"/>
     <BaseModal
       :open-modal="isOpenConfirm" 
-      title-modal="Confirm to publish ?" 
-      :desc-modal="descModalDelete"
+      title-modal="Confirm to publish" 
+      desc-modal="Are you sure you want to publish object"
       icon-modal = "i-heroicons-question-mark-circle" 
       text-confirm = "Publish"
       type-modal = "warning"
@@ -144,7 +144,7 @@
       label: value.toString(),
       value: value.toString(),
     }));
-    const descModalDelete = "Are you sure you want to deactivate your account? All of your data will be permanently removed. This action cannot be undone."
+    const descModalDelete = "Are you sure you want to delete your data? All of your data will be permanently removed."
 
     async function fetchData() {
       loading.value = true

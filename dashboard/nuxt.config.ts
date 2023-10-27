@@ -26,11 +26,16 @@ export default defineNuxtConfig({
   auth: {
     globalAppMiddleware: true,
   },
+  colorMode: {
+    preference: 'light'
+  },
   runtimeConfig: {
     // Public keys that are exposed to the client
     public: {
       baseURL: process.env.BASE_URL_API,
+      baseURLService: process.env.BASE_URL_API_SERVICE,
+      apiServiceKey: process.env.API_SERVICE_KEY,
       portalJabarCMSBaseURL: process.env.NUXT_PUBLIC_PORTAL_JABAR_CMS_BASE_URL,
-    },
+    }
   },
 })

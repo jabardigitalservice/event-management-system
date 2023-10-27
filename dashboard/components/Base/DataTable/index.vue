@@ -27,6 +27,7 @@
         variant="solid"
         label="Create"
         :trailing="false"
+        :to="props.baseRoute + '/form'"
       />
     </div>
     <div class="inline-block min-w-full overflow-hidden rounded-lg bg-white">
@@ -147,6 +148,10 @@
       type: String,
       default: '',
     },
+    baseRoute: {
+      type: String,
+      default: '',
+    }
   })
 
   const toast = useToast()

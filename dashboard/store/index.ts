@@ -5,3 +5,12 @@ export const useActivePage = defineStore('active-page', {
     return { page: '', desc: '' }
   },
 })
+
+export const useDataImage = defineStore('data-image', {
+  state: () => {
+    return { 
+      dataImage: {},
+      dataImageMultiple: []
+      }
+  },
+})

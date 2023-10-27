@@ -22,6 +22,8 @@
     "@sidebase/nuxt-auth": "0.6.0-rc.0",
     "@typescript-eslint/eslint-plugin": "^6.7.4",
     "@typescript-eslint/parser": "^6.7.4",
+    "@vee-validate/nuxt": "^4.11.8",
+    "@vee-validate/yup": "^4.11.8",
     "eslint": "^8.51.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-nuxt": "^4.0.0",
@@ -33,6 +35,7 @@
     "prettier": "^3.0.3",
     "prettier-plugin-tailwindcss": "^0.5.5",
     "vue": "^3.3.4",
-    "vue-router": "^4.2.5"
+    "vue-router": "^4.2.5",
+    "yup": "^1.3.2"
   }
 }

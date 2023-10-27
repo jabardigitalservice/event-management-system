@@ -16,15 +16,15 @@ type (
 	Status string
 
 	Object struct {
-		ID          uuid.UUID      `json:"id"`
-		Name        string         `json:"name"`
-		Address     string         `json:"address"`
-		Description string         `json:"description"`
+		ID          uuid.UUID      `json:"id" validate:"required"`
+		Name        string         `json:"name" validate:"required"`
+		Address     string         `json:"address" validate:"required"`
+		Description string         `json:"description" validate:"required"`
 		Banner      pq.StringArray `json:"banner"`
 		Logo        string         `json:"logo"`
 		SocialMedia []SocialMedia  `json:"social_media"`
-		Organizer   string         `json:"organizer"`
-		Status      Status         `json:"status"`
+		Organizer   string         `json:"organizer" validate:"required"`
+		Status      Status         `json:"status" validate:"required"`
 		CreatedAt   time.Time      `json:"created_at"`
 		UpdatedAt   time.Time      `json:"updated_at"`
 	}

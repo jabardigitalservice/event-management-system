@@ -3,7 +3,7 @@ CREATE TYPE status AS ENUM ('draft', 'unpublished', 'published');
 
 -- Create the "object" table with UUID for id and status as ENUM
 CREATE TABLE object (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name varchar(100),
     address text,
     description text,

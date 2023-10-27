@@ -10,8 +10,7 @@
     "postinstall": "nuxt prepare",
     "lint:js": "eslint --ext \".js,.ts,.vue\" --ignore-path .gitignore .",
     "lint:fix": "eslint --ext \".js,.ts,.vue\" --ignore-path .gitignore . --fix",
-    "lint": "pnpm run lint:js",
-    "prepare": "husky install"
+    "lint": "pnpm run lint:js"
   },
   "devDependencies": {
     "@headlessui/vue": "^1.7.16",
@@ -28,7 +27,6 @@
     "eslint-plugin-nuxt": "^4.0.0",
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-vue": "^9.17.0",
-    "husky": "^8.0.0",
     "next-auth": "4.21.1",
     "nuxt": "^3.7.4",
     "nuxt-icons": "^3.2.1",

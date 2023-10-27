@@ -7,9 +7,6 @@ export const useFetchData = async (path:string, page?: Ref<number>, search?: Ref
     try {
       await useFetch(config.public.baseURL.concat(path), {
         query: { page: page?.value, q: search },
-        headers: {
-          Authorization: `Bearer NRNALK6O8nbyXOTS7tp70AECvcKy9mwCn4hiuVOv`
-        },
         onRequestError({ request, response, options }) {
           // TODO: remove dummy data after API read or integration with API finished
           const responseOrganizer = {
@@ -134,9 +131,6 @@ export const useDeleteData = async (path:string, id?: Ref<number>) => {
       
       await useFetch(config.public.baseURL.concat(`${path}/${id?.value}`), {
         method: 'delete',
-        headers: {
-          Authorization: `Bearer NRNALK6O8nbyXOTS7tp70AECvcKy9mwCn4hiuVOv`
-        },
         onResponse({ response }) {
           resolve(response._data.data);
         },

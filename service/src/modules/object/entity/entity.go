@@ -3,6 +3,7 @@ package entity
 import (
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/lib/pq"
 )
 
@@ -15,7 +16,7 @@ type (
 	Status string
 
 	Object struct {
-		ID          uint64
+		ID          uuid.UUID
 		Name        string
 		Address     string
 		Description string

@@ -17,7 +17,10 @@ require (
 	go.elastic.co/apm/module/apmhttp v1.15.0
 )
 
-require github.com/go-playground/assert/v2 v2.2.0 // indirect
+require (
+	github.com/go-playground/assert/v2 v2.2.0 // indirect
+	github.com/google/uuid v1.4.0 // indirect
+)
 
 require (
 	github.com/ajg/form v1.5.1 // indirect

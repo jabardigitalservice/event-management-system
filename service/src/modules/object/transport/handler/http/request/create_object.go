@@ -3,6 +3,7 @@ package request
 import (
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/lib/pq"
 )
 
@@ -15,7 +16,7 @@ type (
 	Status string
 
 	Object struct {
-		ID          uint64         `json:"id"`
+		ID          uuid.UUID      `json:"id"`
 		Name        string         `json:"name"`
 		Address     string         `json:"address"`
 		Description string         `json:"description"`

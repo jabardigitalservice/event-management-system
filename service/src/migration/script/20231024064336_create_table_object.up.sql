@@ -1,9 +1,9 @@
--- Create Enum for status
+-- Create an ENUM type for status
 CREATE TYPE status AS ENUM ('draft', 'unpublished', 'published');
 
--- Create table "object" with the structure provided
+-- Create the "object" table with UUID for id and status as ENUM
 CREATE TABLE object (
-    id serial PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name varchar(100),
     address text,
     description text,

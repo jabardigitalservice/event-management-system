@@ -16,7 +16,7 @@
           fileIsCorrect
             ? 'border-green-300 bg-green-50'
             : 'border-red-300 bg-red-50',
-          props.heightDragAndDrop,
+          heightDragAndDrop,
         ]"
         class="flex w-full flex-col justify-center rounded-lg border-2 border-dashed px-4"
       >
@@ -84,7 +84,7 @@
       </div>
       <label
         v-else
-        :class="props.heightDragAndDrop"
+        :class="heightDragAndDrop"
         for="drag-and-drop-file"
         class="flex w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-4 hover:bg-gray-200"
         @dragover="dragover"

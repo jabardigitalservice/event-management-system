@@ -38,7 +38,6 @@ func (r *Repository) CreateObject(ctx context.Context, obj entity.Object) (entit
 	if err != nil {
 		return entity.Object{}, err
 	}
-
 	// Return the obj with the retrieved values.
 	return obj, nil
 }

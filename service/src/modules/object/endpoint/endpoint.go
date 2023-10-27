@@ -5,12 +5,13 @@ import (
 
 	"github.com/jabardigitalservice/super-app-services/event/src/app"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/entity"
+	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/transport/handler/http/response"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/usecase"
 )
 
 type (
 	EndpointInterface interface {
-		CreateObject(ctx context.Context, objData entity.Object) (*entity.Object, error)
+		CreateObject(ctx context.Context, objData entity.Object) (*response.Object, error)
 	}
 
 	Endpoint struct {

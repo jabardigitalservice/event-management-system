@@ -10,7 +10,7 @@ import (
 
 type (
 	EndpointInterface interface {
-		CreateObject(ctx context.Context, objData entity.Object) (entity.Object, error)
+		CreateObject(ctx context.Context, objData entity.Object) (*entity.Object, error)
 	}
 
 	Endpoint struct {

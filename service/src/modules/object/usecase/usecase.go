@@ -10,7 +10,7 @@ import (
 
 type (
 	UsecaseInterface interface {
-		CreateObject(ctx context.Context, obj entity.Object) (entity.Object, error)
+		CreateObject(ctx context.Context, obj entity.Object) (*entity.Object, error)
 	}
 
 	Usecase struct {

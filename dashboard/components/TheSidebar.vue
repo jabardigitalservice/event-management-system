@@ -12,24 +12,17 @@
         class="self-start"
       />
       <div>
-        <img
-          src="/logos/logo-text.svg"
-          alt="Portal Jabar Logo"
-          width="75"
-          height="38"
-          class="mb-1"
-        />
         <h1
           data-cy="sidebar__header-title"
           class="font-lato whitespace-nowrap text-sm font-bold leading-5 text-white"
         >
-          CONTENT MANAGEMENT<br />
+          EVENT MANAGEMENT<br />
           SYSTEM
         </h1>
       </div>
     </section>
     <SidebarSiteSelect />
-    <nav class="-ml-6 w-[calc(100%+48px)] overflow-y-auto">
+    <nav class="-ml-6 w-[calc(100%+48px)] overflow-hidden">
       <ul data-cy="sidebar__navigation" class="px-6">
         <li>
           <NuxtLink
@@ -46,19 +39,6 @@
     </nav>
     <section class="mt-auto">
       <ul ref="sidebar-bottom-nav" data-cy="sidebar__bottom-nav">
-        <li>
-          <NuxtLink
-            :to="config.public.portalJabarCMSBaseURL"
-            class="font-lato mb-2 flex min-h-[50px] w-full items-center rounded-lg p-[15px] text-sm font-bold text-white hover:bg-green-700"
-          >
-            <NuxtIcon
-              name="navigation/portal-cms-icon"
-              filled
-              class="text-xl"
-            />
-            <span class="ml-3">CMS Portal Jabar</span>
-          </NuxtLink>
-        </li>
         <li>
           <NuxtLink
             :to="`${config.public.portalJabarCMSBaseURL}/pengaturan`"

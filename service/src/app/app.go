@@ -32,16 +32,13 @@ type (
 func Init() (*App, error) {
 	var ctx = context.Background()
 
-	// Initialize the configuration.
 	appConfig, err := LoadConfig()
 	if err != nil {
 		return nil, err
 	}
 
-	// Initialize the logger.
 	log := logger.Init()
 
-	// Initialize the database connections.
 	masterDB := InitPgsqlMaster(ctx, appConfig)
 	slaveDB := InitPgsqlSlave(ctx, appConfig)
 

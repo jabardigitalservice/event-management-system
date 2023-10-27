@@ -17,21 +17,18 @@ func (h *Handler) CreateObject(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Encode the response object as JSON
 	reqObjJSON, err := json.Marshal(respObj)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	// Decode the JSON data into the request object
 	var reqObj request.Object
 	if err := json.Unmarshal(reqObjJSON, &reqObj); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	// Create a context for the request
 	ctx := r.Context()
 
 	createdObj, err := h.endpoint.CreateObject(ctx, reqObj)

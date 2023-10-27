@@ -4,13 +4,13 @@ import (
 	"context"
 
 	"github.com/jabardigitalservice/super-app-services/event/src/app"
-	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/entity"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/repository"
+	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/transport/handler/http/request"
 )
 
 type (
 	UsecaseInterface interface {
-		CreateObject(ctx context.Context, obj entity.Object) (*entity.Object, error)
+		CreateObject(ctx context.Context, obj request.Object) (*request.Object, error)
 	}
 
 	Usecase struct {

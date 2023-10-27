@@ -290,8 +290,7 @@
   }
 
   const imageClicked = (data: object, index: number) => {
-    // Component Sementara (blm selesai)
-    // console.log(data, index);
+    // TODO : It for define the main of banner
   }
 
   const imageDelete = (index: number) => {

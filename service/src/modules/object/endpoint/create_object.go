@@ -3,7 +3,7 @@ package endpoint
 import (
 	"context"
 
-	"github.com/go-playground/validator/v10"
+	"github.com/fazpass/goliath/v3/helper/validator"
 	_errors "github.com/jabardigitalservice/super-app-services/event/src/error"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/transport/handler/http/request"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/transport/handler/http/response"
@@ -11,12 +11,10 @@ import (
 )
 
 func (e *Endpoint) CreateObject(ctx context.Context, objData request.Object) (interface{}, error) {
-	// Create a new validator instance
-	validate := validator.New()
+	var validates = validator.Validate(objData)
 
-	if err := validate.Struct(objData); err != nil {
-
-		return nil, _errors.ErrPayloadValidation
+	if validates != nil {
+		return struct{}{}, _errors.ErrPayloadValidation
 	}
 
 	createdObj, err := e.usecase.CreateObject(ctx, objData)

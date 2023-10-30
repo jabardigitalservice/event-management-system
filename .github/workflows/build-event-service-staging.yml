@@ -64,5 +64,5 @@ jobs:
           git config user.name "Github Action"
           git checkout -b superapp-service-event-release-${{ env.sha_short }}-staging
           git add deployment.yaml
-          git commit -m "[release]: Superapp Service Event ${{ env.sha_short }} to staging"
-          git push origin superapp-service-event-release-${{ env.sha_short }}-staging -o merge_request.description="${{ github.event.pull_request.body }}" -o merge_request.create
+          git commit -m "Superapp Service Event ${{ env.sha_short }} to staging"
+          git push origin superapp-service-event-release-${{ env.sha_short }}-staging -o merge_request.description="# Overview \n\n - Superapp Service Event Release ${{ env.sha_short }} to staging \n\n ## Evidence \n\n - title: Release Service Event ${{ env.sha_short }} to staging \n - project: Jabar Super Apps \n - participants:  " -o merge_request.create

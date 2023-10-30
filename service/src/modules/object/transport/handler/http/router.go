@@ -23,6 +23,7 @@ func Init(app *app.App, endpoint endpoint.EndpointInterface) *chi.Mux {
 	}, false))
 
 	router.Post("/object", h.CreateObject)
+	router.Get("/object", h.GetObjects)
 
 	return router
 }

@@ -12,7 +12,6 @@ require (
 	github.com/google/uuid v1.4.0
 	github.com/jabardigitalservice/golog v0.0.3
 	github.com/jabardigitalservice/utilities-go v0.0.0-20230109031209-5c783a99a558
-	github.com/joho/godotenv v1.3.0
 	github.com/lib/pq v1.10.9
 	github.com/spf13/viper v1.17.0
 	go.elastic.co/apm/module/apmhttp v1.15.0

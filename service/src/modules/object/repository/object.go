@@ -31,3 +31,35 @@ func (r *Repository) CreateObject(ctx context.Context, obj request.Object) (requ
 
 	return obj, nil
 }
+
+func (r *Repository) GetObjects(ctx context.Context, page int, perPage int) ([]request.Object, error) {
+	offset := (page - 1) * perPage
+
+	var objects []request.Object
+	query := `SELECT * FROM "object" ORDER BY "id" LIMIT $1 OFFSET $2`
+	rows, err := r.db.Slave.QueryContext(ctx, query, perPage, offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var obj request.Object
+		var banners pq.StringArray
+		var socialMediaData []byte
+
+		if err := rows.Scan(&obj.ID, &obj.Name, &obj.Address, &obj.Description, &banners, &obj.Logo, &socialMediaData, &obj.Organizer, &obj.Status, &obj.CreatedAt, &obj.UpdatedAt); err != nil {
+			return nil, err
+		}
+
+		obj.Banner = []string(banners)
+
+		if err := json.Unmarshal(socialMediaData, &obj.SocialMedia); err != nil {
+			return nil, err
+		}
+
+		objects = append(objects, obj)
+	}
+
+	return objects, nil
+}

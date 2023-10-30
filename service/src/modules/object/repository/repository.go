@@ -11,6 +11,7 @@ import (
 type (
 	RepositoryInterface interface {
 		CreateObject(ctx context.Context, obj request.Object) (request.Object, error)
+		GetObjects(ctx context.Context, page int, perPage int) ([]request.Object, error)
 	}
 	Repository struct {
 		app *app.App

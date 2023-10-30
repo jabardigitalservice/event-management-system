@@ -59,10 +59,10 @@ jobs:
       - name: GitOps ArgoCD Create Branch, Commit, Push
         run: |
           export GIT_SSH_COMMAND="ssh -i /tmp/gitlab-deploy-ssh-key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
-          cd jds-terraform-gke/k8s/superapp
+          cd jds-terraform-gke/k8s/superapp/development/service-event
           git config user.email "github-action@github.com"
           git config user.name "Github Action"
           git checkout -b superapp-service-event-release-${{ env.sha_short }}-staging
-          git add .
+          git add deployment.yaml
           git commit -m "[release]: Superapp Service Event ${{ env.sha_short }} to staging"
           git push origin superapp-service-event-release-${{ env.sha_short }}-staging -o merge_request.description="${{ github.event.pull_request.body }}" -o merge_request.create

@@ -266,7 +266,7 @@
 
   const checkFileValidation = () => {
     if (files.value) {
-      if (FileSizeIsCompatible() && FormatFileIsCompatible()) {
+      if (fileSizeIsCompatible() && formatFileIsCompatible()) {
         fileIsCorrect.value = true
         disabledButton.value = false
       } else {
@@ -277,11 +277,11 @@
     }
   }
 
-  const FileSizeIsCompatible = () => {
+  const fileSizeIsCompatible = () => {
     return files.value.size <= props.detailDragAndDrop.maxSizeFile
   }
 
-  const FormatFileIsCompatible = () => {
+  const formatFileIsCompatible = () => {
     return props.detailDragAndDrop.formatTypeFile.includes(files.value.type)
   }
 

@@ -54,14 +54,14 @@
             </template>
 
             <p
-              v-if="!FileSizeIsCompatible()"
+              v-if="!fileSizeIsCompatible()"
               class="font-lato text-[11px] font-bold text-red-600"
             >
               {{ detailDragAndDrop.informationSizeCompatible }}
             </p>
 
             <p
-              v-if="!FormatFileIsCompatible()"
+              v-if="!formatFileIsCompatible()"
               class="font-lato text-[11px] font-bold text-red-600"
             >
               {{ detailDragAndDrop.informationFormatCompatible }}.
@@ -264,7 +264,7 @@
 
   const checkFileValidation = () => {
     if (files.value) {
-      if (FileSizeIsCompatible() && FormatFileIsCompatible()) {
+      if (fileSizeIsCompatible() && formatFileIsCompatible()) {
         fileIsCorrect.value = true
         disabledButton.value = false
       } else {
@@ -275,11 +275,11 @@
     }
   }
 
-  const FileSizeIsCompatible = () => {
+  const fileSizeIsCompatible = () => {
     return files.value.size <= props.detailDragAndDrop.maxSizeFile
   }
 
-  const FormatFileIsCompatible = () => {
+  const formatFileIsCompatible = () => {
     return props.detailDragAndDrop.formatTypeFile.includes(files.value.type)
   }
 </script>

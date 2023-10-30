@@ -14,7 +14,7 @@ func (e *Endpoint) CreateObject(ctx context.Context, objData request.Object) (in
 	var validates = validator.Validate(objData)
 
 	if validates != nil {
-		return struct{}{}, _errors.ErrPayloadValidation
+		return validates, _errors.ErrPayloadValidation
 	}
 
 	createdObj, err := e.usecase.CreateObject(ctx, objData)

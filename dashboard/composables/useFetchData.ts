@@ -137,3 +137,25 @@ export const useDeleteData = async (path:string, id?: Ref<number>) => {
     }
   });
 }
+
+export const usePostServicePhoto = async (body: object) => {
+  const config = useRuntimeConfig();
+  return new Promise(async (resolve, reject) => {
+    try {
+      
+      await useFetch(config.public.baseURLService, {
+        method: 'post',
+        headers: {
+          'Api-Key': config.public.apiServiceKey,
+          'Content-Type': 'application/json'
+        },
+        body: body,
+        onResponse({ response }) {
+          resolve(response._data.data);
+        },
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+}

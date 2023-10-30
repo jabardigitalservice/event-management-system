@@ -55,14 +55,7 @@ jobs:
         uses: mikefarah/yq@master
         with:
           cmd: yq -i '.spec.template.spec.containers[0].image = "${{ secrets.EVENT_SERVICE_IMAGENAME }}:${{ env.sha_short }}-test"' 'service/jds-terraform-gke/k8s/superapp/development/service-event/deployment.yaml'
-  pull-request:
-    runs-on: ubuntu-latest
-    steps:
-      - name: update-pull-request
-        uses: kt3k/update-pr-description@v2
-        with:
-          pr_body: ${{ steps.description.outputs.description }}
-          destination_branch: event-service
+
       - name: GitOps ArgoCD Create Branch, Commit, Push
         run: |
           export GIT_SSH_COMMAND="ssh -i /tmp/gitlab-deploy-ssh-key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
@@ -72,4 +65,4 @@ jobs:
           git checkout -b superapp-service-event-release-${{ env.sha_short }}-staging
           git add .
           git commit -m "[release]: Superapp Service Event ${{ env.sha_short }} to staging"
-          git push origin superapp-service-event-release-${{ env.sha_short }}-staging -o merge_request.description="${{ steps.description.outputs.description }}" -o merge_request.create
+          git push origin superapp-service-event-release-${{ env.sha_short }}-staging -o merge_request.description="${{ github.event.pull_request.body }}" -o merge_request.create

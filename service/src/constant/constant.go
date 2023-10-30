@@ -8,6 +8,8 @@ const (
 	HeaderUserIDKey    = "X-User-ID"
 	HeaderUserName     = "X-User-Name"
 
+	ModuleNameobject = "object"
+
 	ServiceName = "event"
 
 	ContextKeyToken    contextKey = "ck:token"

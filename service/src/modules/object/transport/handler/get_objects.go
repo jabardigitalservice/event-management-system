@@ -1,35 +1,40 @@
 package handler
 
 import (
+	"fmt"
+	"log"
 	"net/http"
-	"strconv"
 
 	helperresponse "github.com/jabardigitalservice/super-app-services/event/src/helper/http/response"
+	helperutils "github.com/jabardigitalservice/super-app-services/event/src/helper/utils"
+	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/transport/handler/http/request"
 	httpresponse "github.com/jabardigitalservice/super-app-services/event/src/response/http"
 )
 
 func (h *Handler) GetObjects(w http.ResponseWriter, r *http.Request) {
-	pageStr := r.URL.Query().Get("page")
-	perPageStr := r.URL.Query().Get("per_page")
-
-	page, err := strconv.Atoi(pageStr)
-	if err != nil {
-		http.Error(w, "Invalid page parameter", http.StatusBadRequest)
-		return
-	}
-
-	perPage, err := strconv.Atoi(perPageStr)
-	if err != nil {
-		http.Error(w, "Invalid per_page parameter", http.StatusBadRequest)
-		return
-	}
 	ctx := r.Context()
+	queryParam := request.GetRequestParam(r)
+	log.Printf("PageSize from request: %d", queryParam.PageSize)
 
-	objects, err := h.endpoint.GetObjects(ctx, page, perPage)
+	sortByQuery := queryParam.SortBy
+
+	validSortOptions := []string{"name", "address", "created_at", "updated_at"}
+
+	isOptionValid, _ := helperutils.InArray(sortByQuery, validSortOptions)
+
+	if !isOptionValid {
+		queryParam.SortBy = ""
+	}
+
+	tmpResult, err := h.endpoint.GetObjects(ctx, queryParam)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		fmt.Println(err)
+		fmt.Println(tmpResult)
+		RenderError(w, r, h, err, tmpResult)
 		return
 	}
 
-	helperresponse.Render(w, r, h.responseMapping, httpresponse.Success, objects, nil)
+	result := tmpResult
+
+	helperresponse.Render(w, r, h.responseMapping, httpresponse.Success, result, nil)
 }

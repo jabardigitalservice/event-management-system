@@ -12,7 +12,7 @@ import (
 type (
 	EndpointInterface interface {
 		CreateObject(ctx context.Context, objData request.Object) (interface{}, error)
-		GetObjects(ctx context.Context, page int, perPage int) ([]response.Object, error)
+		GetObjects(ctx context.Context, params request.QueryParam) ([]response.Object, error)
 	}
 
 	Endpoint struct {

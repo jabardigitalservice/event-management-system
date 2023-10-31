@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/jabardigitalservice/super-app-services/event/src/app"
+	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/entity"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/repository"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/transport/handler/http/request"
 )
@@ -11,7 +12,7 @@ import (
 type (
 	UsecaseInterface interface {
 		CreateObject(ctx context.Context, obj request.Object) (*request.Object, error)
-		GetObjects(ctx context.Context, page int, perPage int) ([]request.Object, error)
+		GetObjects(ctx context.Context, params request.QueryParam) ([]entity.Object, error)
 	}
 
 	Usecase struct {

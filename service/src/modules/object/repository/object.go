@@ -2,9 +2,14 @@ package repository
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
+	"fmt"
+	"log"
 	"time"
 
+	_errors "github.com/jabardigitalservice/super-app-services/event/src/error"
+	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/entity"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/transport/handler/http/request"
 	"github.com/lib/pq"
 )
@@ -32,34 +37,123 @@ func (r *Repository) CreateObject(ctx context.Context, obj request.Object) (requ
 	return obj, nil
 }
 
-func (r *Repository) GetObjects(ctx context.Context, page int, perPage int) ([]request.Object, error) {
-	offset := (page - 1) * perPage
+func (r *Repository) GetObjects(ctx context.Context, params request.QueryParam) ([]entity.Object, error) {
+	binds := make([]interface{}, 0)
 
-	var objects []request.Object
-	query := `SELECT * FROM "object" ORDER BY "id" LIMIT $1 OFFSET $2`
-	rows, err := r.db.Slave.QueryContext(ctx, query, perPage, offset)
+	var query = fmt.Sprintf(`SELECT
+        id,
+        name,
+        address,
+        description,
+        banner,
+        logo,
+        social_media,
+        organizer,
+        status,
+        created_at,
+        updated_at
+    FROM object
+    WHERE 1 = 1 %s `,
+		r.filterObjectQuery(params, &binds))
+
+	result, err := r.getObjects(ctx, query, binds...)
+	fmt.Println(result)
 	if err != nil {
+		println(err)
+		return nil, err
+	}
+	return result, nil
+
+}
+
+func (r *Repository) getObjects(ctx context.Context, query string, args ...interface{}) ([]entity.Object, error) {
+	log.Printf("query :%#v ", query)
+	log.Printf("args :%#v ", args...)
+	rows, err := r.db.Slave.QueryContext(ctx, query, args...)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, _errors.ErrNotFound
+		}
 		return nil, err
 	}
 	defer rows.Close()
 
+	result := make([]entity.Object, 0)
+
 	for rows.Next() {
-		var obj request.Object
-		var banners pq.StringArray
-		var socialMediaData []byte
+		object := new(entity.Object)
 
-		if err := rows.Scan(&obj.ID, &obj.Name, &obj.Address, &obj.Description, &banners, &obj.Logo, &socialMediaData, &obj.Organizer, &obj.Status, &obj.CreatedAt, &obj.UpdatedAt); err != nil {
+		var banner pq.StringArray
+		var socialMediaJSON []byte
+
+		if err := rows.Scan(
+			&object.ID,
+			&object.Name,
+			&object.Address,
+			&object.Description,
+			&banner,
+			&object.Logo,
+			&socialMediaJSON,
+			&object.Organizer,
+			&object.Status,
+			&object.CreatedAt,
+			&object.UpdatedAt,
+		); err != nil {
+			log.Printf("Error scanning rows: %v", err)
 			return nil, err
 		}
 
-		obj.Banner = []string(banners)
+		object.Banner = []string(banner)
 
-		if err := json.Unmarshal(socialMediaData, &obj.SocialMedia); err != nil {
+		if err := json.Unmarshal(socialMediaJSON, &object.SocialMedia); err != nil {
+			log.Printf("Error unmarshaling social_media: %v", err)
 			return nil, err
 		}
 
-		objects = append(objects, obj)
+		result = append(result, *object)
 	}
 
-	return objects, nil
+	return result, nil
+}
+
+func (r *Repository) filterObjectQuery(params request.QueryParam, binds *[]interface{}) string {
+	var query string
+	counter := 1
+
+	if params.Status != "" {
+		*binds = append(*binds, params.Status)
+		query = fmt.Sprintf(`%s AND status = $%d`, query, counter)
+		counter++
+	}
+	if params.Keyword != "" {
+		*binds = append(*binds, `%`+params.Keyword+`%`)
+		query = fmt.Sprintf(`%s AND (name ILIKE $%d OR description ILIKE $%d)`, query, counter, counter)
+		counter++
+	}
+
+	if params.StartDate != "" && params.EndDate != "" {
+		*binds = append(*binds, params.StartDate, params.EndDate)
+		query = fmt.Sprintf("%s AND (DATE(created_at) BETWEEN $%d AND $%d)", query, counter, counter+1)
+		counter += 2
+	}
+
+	sortBy := ` ORDER BY created_at DESC`
+	if params.SortBy != "" {
+		sortBy = fmt.Sprintf(` ORDER BY %s %s`, params.SortBy, params.SortOrder)
+	}
+
+	query += sortBy
+
+	if params.PageSize > 0 {
+		*binds = append(*binds, params.PageSize)
+		query = fmt.Sprintf(`%s LIMIT $%d`, query, counter)
+		counter++
+	}
+
+	if params.Offset > 0 {
+		*binds = append(*binds, params.Offset)
+		query = fmt.Sprintf(`%s OFFSET $%d`, query, counter)
+	}
+
+	return query
 }

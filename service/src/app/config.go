@@ -1,7 +1,6 @@
 package app
 
 import (
-	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
 )
 
@@ -12,10 +11,6 @@ type Config struct {
 }
 
 func LoadConfig() (Config, error) {
-	if err := godotenv.Load(".env"); err != nil {
-		return Config{}, err
-	}
-
 	viper.AutomaticEnv()
 
 	var config Config

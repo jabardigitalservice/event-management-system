@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"log"
 	"time"
 
 	_errors "github.com/jabardigitalservice/super-app-services/event/src/error"
@@ -57,9 +56,7 @@ func (r *Repository) GetObjects(ctx context.Context, params request.QueryParam) 
 		r.filterObjectQuery(params, &binds))
 
 	result, err := r.getObjects(ctx, query, binds...)
-	fmt.Println(result)
 	if err != nil {
-		println(err)
 		return nil, err
 	}
 	return result, nil
@@ -67,8 +64,6 @@ func (r *Repository) GetObjects(ctx context.Context, params request.QueryParam) 
 }
 
 func (r *Repository) getObjects(ctx context.Context, query string, args ...interface{}) ([]entity.Object, error) {
-	log.Printf("query :%#v ", query)
-	log.Printf("args :%#v ", args...)
 	rows, err := r.db.Slave.QueryContext(ctx, query, args...)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -99,14 +94,12 @@ func (r *Repository) getObjects(ctx context.Context, query string, args ...inter
 			&object.CreatedAt,
 			&object.UpdatedAt,
 		); err != nil {
-			log.Printf("Error scanning rows: %v", err)
 			return nil, err
 		}
 
 		object.Banner = []string(banner)
 
 		if err := json.Unmarshal(socialMediaJSON, &object.SocialMedia); err != nil {
-			log.Printf("Error unmarshaling social_media: %v", err)
 			return nil, err
 		}
 

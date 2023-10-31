@@ -2,7 +2,6 @@ package endpoint
 
 import (
 	"context"
-	"log"
 
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/transport/handler/http/request"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/transport/handler/http/response"
@@ -10,7 +9,6 @@ import (
 )
 
 func (e *Endpoint) GetObjects(ctx context.Context, params request.QueryParam) ([]response.Object, error) {
-	log.Printf("GetObjects - Received parameters: %#v", params)
 	objects, err := e.usecase.GetObjects(ctx, params)
 	if err != nil {
 		return nil, err
@@ -25,7 +23,5 @@ func (e *Endpoint) GetObjects(ctx context.Context, params request.QueryParam) ([
 		}
 		responseObjects[i] = *responseObj
 	}
-
-	log.Printf("GetObjects Response: %#v", responseObjects)
 	return responseObjects, nil
 }

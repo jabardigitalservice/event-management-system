@@ -1,8 +1,6 @@
 package handler
 
 import (
-	"fmt"
-	"log"
 	"net/http"
 
 	helperresponse "github.com/jabardigitalservice/super-app-services/event/src/helper/http/response"
@@ -14,7 +12,6 @@ import (
 func (h *Handler) GetObjects(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	queryParam := request.GetRequestParam(r)
-	log.Printf("PageSize from request: %d", queryParam.PageSize)
 
 	sortByQuery := queryParam.SortBy
 
@@ -28,8 +25,6 @@ func (h *Handler) GetObjects(w http.ResponseWriter, r *http.Request) {
 
 	tmpResult, err := h.endpoint.GetObjects(ctx, queryParam)
 	if err != nil {
-		fmt.Println(err)
-		fmt.Println(tmpResult)
 		RenderError(w, r, h, err, tmpResult)
 		return
 	}

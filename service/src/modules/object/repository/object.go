@@ -20,7 +20,7 @@ func (r *Repository) CreateObject(ctx context.Context, obj request.Object) (requ
 	}
 
 	query := `
-        INSERT INTO "object" ("name", "address", "description", "banner", "logo", "social_media", "organizer", "status", "created_at", "updated_at")
+        INSERT INTO "objects" ("name", "address", "description", "banner", "logo", "social_media", "organizer", "status", "created_at", "updated_at")
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
         RETURNING "id", "created_at", "updated_at"
     `
@@ -51,7 +51,7 @@ func (r *Repository) GetObjects(ctx context.Context, params request.QueryParam) 
         status,
         created_at,
         updated_at
-    FROM object
+    FROM objects
     WHERE 1 = 1 %s `,
 		r.filterObjectQuery(params, &binds))
 

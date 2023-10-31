@@ -13,6 +13,7 @@ type (
 	RepositoryInterface interface {
 		CreateObject(ctx context.Context, obj request.Object) (request.Object, error)
 		GetObjects(ctx context.Context, params request.QueryParam) ([]entity.Object, error)
+		UpdateObject(ctx context.Context, obj request.Object) (request.Object, error)
 	}
 	Repository struct {
 		app *app.App

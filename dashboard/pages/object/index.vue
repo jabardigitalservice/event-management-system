@@ -5,12 +5,12 @@
     :path="urlAPI"
     base-route="/object"
   >
-    <template #customeStatus="get">
+    <template #customeStatus="{items}">
       <UBadge
-        :color="statusColors[get.dataRow.status].color"
-        :variant="statusColors[get.dataRow.status].variant"
+        :color="statusColors[items.status].color"
+        :variant="statusColors[items.status].variant"
         class="uppercase"
-        >{{ get.dataRow.status }}
+        >{{ items.status }}
       </UBadge>
     </template>
   </BaseDataTable>

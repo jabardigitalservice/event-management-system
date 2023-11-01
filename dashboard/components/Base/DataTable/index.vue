@@ -41,10 +41,10 @@
         :rows="itemTable"
       >
         <template #status-data="{ row }">
-          <slot name="customeStatus" :data-row="row" />
+          <slot name="customeStatus" :items="row" />
         </template>
         <template #photo-data="{ row }">
-          <slot name="customePhoto" :data-row="row" />
+          <slot name="customePhoto" :items="row" />
         </template>
         <template #actions-data="{ row }">
           <UDropdown :items="itemActions(row)">

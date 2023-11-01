@@ -24,6 +24,7 @@ func Init(app *app.App, endpoint endpoint.EndpointInterface) *chi.Mux {
 
 	router.Post("/object", h.CreateObject)
 	router.Get("/object", h.GetObjects)
+	router.Get("/object/{id}", h.GetObjectByID)
 	router.Put("/object/{id}", h.UpdateObject)
 	router.Delete("/object/{id}", h.DeleteObject)
 

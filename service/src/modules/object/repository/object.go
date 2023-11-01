@@ -152,6 +152,53 @@ func (r *Repository) filterObjectQuery(params request.QueryParam, binds *[]inter
 	return query
 }
 
+func (r *Repository) GetObjectByID(ctx context.Context, id *uuid.UUID) (*entity.Object, error) {
+	query := `
+        SELECT
+            id,
+            name,
+            address,
+            description,
+            banner,
+            logo,
+            social_media,
+            organizer,
+            status,
+            created_at,
+            updated_at
+        FROM objects
+        WHERE id = $1`
+
+	var result entity.Object
+	var banner pq.StringArray
+	var socialMediaJSON []byte
+
+	err := r.db.Slave.QueryRowContext(ctx, query, id).Scan(
+		&result.ID,
+		&result.Name,
+		&result.Address,
+		&result.Description,
+		&banner,
+		&result.Logo,
+		&socialMediaJSON,
+		&result.Organizer,
+		&result.Status,
+		&result.CreatedAt,
+		&result.UpdatedAt,
+	)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, _errors.ErrNotFound
+		}
+		return nil, err
+	}
+	if err := json.Unmarshal(socialMediaJSON, &result.SocialMedia); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
 func (r *Repository) UpdateObject(ctx context.Context, obj *request.Object) (*request.Object, error) {
 	socialMediaJSON, err := json.Marshal(obj.SocialMedia)
 	if err != nil {

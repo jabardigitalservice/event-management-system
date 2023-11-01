@@ -1,5 +1,5 @@
 <template>
-    <BaseDataTable :headers="headerTable" :actions="commonItems" :path="urlAPI">
+    <BaseDataTable :headers="headerTable" :path="urlAPI">
       <template #customePhoto="">
         <UButton  
           color="green" 
@@ -7,6 +7,16 @@
           variant="outline"  
           @click="(openModalPhoto = true)"> Lihat Gambar 
         </UButton>
+      </template>
+      <template #customeAction="">
+        <UDropdown :items="itemActions()">
+          <UButton
+            color="green"
+            variant="outline"
+            icon="i-heroicons-chevron-down"
+            >Actions
+          </UButton>
+        </UDropdown>
       </template>
     </BaseDataTable>
     <UModal v-model="openModalPhoto">
@@ -26,18 +36,31 @@
   const urlAPI: string = "/organizer"
   const openModalPhoto = ref(false)
 
-  const commonItems = [
-    {
-      label: 'Edit',
-      icon: 'i-heroicons-pencil-square-20-solid',
-      iconClass: 'bg-green-500'
-    },
-    {
-      label: 'Detail',
-      icon: 'i-heroicons-document-magnifying-glass-20-solid',
-      iconClass: 'bg-green-500'
-    }
-  ];
+  const itemActions = () => {
+    let actions = [
+      [
+        {
+          label: 'Edit',
+          icon: 'i-heroicons-pencil-square-20-solid',
+          iconClass: 'bg-green-500',
+        },
+        {
+          label: 'Detail',
+          icon: 'i-heroicons-document-magnifying-glass-20-solid',
+          iconClass: 'bg-green-500',
+        },
+      ],
+      [
+        {
+          label: 'Delete',
+          icon: 'i-heroicons-trash-20-solid',
+          iconClass: 'bg-green-500',
+        },
+      ],
+    ]
+
+    return actions
+  }
   
   onMounted(() => {
     const activePage = useActivePage()

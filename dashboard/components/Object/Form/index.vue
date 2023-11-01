@@ -108,16 +108,18 @@
     :mime-type="dataImage.mimeType"
     @close="dataImage.showDialog = false"
   />
+  <UNotifications />
 </template>
 <script setup lang="ts">
   import { Form } from 'vee-validate'
   import { useDataImage } from '@/store/index'
   import { object, string } from 'yup'
-  import { usePostServicePhoto } from '~/composables/useFetchData'
+  import { usePostServicePhoto, usePostData } from '~/composables/useFetchData'
 
   const router = useRouter()
   const formContainer = ref<HTMLInputElement>()
   const submitForm = ref<HTMLInputElement>()
+    const toast = useToast()
 
   const schema = object({
     name: string().required('Nama Objek Wisata wajib diisi'),
@@ -175,9 +177,27 @@
       },
     ]
     data.status = 'draft'
-    
-    //still waiting for API
 
+    try {
+      usePostData('/v1/event/object', data).then((res) => {
+        if(res.code === '2010800'){
+          toast.add({
+            icon: 'i-heroicons-exclamation-triangle',
+            title: 'Data Successfully Added',
+            color: 'green',
+            timeout: 2000,
+          })
+          handleBack()
+        }
+      })
+    } catch (error) {
+      toast.add({
+        title: 'Data Failed to Add',
+        color: 'red',
+        icon: 'i-heroicons-x-circle',
+        timeout: 2000,
+      })
+    }
   }
 
   const handleBack = () => {

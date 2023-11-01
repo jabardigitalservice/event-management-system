@@ -7,6 +7,26 @@ export default NuxtAuthHandler({
   pages: {
     signIn: '/login',
   },
+  callbacks: {
+    jwt: async ({token, account, user}) => {
+      const isSignIn = user ? true : false;
+      if (isSignIn) {
+        token.accessToken = account.access_token
+        token.idToken = account.id_token
+      }
+      return Promise.resolve(token);
+    },
+    session: async ({token, session}) => {
+      session.accessToken = token.accessToken;
+      session.idToken = token.idToken;
+      return Promise.resolve(session);
+    },
+  },
+  events: {
+    signOut: async ({ token }) => {
+      await $fetch(`${process.env.KEYCLOAK_ISSUER}/protocol/openid-connect/logout?id_token_hint=${token.idToken}`)
+    },
+  },
   providers: [
     KeycloakProvider.default({
       clientId: process.env.KEYCLOAK_CLIENT_ID,
@@ -15,3 +35,4 @@ export default NuxtAuthHandler({
     }),
   ],
 })
+

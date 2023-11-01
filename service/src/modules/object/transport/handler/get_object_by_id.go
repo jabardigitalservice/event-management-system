@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/go-chi/chi"
@@ -22,7 +21,6 @@ func (h *Handler) GetObjectByID(w http.ResponseWriter, r *http.Request) {
 
 	object, err := h.endpoint.GetObjectByID(ctx, &id)
 	if err != nil {
-		log.Printf("Error: %v", err)
 		RenderError(w, r, h, err, nil)
 		return
 	}

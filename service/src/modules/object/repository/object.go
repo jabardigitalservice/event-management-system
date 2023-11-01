@@ -150,3 +150,27 @@ func (r *Repository) filterObjectQuery(params request.QueryParam, binds *[]inter
 
 	return query
 }
+
+func (r *Repository) UpdateObject(ctx context.Context, obj *request.Object) (*request.Object, error) {
+	socialMediaJSON, err := json.Marshal(obj.SocialMedia)
+	if err != nil {
+		return nil, err
+	}
+	bannerArray := pq.StringArray(obj.Banner)
+
+	query := `
+        UPDATE "objects" SET "name" = $2, "address" = $3, "description" = $4, "banner" = $5, "logo" = $6, "social_media" = $7, "organizer" = $8, "status" = $9, "updated_at" = $10
+        WHERE "id" = $1
+    `
+
+	_, err = r.db.Master.ExecContext(ctx,
+		query,
+		obj.ID, obj.Name, obj.Address, obj.Description, bannerArray, obj.Logo, socialMediaJSON, obj.Organizer, obj.Status, time.Now(),
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return obj, nil
+}

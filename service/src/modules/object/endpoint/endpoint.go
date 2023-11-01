@@ -13,6 +13,7 @@ type (
 	EndpointInterface interface {
 		CreateObject(ctx context.Context, objData request.Object) (interface{}, error)
 		GetObjects(ctx context.Context, params request.QueryParam) ([]response.Object, error)
+		UpdateObject(ctx context.Context, obj *request.Object) (interface{}, error)
 	}
 
 	Endpoint struct {

@@ -31,7 +31,7 @@ func (h *Handler) UpdateObject(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
 
-	updatedObj, err := h.endpoint.UpdateObject(ctx, obj)
+	updatedObj, err := h.endpoint.UpdateObject(ctx, &obj)
 	if err != nil {
 		if errors.Is(err, _errors.ErrNotFound) {
 			http.Error(w, "Object not found", http.StatusNotFound)

@@ -10,7 +10,7 @@ import (
 	"github.com/jinzhu/copier"
 )
 
-func (e *Endpoint) UpdateObject(ctx context.Context, obj request.Object) (interface{}, error) {
+func (e *Endpoint) UpdateObject(ctx context.Context, obj *request.Object) (interface{}, error) {
 	var validates = validator.Validate(obj)
 
 	if validates != nil {

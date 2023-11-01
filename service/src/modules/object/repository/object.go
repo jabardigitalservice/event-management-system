@@ -151,10 +151,10 @@ func (r *Repository) filterObjectQuery(params request.QueryParam, binds *[]inter
 	return query
 }
 
-func (r *Repository) UpdateObject(ctx context.Context, obj request.Object) (request.Object, error) {
+func (r *Repository) UpdateObject(ctx context.Context, obj *request.Object) (*request.Object, error) {
 	socialMediaJSON, err := json.Marshal(obj.SocialMedia)
 	if err != nil {
-		return request.Object{}, err
+		return &request.Object{}, err
 	}
 	bannerArray := pq.StringArray(obj.Banner)
 
@@ -169,7 +169,7 @@ func (r *Repository) UpdateObject(ctx context.Context, obj request.Object) (requ
 	)
 
 	if err != nil {
-		return request.Object{}, err
+		return &request.Object{}, err
 	}
 
 	return obj, nil

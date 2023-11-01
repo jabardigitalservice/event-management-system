@@ -169,7 +169,7 @@ func (r *Repository) UpdateObject(ctx context.Context, obj *request.Object) (*re
 	)
 
 	if err != nil {
-		return &request.Object{}, err
+		return nil, err
 	}
 
 	return obj, nil

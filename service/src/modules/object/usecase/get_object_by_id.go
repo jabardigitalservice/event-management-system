@@ -8,10 +8,5 @@ import (
 )
 
 func (uc *Usecase) GetObjectByID(ctx context.Context, id *uuid.UUID) (*entity.Object, error) {
-	object, err := uc.repo.GetObjectByID(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-
-	return object, nil
+	return uc.repo.GetObjectByID(ctx, id)
 }

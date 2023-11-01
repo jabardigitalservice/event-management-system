@@ -33,6 +33,7 @@ export default defineNuxtConfig({
     // Public keys that are exposed to the client
     public: {
       baseURL: process.env.BASE_URL_API,
+      apiKey: process.env.API_KEY,
       baseURLService: process.env.BASE_URL_API_SERVICE,
       apiServiceKey: process.env.API_SERVICE_KEY,
       portalJabarCMSBaseURL: process.env.NUXT_PUBLIC_PORTAL_JABAR_CMS_BASE_URL,

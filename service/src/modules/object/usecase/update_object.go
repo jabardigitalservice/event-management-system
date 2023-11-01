@@ -10,7 +10,7 @@ func (uc *Usecase) UpdateObject(ctx context.Context, obj *request.Object) (*requ
 	updatedObj, err := uc.repo.UpdateObject(ctx, obj)
 
 	if err != nil {
-		return &request.Object{}, err
+		return nil, err
 	}
 
 	return updatedObj, nil

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/google/uuid"
 	_errors "github.com/jabardigitalservice/super-app-services/event/src/error"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/entity"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/transport/handler/http/request"
@@ -173,4 +174,15 @@ func (r *Repository) UpdateObject(ctx context.Context, obj *request.Object) (*re
 	}
 
 	return obj, nil
+}
+
+func (r *Repository) DeleteObject(ctx context.Context, id *uuid.UUID) error {
+	query := "DELETE FROM objects WHERE id = $1"
+
+	_, err := r.db.Master.ExecContext(ctx, query, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

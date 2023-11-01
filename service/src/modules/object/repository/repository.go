@@ -4,6 +4,7 @@ package repository
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/jabardigitalservice/super-app-services/event/src/app"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/entity"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/transport/handler/http/request"
@@ -14,6 +15,7 @@ type (
 		CreateObject(ctx context.Context, obj request.Object) (request.Object, error)
 		GetObjects(ctx context.Context, params request.QueryParam) ([]entity.Object, error)
 		UpdateObject(ctx context.Context, obj *request.Object) (*request.Object, error)
+		DeleteObject(ctx context.Context, id *uuid.UUID) error
 	}
 	Repository struct {
 		app *app.App

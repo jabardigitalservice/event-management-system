@@ -3,6 +3,7 @@ package endpoint
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/jabardigitalservice/super-app-services/event/src/app"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/transport/handler/http/request"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/transport/handler/http/response"
@@ -14,6 +15,7 @@ type (
 		CreateObject(ctx context.Context, objData request.Object) (interface{}, error)
 		GetObjects(ctx context.Context, params request.QueryParam) ([]response.Object, error)
 		UpdateObject(ctx context.Context, obj *request.Object) (interface{}, error)
+		DeleteObject(ctx context.Context, id *uuid.UUID) error
 	}
 
 	Endpoint struct {

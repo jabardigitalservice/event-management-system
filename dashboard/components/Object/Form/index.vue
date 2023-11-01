@@ -178,8 +178,6 @@
     ]
     data.status = 'draft'
 
-    console.log('ini data', data)
-
     try {
       usePostData('/v1/event/object', data).then((res) => {
         if(res.code === '2010800'){

@@ -17,6 +17,7 @@ type (
 		GetObjects(ctx context.Context, params request.QueryParam) ([]response.Object, int, error)
 		GetObjectByID(ctx context.Context, id *uuid.UUID) (*entity.Object, error)
 		UpdateObject(ctx context.Context, obj *request.Object) (interface{}, error)
+		UpdateObjectStatus(ctx context.Context, obj *request.Object) error
 		DeleteObject(ctx context.Context, id *uuid.UUID) error
 	}
 

@@ -152,6 +152,53 @@ func (r *Repository) filterObjectQuery(params request.QueryParam, binds *[]inter
 	return query
 }
 
+func (r *Repository) CountFilteredObjects(ctx context.Context, params request.QueryParam) (int, error) {
+	binds := make([]interface{}, 0)
+
+	query := fmt.Sprintf(`SELECT COUNT(1) FROM objects WHERE 1 = 1 %s`, r.filterObjectCountQuery(params, &binds))
+
+	count, err := r.countfilteredObjects(ctx, query, binds...)
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}
+
+func (r *Repository) countfilteredObjects(ctx context.Context, query string, args ...interface{}) (int, error) {
+	var count int
+	err := r.db.Slave.QueryRowContext(ctx, query, args...).Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}
+
+func (r *Repository) filterObjectCountQuery(params request.QueryParam, binds *[]interface{}) string {
+	var query string
+	counter := 1
+
+	if params.Status != "" {
+		*binds = append(*binds, params.Status)
+		query = fmt.Sprintf(`%s AND status = $%d`, query, counter)
+		counter++
+	}
+	if params.Keyword != "" {
+		*binds = append(*binds, `%`+params.Keyword+`%`)
+		query = fmt.Sprintf(`%s AND (name ILIKE $%d OR description ILIKE $%d)`, query, counter, counter)
+		counter++
+	}
+
+	if params.StartDate != "" && params.EndDate != "" {
+		*binds = append(*binds, params.StartDate, params.EndDate)
+		query = fmt.Sprintf("%s AND (DATE(created_at) BETWEEN $%d AND $%d)", query, counter, counter+1)
+		counter += 2
+	}
+
+	return query
+}
+
 func (r *Repository) GetObjectByID(ctx context.Context, id *uuid.UUID) (*entity.Object, error) {
 	query := `
         SELECT

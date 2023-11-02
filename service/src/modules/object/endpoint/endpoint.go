@@ -14,7 +14,7 @@ import (
 type (
 	EndpointInterface interface {
 		CreateObject(ctx context.Context, objData request.Object) (interface{}, error)
-		GetObjects(ctx context.Context, params request.QueryParam) ([]response.Object, error)
+		GetObjects(ctx context.Context, params request.QueryParam) ([]response.Object, int, error)
 		GetObjectByID(ctx context.Context, id *uuid.UUID) (*entity.Object, error)
 		UpdateObject(ctx context.Context, obj *request.Object) (interface{}, error)
 		DeleteObject(ctx context.Context, id *uuid.UUID) error

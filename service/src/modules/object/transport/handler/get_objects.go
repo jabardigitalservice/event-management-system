@@ -34,15 +34,8 @@ func (h *Handler) GetObjects(w http.ResponseWriter, r *http.Request) {
 
 	page := uint64(queryParam.Page)
 
-	startIndex := (page - 1) * pageSize
-	endIndex := startIndex + pageSize
-
-	if endIndex > totalData {
-		endIndex = totalData
-	}
-
 	response := map[string]interface{}{
-		"data": responseObjects[startIndex:endIndex],
+		"data": responseObjects,
 		"meta": map[string]interface{}{
 			"page":        page,
 			"page_size":   pageSize,

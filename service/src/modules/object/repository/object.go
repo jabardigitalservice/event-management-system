@@ -152,17 +152,17 @@ func (r *Repository) filterObjectQuery(params request.QueryParam, binds *[]inter
 	return query
 }
 
-func (r *Repository) CountFilteredObjects(ctx context.Context, params request.QueryParam) (*int, error) {
+func (r *Repository) CountFilteredObjects(ctx context.Context, params request.QueryParam) (int, error) {
 	binds := make([]interface{}, 0)
 
 	query := fmt.Sprintf(`SELECT COUNT(1) FROM objects WHERE 1 = 1 %s`, r.filterObjectCountQuery(params, &binds))
 
 	count, err := r.countfilteredObjects(ctx, query, binds...)
 	if err != nil {
-		return nil, err
+		return 0, err
 	}
 
-	return &count, nil
+	return count, nil
 }
 
 func (r *Repository) countfilteredObjects(ctx context.Context, query string, args ...interface{}) (int, error) {
@@ -195,8 +195,6 @@ func (r *Repository) filterObjectCountQuery(params request.QueryParam, binds *[]
 		query = fmt.Sprintf("%s AND (DATE(created_at) BETWEEN $%d AND $%d)", query, counter, counter+1)
 		counter += 2
 	}
-
-	query += ";"
 
 	return query
 }

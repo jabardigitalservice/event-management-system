@@ -8,10 +8,10 @@ import (
 	"github.com/jinzhu/copier"
 )
 
-func (e *Endpoint) GetObjects(ctx context.Context, params request.QueryParam) ([]response.Object, *int, error) {
+func (e *Endpoint) GetObjects(ctx context.Context, params request.QueryParam) ([]response.Object, int, error) {
 	objects, count, err := e.usecase.GetObjects(ctx, params)
 	if err != nil {
-		return nil, nil, err
+		return nil, 0, err
 	}
 
 	responseObjects := make([]response.Object, len(objects))
@@ -19,7 +19,7 @@ func (e *Endpoint) GetObjects(ctx context.Context, params request.QueryParam) ([
 	for i, obj := range objects {
 		responseObj := &response.Object{}
 		if err := copier.Copy(responseObj, obj); err != nil {
-			return nil, nil, err
+			return nil, 0, err
 		}
 		responseObjects[i] = *responseObj
 	}

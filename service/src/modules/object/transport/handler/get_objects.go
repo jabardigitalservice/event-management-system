@@ -26,7 +26,7 @@ func (h *Handler) GetObjects(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	totalData := uint64(*count)
+	totalData := uint64(count)
 
 	pageSize := uint64(queryParam.PageSize)
 

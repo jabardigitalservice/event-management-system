@@ -14,6 +14,7 @@ type (
 	RepositoryInterface interface {
 		CreateObject(ctx context.Context, obj request.Object) (request.Object, error)
 		GetObjects(ctx context.Context, params request.QueryParam) ([]entity.Object, error)
+		CountFilteredObjects(ctx context.Context, params request.QueryParam) (*int, error)
 		GetObjectByID(ctx context.Context, id *uuid.UUID) (*entity.Object, error)
 		UpdateObject(ctx context.Context, obj *request.Object) (*request.Object, error)
 		DeleteObject(ctx context.Context, id *uuid.UUID) error

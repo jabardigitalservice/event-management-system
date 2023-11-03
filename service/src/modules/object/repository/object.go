@@ -270,6 +270,17 @@ func (r *Repository) UpdateObject(ctx context.Context, obj *request.Object) (*re
 	return obj, nil
 }
 
+func (r *Repository) UpdateObjectStatus(ctx context.Context, obj *request.Object) error {
+	query := `
+        UPDATE "objects" SET "status" = $2, "updated_at" = $3
+        WHERE "id" = $1
+    `
+
+	_, err := r.db.Master.ExecContext(ctx, query, obj.ID, obj.Status, time.Now())
+
+	return err
+}
+
 func (r *Repository) DeleteObject(ctx context.Context, id *uuid.UUID) error {
 	query := "DELETE FROM objects WHERE id = $1"
 

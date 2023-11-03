@@ -26,6 +26,7 @@ func Init(app *app.App, endpoint endpoint.EndpointInterface) *chi.Mux {
 	router.Get("/object", h.GetObjects)
 	router.Get("/object/{id}", h.GetObjectByID)
 	router.Put("/object/{id}", h.UpdateObject)
+	router.Patch("/object/{id}", h.UpdateObjectStatus)
 	router.Delete("/object/{id}", h.DeleteObject)
 
 	return router

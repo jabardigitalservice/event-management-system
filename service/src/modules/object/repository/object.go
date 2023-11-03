@@ -234,6 +234,8 @@ func (r *Repository) GetObjectByID(ctx context.Context, id *uuid.UUID) (*entity.
 		&result.UpdatedAt,
 	)
 
+	result.Banner = []string(banner)
+
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, _errors.ErrNotFound

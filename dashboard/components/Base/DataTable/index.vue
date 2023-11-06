@@ -58,7 +58,7 @@
         >
       </div>
       <div class="mr-2 basis-1/4">
-        <USelectMenu v-model="selectedLimit" :options="listLimitOptions" />
+        <USelectMenu v-model="selectedLimit" :options="listLimit" />
       </div>
       <div class="basis-1/2 self-center">
         <span class="text-sm font-semibold text-gray-500 dark:text-white"
@@ -67,11 +67,11 @@
       </div>
     </div>
     <UPagination
-      v-model="currentPage"
+      v-model="page"
       class="mb-10 mt-5 justify-end"
-      :page-count="5"
+      :page-count="selectedLimit"
       :total="total"
-      :value="currentPage"
+      :value="page"
       :prev-button="{
         icon: 'i-heroicons-arrow-small-left-20-solid',
         label: 'Prev',
@@ -83,7 +83,7 @@
         label: 'Next',
         color: 'gray',
       }"
-      @click="onClickPagination(currentPage)"
+      @click="onClickPagination(page)"
     />
     <UNotifications />
   </div>
@@ -120,7 +120,7 @@
     baseRoute: {
       type: String,
       default: '',
-    }
+    },
   })
 
   const activePage = useActivePage()
@@ -128,21 +128,21 @@
   const itemTable = ref()
   const page: Ref<number> = ref(1)
   const loading = ref(true)
-  let currentPage: number = 1
   let total: number = 1
   const listLimit = [5, 10, 25, 30]
   const selectedLimit = ref(listLimit[0])
-  const listLimitOptions = listLimit.map((value) => ({
-    label: value.toString(),
-    value: value.toString(),
-  }))
-  
+
   async function fetchData() {
     loading.value = true
-    const result = (await useFetchData(props.path, page, search)) as ApiResponse
-    currentPage = result.current_page
-    itemTable.value = result.data
-    total = result.total
+    const result = (await useFetchData(
+      props.path,
+      page,
+      search,
+      selectedLimit,
+    )) as ApiResponse
+    page.value = result.data.meta.page
+    itemTable.value = result.data.data
+    total = result.data.meta.total_data
     loading.value = false
   }
 
@@ -153,6 +153,10 @@
   fetchData()
 
   watch([page, search], () => {
+    fetchData()
+  })
+  watch([selectedLimit], () => {
+    page.value = 1
     fetchData()
   })
 </script>

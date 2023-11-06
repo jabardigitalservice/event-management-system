@@ -7,6 +7,7 @@ export const useFetchData = async (
   selectedLimit?: Ref<number>,
 ) => {
   const config = useRuntimeConfig()
+  const session = await getSession()
   return new Promise(async (resolve, reject) => {
     try {
       await useFetch(config.public.baseURL.concat(`${path}`), {
@@ -101,6 +102,7 @@ export const useFetchData = async (
 
 export const useDeleteData = async (path: string, id?: Ref<string>) => {
   const config = useRuntimeConfig()
+  const session = await getSession()
   return new Promise(async (resolve, reject) => {
     try {
       await useFetch(config.public.baseURL.concat(`${path}/${id?.value}`), {
@@ -164,6 +166,7 @@ export const usePostData = async (path: string, body: object) => {
 
 export const useUpdatePatchData = async (path: string, id?: Ref<string>, body?: object) => {
   const config = useRuntimeConfig()
+  const session = await getSession()
   return new Promise(async (resolve, reject) => {
     try {
       await useFetch(config.public.baseURL.concat(`${path}/${id?.value}`), {

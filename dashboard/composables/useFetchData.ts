@@ -1,8 +1,6 @@
 import { Ref } from 'vue'
 const { getSession } = useAuth()
 
-const session = await getSession()
-
 export const useFetchData = async (
   path: string,
   page?: Ref<number>,
@@ -166,6 +164,7 @@ export const usePostServicePhoto = async (body: object) => {
 
 export const usePostData = async (path: string, body: object) => {
   const config = useRuntimeConfig()
+  const session = await getSession()
   return new Promise(async (resolve, reject) => {
     try {
       await useFetch(config.public.baseURL.concat(`${path}`), {

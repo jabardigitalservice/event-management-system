@@ -12,6 +12,7 @@ import (
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/entity"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/transport/handler/http/request"
 	"github.com/lib/pq"
+	"github.com/spf13/viper"
 )
 
 func (r *Repository) CreateObject(ctx context.Context, obj request.Object) (request.Object, error) {
@@ -40,6 +41,8 @@ func (r *Repository) CreateObject(ctx context.Context, obj request.Object) (requ
 func (r *Repository) GetObjects(ctx context.Context, params request.QueryParam) ([]entity.Object, error) {
 	binds := make([]interface{}, 0)
 
+	storageURL := viper.GetString("STORAGE_URL")
+
 	var query = fmt.Sprintf(`SELECT
         id,
         name,
@@ -60,8 +63,15 @@ func (r *Repository) GetObjects(ctx context.Context, params request.QueryParam) 
 	if err != nil {
 		return nil, err
 	}
-	return result, nil
 
+	for i := range result {
+		result[i].Logo = storageURL + result[i].Logo
+		for j := range result[i].Banner {
+			result[i].Banner[j] = storageURL + result[i].Banner[j]
+		}
+	}
+
+	return result, nil
 }
 
 func (r *Repository) getObjects(ctx context.Context, query string, args ...interface{}) ([]entity.Object, error) {
@@ -216,6 +226,8 @@ func (r *Repository) GetObjectByID(ctx context.Context, id *uuid.UUID) (*entity.
         FROM objects
         WHERE id = $1`
 
+	storageURL := viper.GetString("STORAGE_URL")
+
 	var result entity.Object
 	var banner pq.StringArray
 	var socialMediaJSON []byte
@@ -234,7 +246,11 @@ func (r *Repository) GetObjectByID(ctx context.Context, id *uuid.UUID) (*entity.
 		&result.UpdatedAt,
 	)
 
+	result.Logo = storageURL + result.Logo
 	result.Banner = []string(banner)
+	for i := range banner {
+		banner[i] = storageURL + banner[i]
+	}
 
 	if err != nil {
 		if err == sql.ErrNoRows {

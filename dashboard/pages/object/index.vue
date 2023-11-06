@@ -59,12 +59,12 @@
   const idItems = ref('')
   const fetchObject = ref()
   const headerTable = objectHeaders
-  const urlAPI: string = '/object'
+  const urlAPI: string = '/v1/event/object'
 
   const statusColors: Record<string, StatusColor> = {
-    draft: { color: 'red', variant: 'soft' },
-    published: { color: 'green', variant: 'soft' },
-    unpublished: { color: 'yellow', variant: 'soft' },
+    draft: { color: 'red', variant: 'subtle' },
+    published: { color: 'green', variant: 'subtle' },
+    unpublished: { color: 'orange', variant: 'subtle' },
   }
   const itemActions = (
     items: { id: string; status: string },
@@ -93,13 +93,13 @@
       ],
     ]
 
-    if (items.status === 'draft') {
+    if (items.status === 'draft' || items.status === 'unpublished') {
       actions.push([
         {
           label: 'Publish',
           icon: 'i-heroicons-check-badge-20-solid',
           iconClass: 'bg-green-500',
-          click: () => openModalStatus(items.id, 'Publish'),
+          click: () => openModalStatus(items, fetch, 'published'),
         },
       ])
     } else if (items.status === 'published') {
@@ -108,7 +108,7 @@
           label: 'Unpublish',
           icon: 'i-heroicons-x-circle-20-solid',
           iconClass: 'bg-green-500',
-          click: () => openModalStatus(items.id, 'Unpublish'),
+          click: () => openModalStatus(items, fetch, 'unpublished'),
         },
       ])
     }
@@ -122,9 +122,10 @@
     fetchObject.value = fetch
   }
 
-  function openModalStatus(row: string, status: string) {
+  function openModalStatus(row: {id: string}, fetch: object, status: string) {
     statusObject.value = status
-    idItems.value = row
+    idItems.value = row.id
+    fetchObject.value = fetch
     isOpenObject.value = true
   }
 
@@ -137,6 +138,7 @@
       timeout: 2000,
       callback: async () => {
         if (!cancelled) {
+          await useDeleteData(urlAPI, idItems)
           fetchObject.value()
           toast.add({
             title: 'data successfully deleted',
@@ -165,7 +167,12 @@
     isOpenDelete.value = false
   }
 
-  function updateStatus() {
+  async function updateStatus() {
+    const status = {
+      status: statusObject.value
+    }
+    await useUpdatePatchData(urlAPI, idItems, status)
+    fetchObject.value()
     toast.add({
       icon: 'i-heroicons-exclamation-triangle',
       title: 'data successfully Update',

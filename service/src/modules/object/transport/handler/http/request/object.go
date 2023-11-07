@@ -71,14 +71,6 @@ func GetRequestParam(r *http.Request) QueryParam {
 
 	offset := (page - 1) * limit
 
-	if startDate == "" || endDate == "" {
-		today := time.Now()
-		dateFormat := "2006-01-02 15:04:05"
-		beginningOfDay := time.Date(today.Year(), today.Month(), today.Day(), 0, 0, 0, 0, today.Location())
-		startDate = time.Date(today.Year(), today.Month(), today.Day(), 0, 0, 0, 0, today.Location()).Format(dateFormat)
-		endDate = beginningOfDay.Add(24 * time.Hour).Add(-time.Second).Format(dateFormat)
-	}
-
 	request := QueryParam{
 		Page:      uint64(page),
 		PageSize:  uint64(limit),

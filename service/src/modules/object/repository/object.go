@@ -41,6 +41,7 @@ func (r *Repository) GetObjects(ctx context.Context, params request.QueryParam) 
 	binds := make([]interface{}, 0)
 
 	storageURL := r.app.GetStorageBaseUrl()
+	storageURL = "/" + storageURL
 
 	var query = fmt.Sprintf(`SELECT
         id,
@@ -226,6 +227,7 @@ func (r *Repository) GetObjectByID(ctx context.Context, id *uuid.UUID) (*entity.
         WHERE id = $1`
 
 	storageURL := r.app.GetStorageBaseUrl()
+	storageURL = "/" + storageURL
 
 	var result entity.Object
 	var banner pq.StringArray

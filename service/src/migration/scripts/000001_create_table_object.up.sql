@@ -5,12 +5,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE objects (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name varchar(100),
-    province text,
-    city text,
-    district text,
-    village text,
     address text,
-    google_map text,
     description text,
     banner text[],
     logo text,

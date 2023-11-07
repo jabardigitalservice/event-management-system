@@ -30,6 +30,11 @@ type (
 		Status      Status         `json:"status" validate:"required"`
 		CreatedAt   time.Time      `json:"created_at"`
 		UpdatedAt   time.Time      `json:"updated_at"`
+		Province    string         `json:"province" validate:"required"`
+		City        string         `json:"city" validate:"required"`
+		District    string         `json:"district" validate:"required"`
+		Village     string         `json:"village" validate:"required"`
+		Google_map  string         `json:"google_map" validate:"required"`
 	}
 
 	QueryParam struct {

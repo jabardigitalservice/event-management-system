@@ -21,13 +21,13 @@ func (r *Repository) CreateObject(ctx context.Context, obj request.Object) (requ
 	}
 
 	query := `
-        INSERT INTO "objects" ("name", "address", "description", "banner", "logo", "social_media", "organizer", "status", "created_at", "updated_at")
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+        INSERT INTO "objects" ("name", "address", "description", "banner", "logo", "social_media", "organizer", "status", "created_at", "updated_at", "province", "city", "district", "village", "google_map")
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
         RETURNING "id", "created_at", "updated_at"
     `
 	err = r.db.Slave.QueryRowContext(ctx,
 		query,
-		obj.Name, obj.Address, obj.Description, pq.Array(obj.Banner), obj.Logo, socialMediaJSON, obj.Organizer, obj.Status, time.Now(), time.Now(),
+		obj.Name, obj.Address, obj.Description, pq.Array(obj.Banner), obj.Logo, socialMediaJSON, obj.Organizer, obj.Status, time.Now(), time.Now(), obj.Province, obj.City, obj.District, obj.Village, obj.Google_map,
 	).Scan(&obj.ID, &obj.CreatedAt, &obj.UpdatedAt)
 
 	if err != nil {
@@ -54,7 +54,12 @@ func (r *Repository) GetObjects(ctx context.Context, params request.QueryParam) 
         organizer,
         status,
         created_at,
-        updated_at
+        updated_at,
+		province,
+		city,
+		district,
+		village, 
+		google_map
     FROM objects
     WHERE 1 = 1 %s `,
 		r.filterObjectQuery(params, &binds))
@@ -104,6 +109,11 @@ func (r *Repository) getObjects(ctx context.Context, query string, args ...inter
 			&object.Status,
 			&object.CreatedAt,
 			&object.UpdatedAt,
+			&object.Province,
+			&object.City,
+			&object.District,
+			&object.Village,
+			&object.Google_map,
 		); err != nil {
 			return nil, err
 		}
@@ -222,7 +232,12 @@ func (r *Repository) GetObjectByID(ctx context.Context, id *uuid.UUID) (*entity.
             organizer,
             status,
             created_at,
-            updated_at
+            updated_at,
+			province,
+			city,
+			district,
+			village, 
+			google_map
         FROM objects
         WHERE id = $1`
 
@@ -245,6 +260,11 @@ func (r *Repository) GetObjectByID(ctx context.Context, id *uuid.UUID) (*entity.
 		&result.Status,
 		&result.CreatedAt,
 		&result.UpdatedAt,
+		&result.Province,
+		&result.City,
+		&result.District,
+		&result.Village,
+		&result.Google_map,
 	)
 
 	result.Logo = storageURL + result.Logo
@@ -273,13 +293,14 @@ func (r *Repository) UpdateObject(ctx context.Context, obj *request.Object) (*re
 	bannerArray := pq.StringArray(obj.Banner)
 
 	query := `
-        UPDATE "objects" SET "name" = $2, "address" = $3, "description" = $4, "banner" = $5, "logo" = $6, "social_media" = $7, "organizer" = $8, "status" = $9, "updated_at" = $10
+        UPDATE "objects" SET "name" = $2, "address" = $3, "description" = $4, "banner" = $5, "logo" = $6, "social_media" = $7, "organizer" = $8, "status" = $9, "updated_at" = $10 ,"province" = $11, 
+		"city" = $12, "district" = $13, "village" = $14, "google_map" = $15
         WHERE "id" = $1
     `
 
 	_, err = r.db.Master.ExecContext(ctx,
 		query,
-		obj.ID, obj.Name, obj.Address, obj.Description, bannerArray, obj.Logo, socialMediaJSON, obj.Organizer, obj.Status, time.Now(),
+		obj.ID, obj.Name, obj.Address, obj.Description, bannerArray, obj.Logo, socialMediaJSON, obj.Organizer, obj.Status, time.Now(), obj.Province, obj.City, obj.District, obj.Village, obj.Google_map,
 	)
 
 	if err != nil {

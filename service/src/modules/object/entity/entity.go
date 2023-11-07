@@ -27,5 +27,10 @@ type (
 		Status      Status
 		CreatedAt   time.Time
 		UpdatedAt   time.Time
+		Province    string
+		City        string
+		District    string
+		Village     string
+		Google_map  string
 	}
 )

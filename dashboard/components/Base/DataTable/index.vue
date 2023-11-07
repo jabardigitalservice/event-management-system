@@ -40,6 +40,9 @@
         :columns="props.headers"
         :rows="itemTable"
       >
+        <template #name-data="{ row }">
+          <slot name="customeName" :items="row" />
+        </template>
         <template #status-data="{ row }">
           <slot name="customeStatus" :items="row" />
         </template>

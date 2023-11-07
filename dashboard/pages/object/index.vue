@@ -1,6 +1,22 @@
 <template>
   <div>
     <BaseDataTable :headers="headerTable" :path="urlAPI" base-route="/object">
+      <template #customeName="{ items }">
+        <div class="flex flex-row">
+          <div class="basis-[14%]">
+            <img
+              :src= items.logo
+              :alt=items.name
+              width="20"
+              height="20"
+              class="self-start"
+            />
+          </div>
+          <div class="basis-1/2">
+            {{ items.name }}
+          </div>
+        </div>
+      </template>
       <template #customeStatus="{ items }">
         <UBadge
           :color="statusColors[items.status].color"
@@ -32,10 +48,10 @@
     />
     <BaseModal
       :open-modal="isOpenObject"
-      :title-modal="'Confirm to ' + statusObject"
-      :desc-modal="'Are you sure you want to ' + statusObject"
+      :title-modal="'Confirm to ' + titleObject"
+      :desc-modal="'Are you sure you want to ' + titleObject"
       icon-modal="i-heroicons-question-mark-circle"
-      :text-confirm="statusObject"
+      :text-confirm="titleObject"
       type-modal="warning"
       @close="isOpenObject = false"
       @confirm="updateStatus()"
@@ -56,6 +72,7 @@
   const isOpenDelete = ref(false)
   const isOpenObject = ref(false)
   const statusObject = ref('')
+  const titleObject = ref('')
   const idItems = ref('')
   const fetchObject = ref()
   const headerTable = objectHeaders
@@ -124,6 +141,7 @@
 
   function openModalStatus(row: {id: string}, fetch: object, status: string) {
     statusObject.value = status
+    titleObject.value = (statusObject.value === 'published') ? 'Publish': 'Unpublish'
     idItems.value = row.id
     fetchObject.value = fetch
     isOpenObject.value = true

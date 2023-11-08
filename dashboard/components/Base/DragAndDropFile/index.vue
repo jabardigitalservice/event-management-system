@@ -66,8 +66,14 @@
             >
               {{ detailDragAndDrop.informationFormatCompatible }}.
             </p>
+            <p
+              v-if="fileResolutionIsCompatible()"
+              class="font-lato text-[11px] font-bold text-red-600"
+            >
+              {{ `Resolusi gambar max ${props.maxResolution}px` }}
+            </p>
           </div>
-
+          
           <div class="flex flex-row">
             <button class="w-4" @click="resetDataFile">
               <NuxtIcon name="common/trash" class="h-4 w-4 text-red-600" />
@@ -135,6 +141,10 @@
       type: String,
       default: '',
     },
+    maxResolution: {
+      type: Number,
+      default: 0,
+    },
   })
 
   const emit = defineEmits(['previewFile'])
@@ -148,6 +158,8 @@
     data: '',
     fileSize: '',
     fileCorrect: false,
+    height: 0,
+    width: 0
   })
   const fileInputIsChange = ref(false)
   const proggresBarIsSuccess = ref(false)
@@ -161,6 +173,12 @@
   const onChangeUpload = (e) => {
     if (e.target.files[0]) {
       files.value = e.target.files[0]
+      let img = new Image()
+      img.src = window.URL.createObjectURL(e.target.files[0])
+      img.onload = () => {
+        dataFiles.value.width = img.width
+        dataFiles.value.height = img.height
+      }
       dataFiles.value.name = files.value.name
       dataFiles.value.mimeType = files.value.type
       dataFiles.value.fileSize = convertSize(files.value.size)
@@ -202,7 +220,7 @@
     element.classList.remove('bg-gray-200')
   }
 
-  const convertSize = (sizeFile: string) => {
+  const convertSize = (sizeFile: number) => {
     if (sizeFile === 0) {
       return 'n/a'
     }
@@ -277,6 +295,16 @@
 
   const fileSizeIsCompatible = () => {
     return files.value.size <= props.detailDragAndDrop.maxSizeFile
+  }
+
+  const fileResolutionIsCompatible = () => {
+    const validate = dataFiles.value.width > props.maxResolution && dataFiles.value.height > props.maxResolution
+    if(validate){
+      fileIsCorrect.value = false
+    }else{ 
+      fileIsCorrect.value = true
+    }
+    return validate
   }
 
   const formatFileIsCompatible = () => {

@@ -8,6 +8,7 @@ type Config struct {
 	DBSourceMaster string
 	DBSourceSlave  string
 	DBDriver       string
+	AppVersion     string
 }
 
 func LoadConfig() (Config, error) {
@@ -18,6 +19,7 @@ func LoadConfig() (Config, error) {
 	config.DBSourceMaster = viper.GetString("DB_SOURCE_MASTER")
 	config.DBSourceSlave = viper.GetString("DB_SOURCE_SLAVE")
 	config.DBDriver = viper.GetString("DB_DRIVER")
+	config.AppVersion = viper.GetString("APP_VERSION")
 
 	return config, nil
 }

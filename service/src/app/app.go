@@ -8,7 +8,6 @@ import (
 	"github.com/fazpass/goliath/v3/router"
 	"github.com/go-chi/chi"
 	"github.com/jabardigitalservice/golog/logger"
-	gologlogger "github.com/jabardigitalservice/golog/logger"
 	"github.com/jabardigitalservice/super-app-services/event/src/constant"
 	"github.com/spf13/viper"
 	"go.elastic.co/apm/module/apmhttp"
@@ -82,8 +81,8 @@ func (app *App) GetStorageBaseUrl() string {
 }
 
 func (app *App) SetLogger(module string, method string, err error, additionalInfo map[string]interface{}) {
-	app.GetLogger().Error(&gologlogger.LoggerData{
-		Category:       gologlogger.LoggerApp,
+	app.GetLogger().Error(&logger.LoggerData{
+		Category:       logger.LoggerApp,
 		Service:        constant.ServiceName,
 		Module:         module,
 		Method:         method,

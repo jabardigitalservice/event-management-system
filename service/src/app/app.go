@@ -80,17 +80,6 @@ func (app *App) GetStorageBaseUrl() string {
 	return viper.GetString("STORAGE_BASE_URL")
 }
 
-func (app *App) SetLogger(module string, method string, err error, additionalInfo map[string]interface{}) {
-	app.GetLogger().Error(&logger.LoggerData{
-		Category:       logger.LoggerApp,
-		Service:        constant.ServiceName,
-		Module:         module,
-		Method:         method,
-		Version:        app.GetVersion(),
-		AdditionalInfo: additionalInfo,
-	}, err)
-}
-
 func (app *App) RunHttp() error {
 	var hostname = viper.GetString("APP_HOSTNAME")
 	if hostname == "" {

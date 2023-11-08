@@ -249,3 +249,14 @@ func (r *Repository) UpdateOrganization(ctx context.Context, obj *request.Organi
 
 	return obj, nil
 }
+
+func (r *Repository) DeleteOrganization(ctx context.Context, id *uuid.UUID) error {
+	query := "DELETE FROM organizations WHERE id = $1"
+
+	_, err := r.db.Master.ExecContext(ctx, query, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

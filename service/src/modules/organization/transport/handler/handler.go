@@ -6,7 +6,7 @@ import (
 	"github.com/jabardigitalservice/super-app-services/event/src/app"
 	_errors "github.com/jabardigitalservice/super-app-services/event/src/error"
 	helperresponse "github.com/jabardigitalservice/super-app-services/event/src/helper/http/response"
-	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/endpoint"
+	"github.com/jabardigitalservice/super-app-services/event/src/modules/organization/endpoint"
 	httpresponse "github.com/jabardigitalservice/super-app-services/event/src/response/http"
 )
 

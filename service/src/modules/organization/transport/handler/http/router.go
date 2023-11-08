@@ -6,8 +6,8 @@ import (
 	gologlogger "github.com/jabardigitalservice/golog/logger"
 	"github.com/jabardigitalservice/super-app-services/event/src/app"
 	"github.com/jabardigitalservice/super-app-services/event/src/constant"
-	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/endpoint"
-	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/transport/handler"
+	"github.com/jabardigitalservice/super-app-services/event/src/modules/organization/endpoint"
+	"github.com/jabardigitalservice/super-app-services/event/src/modules/organization/transport/handler"
 )
 
 func Init(app *app.App, endpoint endpoint.EndpointInterface) *chi.Mux {
@@ -18,16 +18,11 @@ func Init(app *app.App, endpoint endpoint.EndpointInterface) *chi.Mux {
 
 	router.Use(middleware.Logger(app.GetLogger(), &gologlogger.LoggerData{
 		Service: constant.ServiceName,
-		Module:  constant.ModuleNameobject,
+		Module:  constant.ModuleNameorganization,
 		Version: app.GetVersion(),
 	}, false))
 
-	router.Post("/", h.CreateObject)
-	router.Get("/", h.GetObjects)
-	router.Get("/{id}", h.GetObjectByID)
-	router.Put("/{id}", h.UpdateObject)
-	router.Patch("/{id}", h.UpdateObjectStatus)
-	router.Delete("/{id}", h.DeleteObject)
+	router.Post("/", h.CreateOrganization)
 
 	return router
 }

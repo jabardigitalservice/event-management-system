@@ -8,7 +8,8 @@ const (
 	HeaderUserIDKey    = "X-User-ID"
 	HeaderUserName     = "X-User-Name"
 
-	ModuleNameobject = "object"
+	ModuleNameobject       = "object"
+	ModuleNameorganization = "organization"
 
 	ServiceName = "event"
 

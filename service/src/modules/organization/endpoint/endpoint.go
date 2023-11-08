@@ -3,6 +3,7 @@ package endpoint
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/jabardigitalservice/super-app-services/event/src/app"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/organization/transport/handler/http/request"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/organization/transport/handler/http/response"
@@ -13,6 +14,7 @@ type (
 	EndpointInterface interface {
 		CreateOrganization(ctx context.Context, objDatsa request.Organization) (interface{}, error)
 		GetOrganizations(ctx context.Context, params request.QueryParam) ([]response.Organization, int, error)
+		GetOrganizationByID(ctx context.Context, id *uuid.UUID) (interface{}, error)
 	}
 
 	Endpoint struct {

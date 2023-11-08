@@ -16,6 +16,7 @@ type (
 		GetOrganizations(ctx context.Context, params request.QueryParam) ([]entity.Organization, int, error)
 		GetOrganizationByID(ctx context.Context, id *uuid.UUID) (*entity.Organization, error)
 		UpdateOrganization(ctx context.Context, obj *request.Organization) (*request.Organization, error)
+		DeleteOrganization(ctx context.Context, id *uuid.UUID) error
 	}
 
 	Usecase struct {

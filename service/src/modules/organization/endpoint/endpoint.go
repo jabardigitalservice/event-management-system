@@ -16,6 +16,7 @@ type (
 		GetOrganizations(ctx context.Context, params request.QueryParam) ([]response.Organization, int, error)
 		GetOrganizationByID(ctx context.Context, id *uuid.UUID) (interface{}, error)
 		UpdateOrganization(ctx context.Context, obj *request.Organization) (interface{}, error)
+		DeleteOrganization(ctx context.Context, id *uuid.UUID) error
 	}
 
 	Endpoint struct {

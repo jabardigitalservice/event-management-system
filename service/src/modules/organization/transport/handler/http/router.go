@@ -23,6 +23,7 @@ func Init(app *app.App, endpoint endpoint.EndpointInterface) *chi.Mux {
 	}, false))
 
 	router.Post("/", h.CreateOrganization)
+	router.Get("/", h.GetOrganizations)
 
 	return router
 }

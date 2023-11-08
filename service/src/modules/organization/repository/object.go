@@ -2,9 +2,13 @@ package repository
 
 import (
 	"context"
+	"database/sql"
+	"fmt"
 	"time"
 
+	_errors "github.com/jabardigitalservice/super-app-services/event/src/error"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/organization/entity"
+	"github.com/jabardigitalservice/super-app-services/event/src/modules/organization/transport/handler/http/request"
 )
 
 func (r *Repository) CreateOrganization(ctx context.Context, obj entity.Organization) (*entity.Organization, error) {
@@ -33,4 +37,152 @@ func (r *Repository) CreateOrganization(ctx context.Context, obj entity.Organiza
 	}
 
 	return &obj, nil
+}
+
+func (r *Repository) GetOrganizations(ctx context.Context, params request.QueryParam) ([]entity.Organization, error) {
+	binds := make([]interface{}, 0)
+
+	storageURL := r.app.GetStorageBaseUrl()
+	storageURL = storageURL + "/"
+
+	var query = fmt.Sprintf(`SELECT
+        id,
+        name,
+        email,
+        address,
+        description,
+        logo,
+        created_at,
+        updated_at
+    FROM organizations
+    WHERE 1 = 1 %s `,
+		r.filterOrganizationQuery(params, &binds))
+
+	result, err := r.getOrganizations(ctx, query, binds...)
+	if err != nil {
+		return nil, err
+	}
+
+	for i := range result {
+		result[i].Logo = storageURL + result[i].Logo
+	}
+
+	return result, nil
+}
+
+func (r *Repository) getOrganizations(ctx context.Context, query string, args ...interface{}) ([]entity.Organization, error) {
+	rows, err := r.db.Slave.QueryContext(ctx, query, args...)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, _errors.ErrNotFound
+		}
+		return nil, err
+	}
+	defer rows.Close()
+
+	result := make([]entity.Organization, 0)
+
+	for rows.Next() {
+		organization := new(entity.Organization)
+
+		if err := rows.Scan(
+			&organization.Id,
+			&organization.Name,
+			&organization.Email,
+			&organization.Address,
+			&organization.Description,
+			&organization.Logo,
+			&organization.CreatedAt,
+			&organization.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+
+		result = append(result, *organization)
+	}
+
+	return result, nil
+}
+
+func (r *Repository) filterOrganizationQuery(params request.QueryParam, binds *[]interface{}) string {
+	var query string
+	counter := 1
+
+	if params.Status != "" {
+		*binds = append(*binds, params.Status)
+		query = fmt.Sprintf(`%s AND status = $%d`, query, counter)
+		counter++
+	}
+	if params.Keyword != "" {
+		*binds = append(*binds, "%"+params.Keyword+"%")
+		query = fmt.Sprintf(`%s AND (name ILIKE $%d OR description ILIKE $%d)`, query, counter, counter)
+		counter++
+	}
+
+	sortBy := " ORDER BY created_at DESC"
+	if params.SortBy != "" {
+		sortBy = fmt.Sprintf(" ORDER BY %s %s", params.SortBy, params.SortOrder)
+	}
+
+	query += sortBy
+
+	if params.PageSize > 0 {
+		*binds = append(*binds, params.PageSize)
+		query = fmt.Sprintf(`%s LIMIT $%d`, query, counter)
+		counter++
+	}
+
+	if params.Offset > 0 {
+		*binds = append(*binds, params.Offset)
+		query = fmt.Sprintf(`%s OFFSET $%d`, query, counter)
+	}
+
+	return query
+}
+
+func (r *Repository) CountFilteredOrganizations(ctx context.Context, params request.QueryParam) (int, error) {
+	binds := make([]interface{}, 0)
+
+	query := fmt.Sprintf(`SELECT COUNT(1) FROM organizations WHERE 1 = 1 %s`, r.filterOrganizationCountQuery(params, &binds))
+
+	count, err := r.countFilteredOrganizations(ctx, query, binds...)
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}
+
+func (r *Repository) countFilteredOrganizations(ctx context.Context, query string, args ...interface{}) (int, error) {
+	var count int
+	err := r.db.Slave.QueryRowContext(ctx, query, args...).Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}
+
+func (r *Repository) filterOrganizationCountQuery(params request.QueryParam, binds *[]interface{}) string {
+	var query string
+	counter := 1
+
+	if params.Status != "" {
+		*binds = append(*binds, params.Status)
+		query = fmt.Sprintf(`%s AND status = $%d`, query, counter)
+		counter++
+	}
+	if params.Keyword != "" {
+		*binds = append(*binds, `%`+params.Keyword+`%`)
+		query = fmt.Sprintf(`%s AND (name ILIKE $%d OR description ILIKE $%d)`, query, counter, counter)
+		counter++
+	}
+
+	if params.StartDate != "" && params.EndDate != "" {
+		*binds = append(*binds, params.StartDate, params.EndDate)
+		query = fmt.Sprintf("%s AND (DATE(created_at) BETWEEN $%d AND $%d)", query, counter, counter+1)
+		counter += 2
+	}
+
+	return query
 }

@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/go-chi/chi"
@@ -22,7 +21,6 @@ func (h *Handler) GetOrganizationByID(w http.ResponseWriter, r *http.Request) {
 
 	Organization, err := h.endpoint.GetOrganizationByID(ctx, &id)
 	if err != nil {
-		log.Printf("error :%v", err)
 		RenderError(w, r, h, err, nil)
 		return
 	}

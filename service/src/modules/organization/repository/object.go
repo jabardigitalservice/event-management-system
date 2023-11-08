@@ -19,7 +19,7 @@ func (r *Repository) CreateOrganization(ctx context.Context, obj entity.Organiza
     `
 
 	_, err := r.db.Slave.ExecContext(ctx, insertQuery,
-		obj.Name, obj.Email, obj.Address, obj.Phone_number, obj.Description, obj.Logo, time.Now(), time.Now())
+		obj.Name, obj.Email, obj.Address, obj.PhoneNumber, obj.Description, obj.Logo, time.Now(), time.Now())
 
 	if err != nil {
 		return nil, err
@@ -92,7 +92,7 @@ func (r *Repository) getOrganizations(ctx context.Context, query string, args ..
 			&organization.Name,
 			&organization.Email,
 			&organization.Address,
-			&organization.Phone_number,
+			&organization.PhoneNumber,
 			&organization.Description,
 			&organization.Logo,
 			&organization.CreatedAt,
@@ -214,7 +214,7 @@ func (r *Repository) GetOrganizationByID(ctx context.Context, id *uuid.UUID) (*e
 		&result.Id,
 		&result.Name,
 		&result.Address,
-		&result.Phone_number,
+		&result.PhoneNumber,
 		&result.Email,
 		&result.Description,
 		&result.Logo,

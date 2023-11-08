@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/google/uuid"
 	_errors "github.com/jabardigitalservice/super-app-services/event/src/error"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/organization/entity"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/organization/transport/handler/http/request"
@@ -18,7 +19,7 @@ func (r *Repository) CreateOrganization(ctx context.Context, obj entity.Organiza
     `
 
 	_, err := r.db.Slave.ExecContext(ctx, insertQuery,
-		obj.Name, obj.Email, obj.Address, obj.Phone_number, obj.Description, obj.Logo, time.Now(), time.Now())
+		obj.Name, obj.Email, obj.Address, obj.PhoneNumber, obj.Description, obj.Logo, time.Now(), time.Now())
 
 	if err != nil {
 		return nil, err
@@ -50,6 +51,7 @@ func (r *Repository) GetOrganizations(ctx context.Context, params request.QueryP
         name,
         email,
         address,
+		phone_number,
         description,
         logo,
         created_at,
@@ -90,6 +92,7 @@ func (r *Repository) getOrganizations(ctx context.Context, query string, args ..
 			&organization.Name,
 			&organization.Email,
 			&organization.Address,
+			&organization.PhoneNumber,
 			&organization.Description,
 			&organization.Logo,
 			&organization.CreatedAt,
@@ -185,4 +188,48 @@ func (r *Repository) filterOrganizationCountQuery(params request.QueryParam, bin
 	}
 
 	return query
+}
+
+func (r *Repository) GetOrganizationByID(ctx context.Context, id *uuid.UUID) (*entity.Organization, error) {
+	query := `
+        SELECT
+        id,
+        name,
+        email,
+        address,
+		phone_number,
+        description,
+        logo,
+        created_at,
+        updated_at
+    FROM organizations
+        WHERE id = $1`
+
+	storageURL := r.app.GetStorageBaseUrl()
+	storageURL = storageURL + "/"
+
+	var result entity.Organization
+
+	err := r.db.Slave.QueryRowContext(ctx, query, id).Scan(
+		&result.Id,
+		&result.Name,
+		&result.Address,
+		&result.PhoneNumber,
+		&result.Email,
+		&result.Description,
+		&result.Logo,
+		&result.CreatedAt,
+		&result.UpdatedAt,
+	)
+
+	result.Logo = storageURL + result.Logo
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, _errors.ErrNotFound
+		}
+		return nil, err
+	}
+
+	return &result, nil
 }

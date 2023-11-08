@@ -48,8 +48,8 @@
     />
     <BaseModal
       :open-modal="isOpenObject"
-      :title-modal="'Confirm to ' + titleObject"
-      :desc-modal="'Are you sure you want to ' + titleObject"
+      :title-modal="`Confirm to ${titleObject}`"
+      :desc-modal="`Are you sure you want to ${titleObject}`" 
       icon-modal="i-heroicons-question-mark-circle"
       :text-confirm="titleObject"
       type-modal="warning"

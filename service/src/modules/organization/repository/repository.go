@@ -15,6 +15,7 @@ type (
 		GetOrganizations(ctx context.Context, params request.QueryParam) ([]entity.Organization, error)
 		CountFilteredOrganizations(ctx context.Context, params request.QueryParam) (int, error)
 		GetOrganizationByID(ctx context.Context, id *uuid.UUID) (*entity.Organization, error)
+		UpdateOrganization(ctx context.Context, obj *request.Organization) (*request.Organization, error)
 	}
 	Repository struct {
 		app *app.App

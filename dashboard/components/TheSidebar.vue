@@ -21,7 +21,6 @@
         </h1>
       </div>
     </section>
-    <SidebarSiteSelect />
     <nav class="-ml-6 w-[calc(100%+48px)] overflow-hidden">
       <ul data-cy="sidebar__navigation" class="px-6">
         <li>

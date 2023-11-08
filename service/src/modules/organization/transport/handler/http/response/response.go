@@ -2,11 +2,13 @@ package response
 
 import (
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type (
 	Organization struct {
-		Id           uint64    `json:"id"`
+		Id           uuid.UUID `json:"id"`
 		Name         string    `json:"name" required:"true"`
 		Email        string    `json:"email" required:"true"`
 		Address      string    `json:"address" required:"true"`

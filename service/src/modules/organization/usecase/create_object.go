@@ -6,10 +6,10 @@ import (
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/organization/entity"
 )
 
-func (uc *Usecase) CreateOrganization(ctx context.Context, obj entity.Organization) (entity.Organization, error) {
+func (uc *Usecase) CreateOrganization(ctx context.Context, obj entity.Organization) (*entity.Organization, error) {
 	createdObj, err := uc.repo.CreateOrganization(ctx, obj)
 	if err != nil {
-		return entity.Organization{}, err
+		return nil, err
 	}
 
 	return createdObj, nil

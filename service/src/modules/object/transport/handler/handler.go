@@ -33,6 +33,6 @@ func RenderError(w http.ResponseWriter, r *http.Request, h *Handler, err error, 
 	case _errors.ErrNotFound:
 		helperresponse.Render(w, r, h.responseMapping, httpresponse.NotFound, nil, result)
 	default:
-		helperresponse.Render(w, r, h.responseMapping, httpresponse.BadRequest, nil, nil)
+		helperresponse.Render(w, r, h.responseMapping, httpresponse.InternalServerError, nil, nil)
 	}
 }

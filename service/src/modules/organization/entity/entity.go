@@ -2,11 +2,13 @@ package entity
 
 import (
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type (
 	Organization struct {
-		Id           uint64
+		Id           uuid.UUID
 		Name         string
 		Email        string
 		Address      string

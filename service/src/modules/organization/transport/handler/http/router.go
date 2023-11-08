@@ -22,7 +22,7 @@ func Init(app *app.App, endpoint endpoint.EndpointInterface) *chi.Mux {
 		Version: app.GetVersion(),
 	}, false))
 
-	router.Post("/", h.Createorganization)
+	router.Post("/", h.CreateOrganization)
 
 	return router
 }

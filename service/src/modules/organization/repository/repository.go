@@ -9,7 +9,7 @@ import (
 
 type (
 	RepositoryInterface interface {
-		CreateOrganization(ctx context.Context, obj entity.Organization) (entity.Organization, error)
+		CreateOrganization(ctx context.Context, obj entity.Organization) (*entity.Organization, error)
 	}
 	Repository struct {
 		app *app.App

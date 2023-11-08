@@ -10,7 +10,7 @@ import (
 	httpresponse "github.com/jabardigitalservice/super-app-services/event/src/response/http"
 )
 
-func (h *Handler) Createorganization(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) CreateOrganization(w http.ResponseWriter, r *http.Request) {
 	var respObj response.Organization
 	if err := json.NewDecoder(r.Body).Decode(&respObj); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)

@@ -233,3 +233,19 @@ func (r *Repository) GetOrganizationByID(ctx context.Context, id *uuid.UUID) (*e
 
 	return &result, nil
 }
+
+func (r *Repository) UpdateOrganization(ctx context.Context, obj *request.Organization) (*request.Organization, error) {
+	query := `
+        UPDATE organizations
+        SET name = $2, email = $3, address = $4, phone_number = $5, description = $6, logo = $7, updated_at = $8
+        WHERE id = $1
+    `
+
+	_, err := r.db.Master.ExecContext(ctx, query, obj.Id, obj.Name, obj.Email, obj.Address, obj.PhoneNumber, obj.Description, obj.Logo, time.Now())
+
+	if err != nil {
+		return nil, err
+	}
+
+	return obj, nil
+}

@@ -299,11 +299,7 @@
 
   const fileResolutionIsCompatible = () => {
     const validate = dataFiles.value.width > props.maxResolution && dataFiles.value.height > props.maxResolution
-    if(validate){
-      fileIsCorrect.value = false
-    }else{ 
-      fileIsCorrect.value = true
-    }
+    fileIsCorrect.value = !validate
     return validate
   }
 

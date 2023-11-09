@@ -30,47 +30,62 @@
               class="w-full max-w-md transform rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
             >
               <div class="sm:items-start">
-                <UFormGroup label="Provinsi" class="w-full mb-4">
+                <UFormGroup label="Provinsi" class="mb-4 w-full">
                   <USelectMenu
                     v-model="selectedProvince"
                     :options="dataProvince"
                     searchable
                     @click="getProvince"
+                    @change="changeProvince"
                   >
                     <template #label>
-                      <span v-if="selectedProvince.length === 0" class="truncate">Pilih Provinsi</span>
+                      <span
+                        v-if="selectedProvince.length === 0"
+                        class="truncate"
+                        >Pilih Provinsi</span
+                      >
                     </template>
                     <template #option-empty="{ query }">
                       <q>{{ query }}</q> not found
                     </template>
                   </USelectMenu>
                 </UFormGroup>
-                <UFormGroup label="Kota/Kabupaten" class="w-full mb-4">
+                <UFormGroup label="Kota/Kabupaten" class="mb-4 w-full">
                   <USelectMenu
                     v-model="selectedCity"
-                    :disabled="disableCity"
+                    :disabled="!!selectedProvince.values"
                     :options="dataCity"
                     searchable
                     @click="getCity"
+                    @change="changeCity"
                   >
                     <template #label>
-                      <span v-if="selectedCity.length === 0" class="truncate">Pilih Kota/Kabupaten</span>
+                      <span 
+                        v-if="selectedCity.length === 0" 
+                        class="truncate"
+                        >Pilih Kota/Kabupaten</span
+                      >
                     </template>
                     <template #option-empty="{ query }">
                       <q>{{ query }}</q> not found
                     </template>
                   </USelectMenu>
                 </UFormGroup>
-                <UFormGroup label="Kecamatan" class="w-full mb-4">
+                <UFormGroup label="Kecamatan" class="mb-4 w-full">
                   <USelectMenu
                     v-model="selectedDistrict"
-                    :disabled="disableDistrict"
+                    :disabled="!!selectedCity.values"
                     :options="dataDistrict"
                     searchable
                     @click="getDistrict"
+                    @change="selectedVillage.value = []"
                   >
                     <template #label>
-                      <span v-if="selectedDistrict.length === 0" class="truncate">Pilih Kecamatan</span>
+                      <span
+                        v-if="selectedDistrict.length === 0"
+                        class="truncate"
+                        >Pilih Kecamatan</span
+                      >
                     </template>
                     <template #option-empty="{ query }">
                       <q>{{ query }}</q> not found
@@ -80,13 +95,17 @@
                 <UFormGroup label="Desa/Kelurahan" class="w-full">
                   <USelectMenu
                     v-model="selectedVillage"
-                    :disabled="disableVillage"
+                    :disabled="!!selectedDistrict.values"
                     :options="dataVillage"
                     searchable
                     @click="getVillage"
                   >
                     <template #label>
-                      <span v-if="selectedVillage.length === 0" class="truncate">Pilih Desa/Kelurahan</span>
+                      <span 
+                        v-if="selectedVillage.length === 0"
+                        class="truncate"
+                        >Pilih Desa/Kelurahan</span
+                      >
                     </template>
                     <template #option-empty="{ query }">
                       <q>{{ query }}</q> not found
@@ -132,42 +151,60 @@
 
   const selectedCity = ref([])
   const dataCity = ref([])
-  const disableCity = ref(true)
 
   const selectedDistrict = ref([])
   const dataDistrict = ref([])
-  const disableDistrict = ref(true)
 
   const selectedVillage = ref([])
   const dataVillage = ref([])
-  const disableVillage = ref(true)
 
   const getProvince = async () => {
     const result = await useFetchAddress('/v1/area/province')
-    dataProvince.value = result.data.map((data) => ({ id: data.id, label: data.name }))
-    disableCity.value = false
+    dataProvince.value = result.data.map((data) => ({
+      id: data.id,
+      label: data.name,
+    }))
+  }
+
+  const changeProvince = async () => {
     selectedCity.value = []
     selectedDistrict.value = []
     selectedVillage.value = []
   }
 
   const getCity = async () => {
-    const result = await useFetchAddress('/v1/area/city', { provinceId: selectedProvince.value.id })
-    dataCity.value = result.data.map((data) => ({ id: data.id, label: data.name }))
-    disableDistrict.value = false
-    selectedDistrict.value = []
+    const result = await useFetchAddress('/v1/area/city', {
+      provinceId: selectedProvince.value.id,
+    })
+    dataCity.value = result.data.map((data) => ({
+      id: data.id,
+      label: data.name,
+    }))
   }
 
-  const getDistrict = async () => {
-    const result = await useFetchAddress('/v1/area/district', { cityId: selectedCity.value.id })
-    dataDistrict.value = result.data.map((data) => ({ id: data.id, label: data.name }))
-    disableVillage.value = false
+  const changeCity = async () => {
+    selectedDistrict.value = []
     selectedVillage.value = []
   }
 
+  const getDistrict = async () => {
+    const result = await useFetchAddress('/v1/area/district', {
+      cityId: selectedCity.value.id,
+    })
+    dataDistrict.value = result.data.map((data) => ({
+      id: data.id,
+      label: data.name,
+    }))
+  }
+
   const getVillage = async () => {
-    const result = await useFetchAddress('/v1/area/village', { districtId: selectedDistrict.value.id })
-    dataVillage.value = result.data.map((data) => ({ id: data.id, label: data.name }))
+    const result = await useFetchAddress('/v1/area/village', {
+      districtId: selectedDistrict.value.id,
+    })
+    dataVillage.value = result.data.map((data) => ({
+      id: data.id,
+      label: data.name,
+    }))
   }
 
   const props = defineProps({

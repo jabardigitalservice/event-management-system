@@ -32,15 +32,15 @@
               <div class="sm:items-start">
                 <UFormGroup label="Provinsi" class="mb-4 w-full">
                   <USelectMenu
-                    v-model="selectedProvince"
-                    :options="dataProvince"
+                    v-model="state.selectedProvince"
+                    :options="state.dataProvince"
                     searchable
                     @click="getProvince"
                     @change="changeProvince"
                   >
                     <template #label>
                       <span
-                        v-if="selectedProvince.length === 0"
+                        v-if="state.selectedProvince.length === 0"
                         class="truncate"
                         >Pilih Provinsi</span
                       >
@@ -52,16 +52,16 @@
                 </UFormGroup>
                 <UFormGroup label="Kota/Kabupaten" class="mb-4 w-full">
                   <USelectMenu
-                    v-model="selectedCity"
-                    :disabled="!!selectedProvince.values"
-                    :options="dataCity"
+                    v-model="state.selectedCity"
+                    :disabled="!!state.selectedProvince.values"
+                    :options="state.dataCity"
                     searchable
                     @click="getCity"
                     @change="changeCity"
                   >
                     <template #label>
                       <span 
-                        v-if="selectedCity.length === 0" 
+                        v-if="state.selectedCity.length === 0" 
                         class="truncate"
                         >Pilih Kota/Kabupaten</span
                       >
@@ -73,16 +73,16 @@
                 </UFormGroup>
                 <UFormGroup label="Kecamatan" class="mb-4 w-full">
                   <USelectMenu
-                    v-model="selectedDistrict"
-                    :disabled="!!selectedCity.values"
-                    :options="dataDistrict"
+                    v-model="state.selectedDistrict"
+                    :disabled="!!state.selectedCity.values"
+                    :options="state.dataDistrict"
                     searchable
                     @click="getDistrict"
-                    @change="selectedVillage.value = []"
+                    @change="state.selectedVillage = []"
                   >
                     <template #label>
                       <span
-                        v-if="selectedDistrict.length === 0"
+                        v-if="state.selectedDistrict.length === 0"
                         class="truncate"
                         >Pilih Kecamatan</span
                       >
@@ -94,15 +94,15 @@
                 </UFormGroup>
                 <UFormGroup label="Desa/Kelurahan" class="w-full">
                   <USelectMenu
-                    v-model="selectedVillage"
-                    :disabled="!!selectedDistrict.values"
-                    :options="dataVillage"
+                    v-model="state.selectedVillage"
+                    :disabled="!!state.selectedDistrict.values"
+                    :options="state.dataVillage"
                     searchable
                     @click="getVillage"
                   >
                     <template #label>
                       <span 
-                        v-if="selectedVillage.length === 0"
+                        v-if="state.selectedVillage.length === 0"
                         class="truncate"
                         >Pilih Desa/Kelurahan</span
                       >
@@ -146,52 +146,51 @@
     DialogPanel,
   } from '@headlessui/vue'
 
-  const selectedProvince = ref([])
-  const dataProvince = ref([])
-
-  const selectedCity = ref([])
-  const dataCity = ref([])
-
-  const selectedDistrict = ref([])
-  const dataDistrict = ref([])
-
-  const selectedVillage = ref([])
-  const dataVillage = ref([])
+  const state = reactive({
+    selectedProvince: [],
+    dataProvince: [],
+    selectedCity: [],
+    dataCity: [],
+    selectedDistrict: [],
+    dataDistrict: [],
+    selectedVillage: [],
+    dataVillage: []
+  })
 
   const getProvince = async () => {
     const result = await useFetchAddress('/v1/area/province')
-    dataProvince.value = result.data.map((data) => ({
+    state.dataProvince = result.data.map((data) => ({
       id: data.id,
       label: data.name,
     }))
   }
 
   const changeProvince = async () => {
-    selectedCity.value = []
-    selectedDistrict.value = []
-    selectedVillage.value = []
+    state.selectedCity = []
+    state.selectedDistrict = []
+    state.selectedVillage = []
   }
 
   const getCity = async () => {
     const result = await useFetchAddress('/v1/area/city', {
-      provinceId: selectedProvince.value.id,
+      provinceId: state.selectedProvince.id,
     })
-    dataCity.value = result.data.map((data) => ({
+    state.dataCity = result.data.map((data) => ({
       id: data.id,
       label: data.name,
     }))
   }
 
   const changeCity = async () => {
-    selectedDistrict.value = []
-    selectedVillage.value = []
+    state.selectedDistrict = []
+    state.selectedVillage = []
   }
 
   const getDistrict = async () => {
     const result = await useFetchAddress('/v1/area/district', {
-      cityId: selectedCity.value.id,
+      cityId: state.selectedCity.id,
     })
-    dataDistrict.value = result.data.map((data) => ({
+    state.dataDistrict = result.data.map((data) => ({
       id: data.id,
       label: data.name,
     }))
@@ -199,9 +198,9 @@
 
   const getVillage = async () => {
     const result = await useFetchAddress('/v1/area/village', {
-      districtId: selectedDistrict.value.id,
+      districtId: state.selectedDistrict.id,
     })
-    dataVillage.value = result.data.map((data) => ({
+    state.dataVillage = result.data.map((data) => ({
       id: data.id,
       label: data.name,
     }))

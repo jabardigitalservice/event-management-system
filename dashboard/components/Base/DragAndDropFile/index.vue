@@ -70,7 +70,7 @@
               v-if="fileResolutionIsCompatible()"
               class="font-lato text-[11px] font-bold text-red-600"
             >
-              {{ `Resolusi gambar max ${props.maxResolution}px` }}
+              Resolusi gambar max {{props.maxResolution}}px
             </p>
           </div>
           

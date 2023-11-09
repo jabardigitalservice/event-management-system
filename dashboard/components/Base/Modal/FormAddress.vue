@@ -38,7 +38,7 @@
                     @click="getProvince"
                   >
                     <template #label>
-                      <span v-if="selectedProvince.length == 0" class="truncate">Pilih Provinsi</span>
+                      <span v-if="selectedProvince.length === 0" class="truncate">Pilih Provinsi</span>
                     </template>
                     <template #option-empty="{ query }">
                       <q>{{ query }}</q> not found
@@ -54,7 +54,7 @@
                     @click="getCity"
                   >
                     <template #label>
-                      <span v-if="selectedCity.length == 0" class="truncate">Pilih Kota/Kabupaten</span>
+                      <span v-if="selectedCity.length === 0" class="truncate">Pilih Kota/Kabupaten</span>
                     </template>
                     <template #option-empty="{ query }">
                       <q>{{ query }}</q> not found
@@ -70,7 +70,7 @@
                     @click="getDistrict"
                   >
                     <template #label>
-                      <span v-if="selectedDistrict.length == 0" class="truncate">Pilih Kecamatan</span>
+                      <span v-if="selectedDistrict.length === 0" class="truncate">Pilih Kecamatan</span>
                     </template>
                     <template #option-empty="{ query }">
                       <q>{{ query }}</q> not found
@@ -86,7 +86,7 @@
                     @click="getVillage"
                   >
                     <template #label>
-                      <span v-if="selectedVillage.length == 0" class="truncate">Pilih Desa/Kelurahan</span>
+                      <span v-if="selectedVillage.length === 0" class="truncate">Pilih Desa/Kelurahan</span>
                     </template>
                     <template #option-empty="{ query }">
                       <q>{{ query }}</q> not found

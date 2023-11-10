@@ -59,6 +59,7 @@
             ref="BaseDragAndDropFile"
             label="Logo"
             sublabel="Tipe File JPG/JPEG/PNG dengan maksimal ukuran file 2 MB"
+            :max-resolution=46
             height-drag-and-drop="h-[224px]"
             :detail-drag-and-drop="detailDragAndDrop"
             @preview-file="previewFile"
@@ -119,7 +120,7 @@
   const router = useRouter()
   const formContainer = ref<HTMLInputElement>()
   const submitForm = ref<HTMLInputElement>()
-    const toast = useToast()
+  const toast = useToast()
 
   const schema = object({
     name: string().required('Nama Objek Wisata wajib diisi'),

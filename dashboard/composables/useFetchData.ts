@@ -100,6 +100,33 @@ export const useFetchData = async (
   })
 }
 
+export const useFetchAddress = async (
+  path: string,
+  params: { provinceId?: string; cityId?: string; districtId?: string } = {},
+) => {
+  const config = useRuntimeConfig()
+  const session = await getSession()
+  const { provinceId, cityId, districtId } = params
+  return new Promise(async (resolve, reject) => {
+    try {
+      await useFetch(config.public.baseURL.concat(`${path}`), {
+        method: 'get',
+        headers: {
+          'Api-Key': config.public.apiKey,
+          'Content-Type': 'application/json',
+        },
+        query: { provinceId, cityId, districtId },
+
+        onResponse({ response }) {
+          resolve(response._data)
+        },
+      })
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
+
 export const useDeleteData = async (path: string, id?: Ref<string>) => {
   const config = useRuntimeConfig()
   const session = await getSession()
@@ -164,7 +191,11 @@ export const usePostData = async (path: string, body: object) => {
   })
 }
 
-export const useUpdatePatchData = async (path: string, id?: Ref<string>, body?: object) => {
+export const useUpdatePatchData = async (
+  path: string,
+  id?: Ref<string>,
+  body?: object,
+) => {
   const config = useRuntimeConfig()
   const session = await getSession()
   return new Promise(async (resolve, reject) => {

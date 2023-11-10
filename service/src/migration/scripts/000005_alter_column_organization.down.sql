@@ -1,0 +1,9 @@
+ALTER TABLE organizations
+DROP COLUMN province,
+DROP COLUMN city,
+DROP COLUMN district,
+DROP COLUMN village,
+DROP COLUMN google_map,
+DROP COLUMN pic_name,
+DROP COLUMN pic_position,
+DROP COLUMN pic_phone;

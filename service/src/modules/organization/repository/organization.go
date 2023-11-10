@@ -14,12 +14,14 @@ import (
 
 func (r *Repository) CreateOrganization(ctx context.Context, obj entity.Organization) (*entity.Organization, error) {
 	insertQuery := `
-        INSERT INTO organizations (name, email, address, phone_number, description, logo, created_at, updated_at)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        INSERT INTO organizations (name, email, address, phone_number, description, logo, created_at, updated_at,
+        province, city, district, village, google_map, pic_name, pic_position)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
     `
 
 	_, err := r.db.Slave.ExecContext(ctx, insertQuery,
-		obj.Name, obj.Email, obj.Address, obj.PhoneNumber, obj.Description, obj.Logo, time.Now(), time.Now())
+		obj.Name, obj.Email, obj.Address, obj.PicPhone, obj.Description, obj.Logo, time.Now(), time.Now(),
+		obj.Province, obj.City, obj.District, obj.Village, obj.Google_map, obj.PicName, obj.PicPosition)
 
 	if err != nil {
 		return nil, err
@@ -55,7 +57,14 @@ func (r *Repository) GetOrganizations(ctx context.Context, params request.QueryP
         description,
         logo,
         created_at,
-        updated_at
+        updated_at,
+        province,
+        city,
+        district,
+        village,
+        google_map,
+        pic_name,
+        pic_position
     FROM organizations
     WHERE 1 = 1 %s `,
 		r.filterOrganizationQuery(params, &binds))
@@ -92,11 +101,18 @@ func (r *Repository) getOrganizations(ctx context.Context, query string, args ..
 			&organization.Name,
 			&organization.Email,
 			&organization.Address,
-			&organization.PhoneNumber,
+			&organization.PicPhone,
 			&organization.Description,
 			&organization.Logo,
 			&organization.CreatedAt,
 			&organization.UpdatedAt,
+			&organization.Province,
+			&organization.City,
+			&organization.District,
+			&organization.Village,
+			&organization.Google_map,
+			&organization.PicName,
+			&organization.PicPosition,
 		); err != nil {
 			return nil, err
 		}
@@ -201,7 +217,14 @@ func (r *Repository) GetOrganizationByID(ctx context.Context, id *uuid.UUID) (*e
         description,
         logo,
         created_at,
-        updated_at
+        updated_at,
+        province,
+        city,
+        district,
+        village,
+        google_map,
+        pic_name,
+        pic_position
     FROM organizations
         WHERE id = $1`
 
@@ -213,13 +236,20 @@ func (r *Repository) GetOrganizationByID(ctx context.Context, id *uuid.UUID) (*e
 	err := r.db.Slave.QueryRowContext(ctx, query, id).Scan(
 		&result.Id,
 		&result.Name,
-		&result.Address,
-		&result.PhoneNumber,
 		&result.Email,
+		&result.Address,
+		&result.PicPhone,
 		&result.Description,
 		&result.Logo,
 		&result.CreatedAt,
 		&result.UpdatedAt,
+		&result.Province,
+		&result.City,
+		&result.District,
+		&result.Village,
+		&result.Google_map,
+		&result.PicName,
+		&result.PicPosition,
 	)
 
 	result.Logo = storageURL + result.Logo
@@ -237,11 +267,14 @@ func (r *Repository) GetOrganizationByID(ctx context.Context, id *uuid.UUID) (*e
 func (r *Repository) UpdateOrganization(ctx context.Context, obj *request.Organization) (*request.Organization, error) {
 	query := `
         UPDATE organizations
-        SET name = $2, email = $3, address = $4, phone_number = $5, description = $6, logo = $7, updated_at = $8
+        SET name = $2, email = $3, address = $4, phone_number = $5, description = $6, logo = $7,
+        province = $8, city = $9, district = $10, village = $11, google_map = $12, pic_name = $13, pic_position = $14,
+        updated_at = $15
         WHERE id = $1
     `
 
-	_, err := r.db.Master.ExecContext(ctx, query, obj.Id, obj.Name, obj.Email, obj.Address, obj.PhoneNumber, obj.Description, obj.Logo, time.Now())
+	_, err := r.db.Master.ExecContext(ctx, query, obj.Id, obj.Name, obj.Email, obj.Address, obj.PicPhone, obj.Description, obj.Logo,
+		obj.Province, obj.City, obj.District, obj.Village, obj.Google_map, obj.PicName, obj.PicPosition, time.Now())
 
 	if err != nil {
 		return nil, err

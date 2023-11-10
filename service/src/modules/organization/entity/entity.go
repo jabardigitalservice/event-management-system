@@ -12,10 +12,17 @@ type (
 		Name        string
 		Email       string
 		Address     string
-		PhoneNumber string
+		PicPhone    string
 		Description string
 		Logo        string
 		CreatedAt   time.Time
 		UpdatedAt   time.Time
+		Province    string
+		City        string
+		District    string
+		Village     string
+		Google_map  string
+		PicName     string
+		PicPosition string
 	}
 )

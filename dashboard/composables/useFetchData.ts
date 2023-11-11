@@ -14,7 +14,7 @@ export const useFetchData = async (
         method: 'get',
         headers: {
           'Api-Key': config.public.apiKey,
-          'Authorization': `Bearer ${session.accessToken}`,
+          Authorization: `Bearer ${session.accessToken}`,
         },
         query: { page: page?.value, q: search, pageSize: selectedLimit },
 
@@ -24,66 +24,29 @@ export const useFetchData = async (
             data: {
               data: [
                 {
-                  id: 1,
+                  id: 'a2f7fc23-054f-4037-86c8-cd9a60cf51c6',
                   name: 'Sapawarga',
-                  address: 'Jl Sultan Hasanuddin',
-                  photo: 'daengweb.png',
-                  email: 'aljabar@gmail.com',
-                  phone_number: '085343966997',
-                  status: 1,
-                  created_at: '2023-10-02T13:40:13.000000Z',
-                  updated_at: '2023-10-18T07:11:28.000000Z',
-                },
-                {
-                  id: 2,
-                  name: 'Aljabar',
-                  address: 'Jl Sultan Hasanuddin2',
-                  photo: 'daengweb.png2',
-                  email: 'aljabar1@gmail.com',
-                  phone_number: '085343966997',
-                  status: 1,
-                  created_at: '2023-10-02T13:40:13.000000Z',
-                  updated_at: '2023-10-18T07:11:28.000000Z',
-                },
-                {
-                  id: 3,
-                  name: 'Saparua',
-                  address: 'Jl Sultan Hasanuddin2',
-                  photo: 'daengweb.png2',
-                  email: 'aljabar2@gmail.com',
-                  phone_number: '085343966997',
-                  status: 1,
-                  created_at: '2023-10-02T13:40:13.000000Z',
-                  updated_at: '2023-10-18T07:11:28.000000Z',
-                },
-                {
-                  id: 4,
-                  name: 'Sapawarga',
-                  address: 'Jl Sultan Hasanuddin4',
-                  photo: 'daengweb.png4',
-                  email: 'aljabar4@gmail.com',
-                  phone_number: '085343966997',
-                  status: 1,
-                  created_at: '2023-10-02T13:40:13.000000Z',
-                  updated_at: '2023-10-18T07:11:28.000000Z',
-                },
-                {
-                  id: 5,
-                  name: 'Sapawarga',
-                  address: 'Jl Sultan Hasanuddin5',
-                  photo: 'daengweb.png5',
-                  email: 'aljabar5@gmail.com',
-                  phone_number: '085343966997',
-                  status: 1,
-                  created_at: '2023-10-02T13:40:13.000000Z',
-                  updated_at: '2023-10-18T07:11:28.000000Z',
+                  email: 'sapawarga@gmail.com',
+                  address: 'bandung, City',
+                  description: 'This is a sample organization.',
+                  logo: 'google.com/https://example.com/logo.png',
+                  created_at: '2023-11-10T14:38:03.945726Z',
+                  updated_at: '2023-11-10T14:38:03.945726Z',
+                  province: 'SampleProvince',
+                  city: 'SampleCity',
+                  district: 'SampleDistrict',
+                  village: 'SampleVillage',
+                  google_map: 'SampleGoogleMap',
+                  pic_name: 'SamplePicName',
+                  pic_position: 'SamplePicPosition',
+                  pic_phone: '+1-123-456-789a0',
                 },
               ],
               meta: {
                 page: 1,
-                page_size: 10,
-                total_data: 1,
-                total_pages: 1,
+                page_size: 1,
+                total_data: 6,
+                total_pages: 6,
               },
             },
           }
@@ -105,7 +68,6 @@ export const useFetchAddress = async (
   params: { provinceId?: string; cityId?: string; districtId?: string } = {},
 ) => {
   const config = useRuntimeConfig()
-  const session = await getSession()
   const { provinceId, cityId, districtId } = params
   return new Promise(async (resolve, reject) => {
     try {
@@ -127,16 +89,16 @@ export const useFetchAddress = async (
   })
 }
 
-export const useDeleteData = async (path: string, id?: Ref<string>) => {
+export const useDeleteData = async (path: string, id?: string) => {
   const config = useRuntimeConfig()
   const session = await getSession()
   return new Promise(async (resolve, reject) => {
     try {
-      await useFetch(config.public.baseURL.concat(`${path}/${id?.value}`), {
+      await useFetch(config.public.baseURL.concat(`${path}/${id}`), {
         method: 'delete',
         headers: {
           'Api-Key': config.public.apiKey,
-          'Authorization': `Bearer ${session.accessToken}`,
+          Authorization: `Bearer ${session.accessToken}`,
         },
         onResponse({ response }) {
           resolve(response._data.data)
@@ -178,7 +140,7 @@ export const usePostData = async (path: string, body: object) => {
         method: 'post',
         headers: {
           'Api-Key': config.public.apiKey,
-          'Authorization': `Bearer ${session.accessToken}`
+          Authorization: `Bearer ${session.accessToken}`,
         },
         body: body,
         onResponse({ response }) {
@@ -193,18 +155,18 @@ export const usePostData = async (path: string, body: object) => {
 
 export const useUpdatePatchData = async (
   path: string,
-  id?: Ref<string>,
+  id?: string,
   body?: object,
 ) => {
   const config = useRuntimeConfig()
   const session = await getSession()
   return new Promise(async (resolve, reject) => {
     try {
-      await useFetch(config.public.baseURL.concat(`${path}/${id?.value}`), {
+      await useFetch(config.public.baseURL.concat(`${path}/${id}`), {
         method: 'patch',
         headers: {
           'Api-Key': config.public.apiKey,
-          'Authorization': `Bearer ${session.accessToken}`,
+          Authorization: `Bearer ${session.accessToken}`,
         },
         body: body,
         onResponse({ response }) {

@@ -81,13 +81,13 @@
                   square
                   variant="solid"
                   class="absolute"
-                  @click="imageDelete(index)"
+                  @click="imageDelete(index, data?.url)"
                 />
               </div>
 
               <div class="flex items-center">
                 <div class="flex items-center">
-                  <img :src="fileDocument(data)" class="" />
+                  <img :src="data.url != '' ? data.url : fileDocument(data)" class="" />
                 </div>
               </div>
             </div>
@@ -106,6 +106,7 @@
     RadioGroupLabel,
     RadioGroupOption,
   } from '@headlessui/vue'
+import { array, object } from 'yup';
 
   const props = defineProps({
     detailDragAndDrop: {
@@ -124,9 +125,13 @@
       type: String,
       default: '',
     },
+    imageUrlMultiple: {
+      type: array,
+      default: [],
+    },
   })
 
-  const emit = defineEmits(['previewFile'])
+  const emit = defineEmits(['previewFile', 'deleteUrlFileMultiple'])
   const files = ref()
   const dataFilesMultiple: Ref<object[]> = ref([])
   const fileInputIsChange = ref(false)
@@ -138,16 +143,26 @@
   const fileIsCorrect = ref(false)
   const disabledButton = ref(true)
   const dataImage = useDataImage()
+  const counterImageLoad = ref(0)
 
   const selected = ref(dataFilesMultiple.value[0])
 
-  const onChangeUpload = async (e: Event): Promise<void> => {
-    let element = e.target as HTMLInputElement
-    let fileTarget = element?.files ? element.files : []
+  interface dataFile {
+    name: string,
+    isConfidental: boolean,
+    mimeType: string,
+    roles: object,
+    data: string,
+    fileSize: string,
+    fileCorrect: boolean,
+    url: string
+  }
 
-    if (fileTarget?.length >= 1) {
-      for (let i = 0; i < fileTarget.length; i++) {
-        const dataFile = {
+  onUpdated(async () => {
+    if (counterImageLoad.value < props.imageUrlMultiple.length) {
+      
+      for (let i = 0; i < props.imageUrlMultiple.length; i++) {
+        const dataFile: dataFile = {
           name: '',
           isConfidental: false,
           mimeType: '',
@@ -155,6 +170,37 @@
           data: '',
           fileSize: '',
           fileCorrect: false,
+          url: ''
+        }
+        fileInputIsChange.value = true
+        fileIsCorrect.value = true
+        dataFile.fileCorrect = true
+        dataFile.url = props.imageUrlMultiple[i]
+        
+        dataFilesMultiple.value.push(dataFile)
+        counterImageLoad.value++
+      }
+
+      dataImage.dataImageMultiple = dataFilesMultiple.value
+    }
+  })
+
+
+  const onChangeUpload = async (e: Event): Promise<void> => {
+    let element = e.target as HTMLInputElement
+    let fileTarget = element?.files ? element.files : []
+
+    if (fileTarget?.length >= 1) {
+      for (let i = 0; i < fileTarget.length; i++) {
+        const dataFile: dataFile = {
+          name: '',
+          isConfidental: false,
+          mimeType: '',
+          roles: ['admin'],
+          data: '',
+          fileSize: '',
+          fileCorrect: false,
+          url: ''
         }
 
         files.value = fileTarget[i]
@@ -293,9 +339,13 @@
     // TODO : It for define the main of banner
   }
 
-  const imageDelete = (index: number) => {
+  const imageDelete = (index: number, dataUrl: string) => {
+    if (dataUrl !== '') {
+      emit('deleteUrlFileMultiple', index)
+    }
+
     dataFilesMultiple.value.splice(index, 1)
 
-    useDataImage().dataImageMultiple = { ...dataFilesMultiple.value }
+    dataImage.dataImageMultiple = { ...dataFilesMultiple.value }
   }
 </script>

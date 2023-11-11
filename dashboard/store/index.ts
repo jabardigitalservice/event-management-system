@@ -14,3 +14,11 @@ export const useDataImage = defineStore('data-image', {
     }
   },
 })
+
+export const useIdData = defineStore('id-data', {
+  state: () => {
+    return {
+      id: '',
+    }
+  },
+})

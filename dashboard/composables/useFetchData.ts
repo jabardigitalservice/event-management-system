@@ -14,7 +14,7 @@ export const useFetchData = async (
         method: 'get',
         headers: {
           'Api-Key': config.public.apiKey,
-          'Authorization': `Bearer ${session.accessToken}`,
+          Authorization: `Bearer ${session.accessToken}`,
         },
         query: { page: page?.value, q: search, pageSize: selectedLimit },
 
@@ -136,7 +136,7 @@ export const useDeleteData = async (path: string, id?: Ref<string>) => {
         method: 'delete',
         headers: {
           'Api-Key': config.public.apiKey,
-          'Authorization': `Bearer ${session.accessToken}`,
+          Authorization: `Bearer ${session.accessToken}`,
         },
         onResponse({ response }) {
           resolve(response._data.data)
@@ -169,6 +169,27 @@ export const usePostServicePhoto = async (body: object) => {
   })
 }
 
+export const useGetData = async (path: string) => {
+  const config = useRuntimeConfig()
+  const session = await getSession()
+  return new Promise(async (resolve, reject) => {
+    try {
+      await useFetch(config.public.baseURL.concat(`${path}`), {
+        method: 'get',
+        headers: {
+          'Api-Key': config.public.apiKey,
+          Authorization: `Bearer ${session.accessToken}`,
+        },
+        onResponse({ response }) {
+          resolve(response._data)
+        },
+      })
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
+
 export const usePostData = async (path: string, body: object) => {
   const config = useRuntimeConfig()
   const session = await getSession()
@@ -178,7 +199,29 @@ export const usePostData = async (path: string, body: object) => {
         method: 'post',
         headers: {
           'Api-Key': config.public.apiKey,
-          'Authorization': `Bearer ${session.accessToken}`
+          Authorization: `Bearer ${session.accessToken}`,
+        },
+        body: body,
+        onResponse({ response }) {
+          resolve(response._data)
+        },
+      })
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
+
+export const usePutData = async (path: string, body: object) => {
+  const config = useRuntimeConfig()
+  const session = await getSession()
+  return new Promise(async (resolve, reject) => {
+    try {
+      await useFetch(config.public.baseURL.concat(`${path}`), {
+        method: 'put',
+        headers: {
+          'Api-Key': config.public.apiKey,
+          Authorization: `Bearer ${session.accessToken}`,
         },
         body: body,
         onResponse({ response }) {
@@ -204,7 +247,7 @@ export const useUpdatePatchData = async (
         method: 'patch',
         headers: {
           'Api-Key': config.public.apiKey,
-          'Authorization': `Bearer ${session.accessToken}`,
+          Authorization: `Bearer ${session.accessToken}`,
         },
         body: body,
         onResponse({ response }) {

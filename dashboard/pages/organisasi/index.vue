@@ -67,11 +67,6 @@
             router.push({ path: '/organisasi/form' })
           }
         },
-        {
-          label: 'Detail',
-          icon: 'i-heroicons-document-magnifying-glass-20-solid',
-          iconClass: 'bg-green-500',
-        },
       ],
       [
         {

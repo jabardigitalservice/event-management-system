@@ -24,9 +24,9 @@ type (
 		Google_map  string
 		PicName     string
 		PicPosition string
-		Province_id string
-		City_id     string
-		District_id string
-		Village_id  string
+		ProvinceId  string
+		CityId      string
+		DistrictId  string
+		VillageId   string
 	}
 )

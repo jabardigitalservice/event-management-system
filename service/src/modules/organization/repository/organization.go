@@ -21,7 +21,7 @@ func (r *Repository) CreateOrganization(ctx context.Context, obj entity.Organiza
 
 	_, err := r.db.Slave.ExecContext(ctx, insertQuery,
 		obj.Name, obj.Email, obj.Address, obj.PicPhone, obj.Description, obj.Logo, time.Now(), time.Now(),
-		obj.Province, obj.City, obj.District, obj.Village, obj.Google_map, obj.PicName, obj.PicPosition, obj.Province_id, obj.City_id, obj.District_id, obj.Village_id)
+		obj.Province, obj.City, obj.District, obj.Village, obj.Google_map, obj.PicName, obj.PicPosition, obj.ProvinceId, obj.CityId, obj.DistrictId, obj.VillageId)
 
 	if err != nil {
 		return nil, err
@@ -117,10 +117,10 @@ func (r *Repository) getOrganizations(ctx context.Context, query string, args ..
 			&organization.Google_map,
 			&organization.PicName,
 			&organization.PicPosition,
-			&organization.Province_id,
-			&organization.City_id,
-			&organization.District_id,
-			&organization.Village_id,
+			&organization.ProvinceId,
+			&organization.CityId,
+			&organization.DistrictId,
+			&organization.VillageId,
 		); err != nil {
 			return nil, err
 		}
@@ -262,10 +262,10 @@ func (r *Repository) GetOrganizationByID(ctx context.Context, id *uuid.UUID) (*e
 		&result.Google_map,
 		&result.PicName,
 		&result.PicPosition,
-		&result.Province_id,
-		&result.City_id,
-		&result.District_id,
-		&result.Village_id,
+		&result.ProvinceId,
+		&result.CityId,
+		&result.DistrictId,
+		&result.VillageId,
 	)
 
 	result.Logo = storageURL + result.Logo
@@ -290,7 +290,7 @@ func (r *Repository) UpdateOrganization(ctx context.Context, obj *request.Organi
     `
 
 	_, err := r.db.Master.ExecContext(ctx, query, obj.Id, obj.Name, obj.Email, obj.Address, obj.PicPhone, obj.Description, obj.Logo,
-		obj.Province, obj.City, obj.District, obj.Village, obj.Google_map, obj.PicName, obj.PicPosition, obj.Province_id, obj.City_id, obj.District_id, obj.Village_id, time.Now())
+		obj.Province, obj.City, obj.District, obj.Village, obj.Google_map, obj.PicName, obj.PicPosition, obj.ProvinceId, obj.CityId, obj.DistrictId, obj.VillageId, time.Now())
 
 	if err != nil {
 		return nil, err

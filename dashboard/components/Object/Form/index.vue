@@ -247,9 +247,13 @@
     description: string
     address: string
     province: string
+    province_id: string
     city: string
+    city_id: string
     district: string
+    district_id: string
     village: string
+    village_id: string
     google_map: string
     status: string
   }
@@ -279,9 +283,13 @@
         state.address = {
           address: responseData?.address,
           province: responseData?.province,
+          province_id: responseData?.province_id,
           city: responseData?.city,
+          city_id: responseData?.city_id,
           district: responseData?.district,
+          district_id: responseData?.district_id,
           village: responseData?.village,
+          village_id: responseData?.village_id,
           google_map: responseData?.google_map,
         }
 
@@ -350,10 +358,14 @@
     data.status = 'draft'
     if (Object.keys(state.address).length > 0) {
       data.address = state.address.address
-      ;(data.province = state.address.province),
-        (data.city = state.address.city),
-        (data.district = state.address.district),
-        (data.village = state.address.village)
+      data.province = state.address.province
+      data.province_id = state.address.province_id
+      data.city = state.address.city
+      data.city_id = state.address.city_id
+      data.district = state.address.district
+      data.district_id = state.address.district_id
+      data.village = state.address.village
+      data.village_id = state.address.village_id
       data.google_map = state.address.google_map
     } else {
       return toast.add({

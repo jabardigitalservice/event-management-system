@@ -28,6 +28,7 @@
         label="Create"
         :trailing="false"
         :to="props.baseRoute + '/form'"
+        @click="useIdData().id = ''"
       />
     </div>
     <div class="inline-block min-w-full overflow-hidden rounded-lg bg-white">
@@ -94,7 +95,7 @@
 
 <script setup lang="ts">
   import { useFetchData } from '~/composables/useFetchData'
-  import { useActivePage } from '@/store/index'
+  import { useActivePage, useIdData } from '@/store/index'
 
   interface ApiResponse {
     current_page: number

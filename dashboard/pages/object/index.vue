@@ -60,7 +60,7 @@
 </template>
 
 <script setup lang="ts">
-  import { useActivePage } from '@/store/index'
+  import { useActivePage, useIdData } from '@/store/index'
   import { objectHeaders } from '~/common/constant/object'
 
   interface StatusColor {
@@ -68,6 +68,7 @@
     variant: string
   }
 
+  const router = useRouter()
   const toast = useToast()
   const isOpenDelete = ref(false)
   const isOpenObject = ref(false)
@@ -93,6 +94,10 @@
           label: 'Edit',
           icon: 'i-heroicons-pencil-square-20-solid',
           iconClass: 'bg-green-500',
+          click: () => {
+            useIdData().id = items.id
+            router.push({ path: '/object/form' })
+          }
         },
         {
           label: 'Detail',

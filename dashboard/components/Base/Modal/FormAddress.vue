@@ -39,10 +39,10 @@
                     @change="changeProvince"
                   >
                     <template #label>
-                      <span
-                        v-if="state.selectedProvince.length === 0"
+                      <spans
+                        v-if="state.selectedProvince.id === undefined"
                         class="truncate"
-                        >Pilih Provinsi</span
+                        >Pilih Provinsi</spans
                       >
                     </template>
                     <template #option-empty="{ query }">
@@ -61,7 +61,7 @@
                   >
                     <template #label>
                       <span
-                        v-if="state.selectedCity.length === 0"
+                        v-if="state.selectedCity.id === undefined"
                         class="truncate"
                         >Pilih Kota/Kabupaten</span
                       >
@@ -82,7 +82,7 @@
                   >
                     <template #label>
                       <span
-                        v-if="state.selectedDistrict.length === 0"
+                        v-if="state.selectedDistrict.id === undefined"
                         class="truncate"
                         >Pilih Kecamatan</span
                       >
@@ -102,7 +102,7 @@
                   >
                     <template #label>
                       <span
-                        v-if="state.selectedVillage.length === 0"
+                        v-if="state.selectedVillage.id === undefined"
                         class="truncate"
                         >Pilih Desa/Kelurahan</span
                       >
@@ -182,7 +182,7 @@
     selectedVillage: [],
     dataVillage: [],
     address: '',
-    google_map: ''
+    google_map: '',
   })
 
   const getProvince = async () => {
@@ -248,7 +248,24 @@
   const emit = defineEmits(['close', 'confirm'])
 
   onUpdated(() => {
-    state.address = props.addressData.address
+    state.address = props.addressData.address,
+    state.selectedProvince = {
+    label: props.addressData.province,
+    id: props.addressData.province_id
+    }
+    state.selectedCity = {
+    label: props.addressData.city,
+    id: props.addressData.city_id
+    }
+    state.selectedDistrict = {
+    label: props.addressData.district,
+    id: props.addressData.district_id
+    }
+    state.selectedVillage = {
+    label: props.addressData.village,
+    id: props.addressData.village_id
+    }
+    
     state.google_map = props.addressData.google_map
   })
 
@@ -258,9 +275,13 @@
   function confirmModal() {
     emit('confirm', {
       province: state.selectedProvince.label,
+      province_id: state.selectedProvince.id,
       city: state.selectedCity.label,
+      city_id: state.selectedCity.id,
       district: state.selectedDistrict.label,
+      district_id: state.selectedDistrict.id,
       village: state.selectedVillage.label,
+      village_id: state.selectedVillage.id,
       address: state.address,
       google_map: state.google_map
     })

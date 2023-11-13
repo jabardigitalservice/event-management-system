@@ -1,5 +1,5 @@
 <template>
-    <BaseDataTable :headers="organisasiHeaders" :path="urlAPI">
+    <BaseDataTable :headers="organisasiHeaders" :path="urlAPI" base-route="/organisasi">
       <template #customeName="{ items }">
         <div class="flex flex-row">
           <div class="basis-[14%]">
@@ -40,16 +40,17 @@
 </template>
 
 <script setup lang="ts">
-  import { useActivePage } from '@/store/index'
+  import { useActivePage, useIdData } from '@/store/index'
   import { organisasiHeaders } from "~/common/constant/organisasi"
 
+  const router = useRouter()
   const toast = useToast()
   const state = reactive({
     isOpenDelete: false,
     idItems: '',
     fetchObject: {},
   })
-  const urlAPI: string = "/organizer"
+  const urlAPI: string = "/v1/event/organization"
 
   const itemActions = (
     items: { id: string; status: string },
@@ -61,6 +62,10 @@
           label: 'Edit',
           icon: 'i-heroicons-pencil-square-20-solid',
           iconClass: 'bg-green-500',
+          click: () => {
+            useIdData().id = items.id
+            router.push({ path: '/organisasi/form' })
+          }
         },
         {
           label: 'Detail',

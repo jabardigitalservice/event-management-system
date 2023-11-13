@@ -28,7 +28,7 @@ func (r *Repository) CreateObject(ctx context.Context, obj request.Object) (requ
 
 	err = r.db.Slave.QueryRowContext(ctx,
 		query,
-		obj.Name, obj.Address, obj.Description, pq.Array(obj.Banner), obj.Logo, socialMediaJSON, obj.Organizer, obj.Status, time.Now(), time.Now(), obj.Province, obj.City, obj.District, obj.Village, obj.Google_map, obj.Organizer_email, obj.Organizer_phone, obj.ProvinceId, obj.CityId, obj.DistrictId, obj.VillageId, obj.OrganizationID,
+		obj.Name, obj.Address, obj.Description, pq.Array(obj.Banner), obj.Logo, socialMediaJSON, obj.Organizer, obj.Status, time.Now(), time.Now(), obj.Province, obj.City, obj.District, obj.Village, obj.Google_map, obj.Organizer_email, obj.Organizer_phone, obj.ProvinceID, obj.CityID, obj.DistrictID, obj.VillageID, obj.OrganizationID,
 	).Scan(&obj.ID, &obj.CreatedAt, &obj.UpdatedAt)
 
 	if err != nil {
@@ -124,10 +124,10 @@ func (r *Repository) getObjects(ctx context.Context, query string, args ...inter
 			&object.Google_map,
 			&object.Organizer_email,
 			&object.Organizer_phone,
-			&object.ProvinceId,
-			&object.CityId,
-			&object.DistrictId,
-			&object.VillageId,
+			&object.ProvinceID,
+			&object.CityID,
+			&object.DistrictID,
+			&object.VillageID,
 			&object.OrganizationID,
 		); err != nil {
 			return nil, err
@@ -289,10 +289,10 @@ func (r *Repository) GetObjectByID(ctx context.Context, id *uuid.UUID) (*entity.
 		&result.Google_map,
 		&result.Organizer_email,
 		&result.Organizer_phone,
-		&result.ProvinceId,
-		&result.CityId,
-		&result.DistrictId,
-		&result.VillageId,
+		&result.ProvinceID,
+		&result.CityID,
+		&result.DistrictID,
+		&result.VillageID,
 		&result.OrganizationID,
 	)
 
@@ -330,7 +330,7 @@ func (r *Repository) UpdateObject(ctx context.Context, obj *request.Object) (*re
 
 	_, err = r.db.Master.ExecContext(ctx,
 		query,
-		obj.ID, obj.Name, obj.Address, obj.Description, bannerArray, obj.Logo, socialMediaJSON, obj.Organizer, obj.Status, time.Now(), obj.Province, obj.City, obj.District, obj.Village, obj.Google_map, obj.Organizer_email, obj.Organizer_phone, obj.ProvinceId, obj.CityId, obj.DistrictId, obj.VillageId, obj.OrganizationID,
+		obj.ID, obj.Name, obj.Address, obj.Description, bannerArray, obj.Logo, socialMediaJSON, obj.Organizer, obj.Status, time.Now(), obj.Province, obj.City, obj.District, obj.Village, obj.Google_map, obj.Organizer_email, obj.Organizer_phone, obj.ProvinceID, obj.CityID, obj.DistrictID, obj.VillageID, obj.OrganizationID,
 	)
 
 	if err != nil {

@@ -34,10 +34,10 @@ type (
 		Google_map      string
 		Organizer_email string
 		Organizer_phone string
-		ProvinceId      string
-		CityId          string
-		DistrictId      string
-		VillageId       string
+		ProvinceID      string
+		CityID          string
+		DistrictID      string
+		VillageID       string
 		OrganizationID  uuid.UUID
 	}
 )

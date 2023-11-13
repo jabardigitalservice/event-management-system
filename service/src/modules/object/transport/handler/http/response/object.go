@@ -27,17 +27,17 @@ type (
 		Status          Status         `json:"status"`
 		CreatedAt       time.Time      `json:"created_at"`
 		UpdatedAt       time.Time      `json:"updated_at"`
-		Province        string         `json:"province" validate:"required"`
-		City            string         `json:"city" validate:"required"`
-		District        string         `json:"district" validate:"required"`
-		Village         string         `json:"village" validate:"required"`
-		Google_map      string         `json:"google_map" validate:"required"`
-		Organizer_email string         `json:"organizer_email" validate:"required"`
-		Organizer_phone string         `json:"organizer_phone" validate:"required"`
-		ProvinceId      string         `json:"province_id" validate:"required"`
-		CityId          string         `json:"city_id" validate:"required"`
-		DistrictId      string         `json:"district_id" validate:"required"`
-		VillageId       string         `json:"village_id" validate:"required"`
-		OrganizationID  uuid.UUID      `json:"organization_id" validate:"required"`
+		Province        string         `json:"province" `
+		City            string         `json:"city" `
+		District        string         `json:"district" `
+		Village         string         `json:"village" `
+		Google_map      string         `json:"google_map" `
+		Organizer_email string         `json:"organizer_email" `
+		Organizer_phone string         `json:"organizer_phone" `
+		ProvinceId      string         `json:"province_id" `
+		CityID          string         `json:"city_id" `
+		DistrictID      string         `json:"district_id" `
+		VillageID       string         `json:"village_id" `
+		OrganizationID  uuid.UUID      `json:"organization_id" `
 	}
 )

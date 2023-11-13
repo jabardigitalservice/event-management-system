@@ -34,5 +34,9 @@ type (
 		Google_map      string
 		Organizer_email string
 		Organizer_phone string
+		ProvinceId      string
+		CityId          string
+		DistrictId      string
+		VillageId       string
 	}
 )

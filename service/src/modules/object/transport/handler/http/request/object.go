@@ -37,6 +37,10 @@ type (
 		Google_map      string         `json:"google_map" validate:"required"`
 		Organizer_email string         `json:"organizer_email" validate:"required"`
 		Organizer_phone string         `json:"organizer_phone" validate:"required"`
+		ProvinceId      string         `json:"province_id" validate:"required"`
+		CityId          string         `json:"city_id" validate:"required"`
+		DistrictId      string         `json:"district_id" validate:"required"`
+		VillageId       string         `json:"village_id" validate:"required"`
 	}
 
 	QueryParam struct {

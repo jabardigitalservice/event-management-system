@@ -38,5 +38,6 @@ type (
 		CityId          string
 		DistrictId      string
 		VillageId       string
+		OrganizationID  uuid.UUID
 	}
 )

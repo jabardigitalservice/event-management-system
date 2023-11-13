@@ -21,13 +21,14 @@ func (r *Repository) CreateObject(ctx context.Context, obj request.Object) (requ
 	}
 
 	query := `
-        INSERT INTO "objects" ("name", "address", "description", "banner", "logo", "social_media", "organizer", "status", "created_at", "updated_at", "province", "city", "district", "village", "google_map", "organizer_email", "organizer_phone",  "province_id", "city_id", "district_id", "village_id")
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21)
-        RETURNING "id", "created_at", "updated_at"
-    `
+    INSERT INTO objects (name, address, description, banner, logo, social_media, organizer, status, created_at, updated_at, province, city, district, village, google_map, organizer_email, organizer_phone, province_id, city_id, district_id, village_id, organization_id)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22)
+    RETURNING id, created_at, updated_at
+	`
+
 	err = r.db.Slave.QueryRowContext(ctx,
 		query,
-		obj.Name, obj.Address, obj.Description, pq.Array(obj.Banner), obj.Logo, socialMediaJSON, obj.Organizer, obj.Status, time.Now(), time.Now(), obj.Province, obj.City, obj.District, obj.Village, obj.Google_map, obj.Organizer_email, obj.Organizer_phone, obj.ProvinceId, obj.CityId, obj.DistrictId, obj.VillageId,
+		obj.Name, obj.Address, obj.Description, pq.Array(obj.Banner), obj.Logo, socialMediaJSON, obj.Organizer, obj.Status, time.Now(), time.Now(), obj.Province, obj.City, obj.District, obj.Village, obj.Google_map, obj.Organizer_email, obj.Organizer_phone, obj.ProvinceId, obj.CityId, obj.DistrictId, obj.VillageId, obj.OrganizationID,
 	).Scan(&obj.ID, &obj.CreatedAt, &obj.UpdatedAt)
 
 	if err != nil {
@@ -65,7 +66,8 @@ func (r *Repository) GetObjects(ctx context.Context, params request.QueryParam) 
 		province_id, 
 		city_id, 
 		district_id, 
-		village_id
+		village_id,
+		organization_id
     FROM objects
     WHERE 1 = 1 %s `,
 		r.filterObjectQuery(params, &binds))
@@ -126,6 +128,7 @@ func (r *Repository) getObjects(ctx context.Context, query string, args ...inter
 			&object.CityId,
 			&object.DistrictId,
 			&object.VillageId,
+			&object.OrganizationID,
 		); err != nil {
 			return nil, err
 		}
@@ -255,7 +258,8 @@ func (r *Repository) GetObjectByID(ctx context.Context, id *uuid.UUID) (*entity.
 			province_id, 
 			city_id, 
 			district_id, 
-			village_id
+			village_id,
+			organization_id
         FROM objects
         WHERE id = $1`
 
@@ -289,6 +293,7 @@ func (r *Repository) GetObjectByID(ctx context.Context, id *uuid.UUID) (*entity.
 		&result.CityId,
 		&result.DistrictId,
 		&result.VillageId,
+		&result.OrganizationID,
 	)
 
 	result.Logo = storageURL + result.Logo
@@ -318,14 +323,14 @@ func (r *Repository) UpdateObject(ctx context.Context, obj *request.Object) (*re
 
 	query := `
         UPDATE "objects" SET "name" = $2, "address" = $3, "description" = $4, "banner" = $5, "logo" = $6, "social_media" = $7, "organizer" = $8, "status" = $9, "updated_at" = $10 ,"province" = $11, 
-		"city" = $12, "district" = $13, "village" = $14, "google_map" = $15, "organizer_email" = $16, "organizer_phone" = $17,  province_id = $18, 
-		city_id = $19, 	district_id = $20, 	village_id = $21
+		"city" = $12, "district" = $13, "village" = $14, "google_map" = $15, "organizer_email" = $16, "organizer_phone" = $17,  province_id = $18,
+		city_id = $19, 	district_id = $20, 	village_id = $21, organization_id= $22
         WHERE "id" = $1
     `
 
 	_, err = r.db.Master.ExecContext(ctx,
 		query,
-		obj.ID, obj.Name, obj.Address, obj.Description, bannerArray, obj.Logo, socialMediaJSON, obj.Organizer, obj.Status, time.Now(), obj.Province, obj.City, obj.District, obj.Village, obj.Google_map, obj.Organizer_email, obj.Organizer_phone, obj.ProvinceId, obj.CityId, obj.DistrictId, obj.VillageId,
+		obj.ID, obj.Name, obj.Address, obj.Description, bannerArray, obj.Logo, socialMediaJSON, obj.Organizer, obj.Status, time.Now(), obj.Province, obj.City, obj.District, obj.Village, obj.Google_map, obj.Organizer_email, obj.Organizer_phone, obj.ProvinceId, obj.CityId, obj.DistrictId, obj.VillageId, obj.OrganizationID,
 	)
 
 	if err != nil {

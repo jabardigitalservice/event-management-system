@@ -38,5 +38,6 @@ type (
 		CityId          string         `json:"city_id" validate:"required"`
 		DistrictId      string         `json:"district_id" validate:"required"`
 		VillageId       string         `json:"village_id" validate:"required"`
+		OrganizationID  uuid.UUID      `json:"organization_id" validate:"required"`
 	}
 )

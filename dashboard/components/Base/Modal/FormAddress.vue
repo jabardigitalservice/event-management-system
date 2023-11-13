@@ -60,8 +60,8 @@
                     @change="changeCity"
                   >
                     <template #label>
-                      <span 
-                        v-if="state.selectedCity.length === 0" 
+                      <span
+                        v-if="state.selectedCity.length === 0"
                         class="truncate"
                         >Pilih Kota/Kabupaten</span
                       >
@@ -92,7 +92,7 @@
                     </template>
                   </USelectMenu>
                 </UFormGroup>
-                <UFormGroup label="Desa/Kelurahan" class="w-full">
+                <UFormGroup label="Desa/Kelurahan" class="mb-4 w-full">
                   <USelectMenu
                     v-model="state.selectedVillage"
                     :disabled="!!state.selectedDistrict.values"
@@ -101,7 +101,7 @@
                     @click="getVillage"
                   >
                     <template #label>
-                      <span 
+                      <span
                         v-if="state.selectedVillage.length === 0"
                         class="truncate"
                         >Pilih Desa/Kelurahan</span
@@ -111,6 +111,32 @@
                       <q>{{ query }}</q> not found
                     </template>
                   </USelectMenu>
+                </UFormGroup>
+                <UFormGroup label="Alamat Lengkap" class="mb-4 w-full">
+                  <p
+                    class="text-[13px] text-gray-600"
+                  >
+                  Silahkan masukkan detail lokasi tambahan, seperti nama jalan atau no. bangunan
+                  </p>
+                  <UTextarea
+                    v-model="state.address"
+                    placeholder="Masukan Alamat Lengkap Anda"
+                    class="mt-1"
+                  />
+                </UFormGroup>
+                <UFormGroup label="Link Google Maps" class="mb-4 w-full">
+                  <UInput
+                    v-model="state.google_map"
+                    placeholder="Masukan Link Google Maps Anda"
+                    class="mt-1"
+                  >
+                    <template #leading>
+                      <NuxtIcon
+                        name="common/map-icon"
+                        class="text-2xl text-gray-300 "
+                      />
+                    </template>
+                  </UInput>
                 </UFormGroup>
               </div>
               <div class="mt-6 sm:flex sm:flex-row-reverse">
@@ -154,7 +180,9 @@
     selectedDistrict: [],
     dataDistrict: [],
     selectedVillage: [],
-    dataVillage: []
+    dataVillage: [],
+    address: '',
+    google_map: ''
   })
 
   const getProvince = async () => {
@@ -211,14 +239,30 @@
       type: Boolean,
       default: false,
     },
+    addressData: {
+      type: Object,
+      default: () => {},
+    }
   })
 
   const emit = defineEmits(['close', 'confirm'])
+
+  onUpdated(() => {
+    state.address = props.addressData.address
+    state.google_map = props.addressData.google_map
+  })
 
   function closedModal() {
     emit('close')
   }
   function confirmModal() {
-    emit('confirm')
+    emit('confirm', {
+      province: state.selectedProvince.label,
+      city: state.selectedCity.label,
+      district: state.selectedDistrict.label,
+      village: state.selectedVillage.label,
+      address: state.address,
+      google_map: state.google_map
+    })
   }
 </script>

@@ -5,7 +5,6 @@
   import { useActivePage } from '@/store/index'
 
   definePageMeta({
-    title: 'Tambah Objek',
     middleware: ['auth'],
   })
   onMounted(() => {

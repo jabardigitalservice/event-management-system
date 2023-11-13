@@ -32,7 +32,7 @@
             <p
               class="mb-2 truncate font-lato text-[14px] font-normal text-black"
             >
-              {{ dataFiles.name }}
+              {{ dataFiles?.name }}
             </p>
             <template v-if="proggresBarIsSuccess">
               <div class="mb-1 h-1.5 w-full rounded-full bg-gray-200">
@@ -49,31 +49,30 @@
             </template>
             <template v-else>
               <p class="mb-2 font-lato text-[11px] font-normal text-gray-600">
-                Ukuran {{ dataFiles.fileSize }}
+                Ukuran {{ dataFiles?.fileSize }}
               </p>
             </template>
-
-            <p
-              v-if="!fileSizeIsCompatible()"
-              class="font-lato text-[11px] font-bold text-red-600"
-            >
-              {{ detailDragAndDrop.informationSizeCompatible }}
-            </p>
-
-            <p
-              v-if="!formatFileIsCompatible()"
-              class="font-lato text-[11px] font-bold text-red-600"
-            >
-              {{ detailDragAndDrop.informationFormatCompatible }}.
-            </p>
-            <p
-              v-if="fileResolutionIsCompatible()"
-              class="font-lato text-[11px] font-bold text-red-600"
-            >
-              Resolusi gambar max {{props.maxResolution}}px
-            </p>
+            <div v-if="imageUrl === ''">
+              <p
+                v-if="!fileSizeIsCompatible()"
+                class="font-lato text-[11px] font-bold text-red-600"
+              >
+                {{ detailDragAndDrop.informationSizeCompatible }}
+              </p>
+              <p
+                v-if="!formatFileIsCompatible()"
+                class="font-lato text-[11px] font-bold text-red-600"
+              >
+                {{ detailDragAndDrop.informationFormatCompatible }}.
+              </p>
+              <p
+                v-if="fileResolutionIsCompatible()"
+                class="font-lato text-[11px] font-bold text-red-600"
+              >
+                Resolusi gambar max {{ detailDragAndDrop.maxResolution }}px
+              </p>
+            </div>
           </div>
-          
           <div class="flex flex-row">
             <button class="w-4" @click="resetDataFile">
               <NuxtIcon name="common/trash" class="h-4 w-4 text-red-600" />
@@ -141,13 +140,13 @@
       type: String,
       default: '',
     },
-    maxResolution: {
-      type: Number,
-      default: 0,
+    imageUrl: {
+      type: String,
+      default: '',
     },
   })
 
-  const emit = defineEmits(['previewFile'])
+  const emit = defineEmits(['previewFile', 'deleteUrlFile'])
 
   const files = ref()
   const dataFiles = ref({
@@ -159,7 +158,7 @@
     fileSize: '',
     fileCorrect: false,
     height: 0,
-    width: 0
+    width: 0,
   })
   const fileInputIsChange = ref(false)
   const proggresBarIsSuccess = ref(false)
@@ -169,6 +168,20 @@
   const responseImage = ref('')
   const fileIsCorrect = ref(false)
   const disabledButton = ref(true)
+
+  onUpdated(async () => {
+    if (props.imageUrl != '') {
+      const res = await $fetch(props.imageUrl)
+
+      dataFiles.value.name = ''
+      dataFiles.value.mimeType = res.type
+      dataFiles.value.fileSize = convertSize(res.size)
+      fileInputIsChange.value = true
+      fileIsCorrect.value = true
+
+      dataFiles.value.fileCorrect = true
+    }
+  })
 
   const onChangeUpload = (e) => {
     if (e.target.files[0]) {
@@ -263,6 +276,9 @@
     responseImage.value = ''
     fileIsCorrect.value = false
     disabledButton.value = true
+
+    emit('deleteUrlFile')
+
     useDataImage().dataImage = {}
   }
 
@@ -298,7 +314,9 @@
   }
 
   const fileResolutionIsCompatible = () => {
-    const validate = dataFiles.value.width > props.maxResolution && dataFiles.value.height > props.maxResolution
+    const validate =
+      dataFiles.value.width > props.detailDragAndDrop.maxResolution &&
+      dataFiles.value.height > props.detailDragAndDrop.maxResolution
     fileIsCorrect.value = !validate
     return validate
   }

@@ -13,19 +13,19 @@ import (
 func (h *Handler) CreateOrganization(w http.ResponseWriter, r *http.Request) {
 	var respObj response.Organization
 	if err := json.NewDecoder(r.Body).Decode(&respObj); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		RenderError(w, r, h, err, nil)
 		return
 	}
 
 	reqObjJSON, err := json.Marshal(respObj)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		RenderError(w, r, h, err, nil)
 		return
 	}
 
 	var reqObj request.Organization
 	if err := json.Unmarshal(reqObjJSON, &reqObj); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		RenderError(w, r, h, err, nil)
 		return
 	}
 
@@ -33,7 +33,7 @@ func (h *Handler) CreateOrganization(w http.ResponseWriter, r *http.Request) {
 
 	createdObj, err := h.endpoint.CreateOrganization(ctx, reqObj)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		RenderError(w, r, h, err, nil)
 		return
 	}
 

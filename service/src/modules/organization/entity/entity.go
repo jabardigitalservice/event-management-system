@@ -21,12 +21,12 @@ type (
 		City        string
 		District    string
 		Village     string
-		Google_map  string
+		GoogleMap   string
 		PicName     string
 		PicPosition string
-		ProvinceId  string
-		CityId      string
-		DistrictId  string
-		VillageId   string
+		ProvinceID  string
+		CityID      string
+		DistrictID  string
+		VillageID   string
 	}
 )

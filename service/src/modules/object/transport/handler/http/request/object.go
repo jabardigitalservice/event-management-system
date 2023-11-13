@@ -19,29 +19,29 @@ type (
 	Status string
 
 	Object struct {
-		ID              uuid.UUID      `json:"id"`
-		Name            string         `json:"name" validate:"required"`
-		Address         string         `json:"address" validate:"required"`
-		Description     string         `json:"description" validate:"required"`
-		Banner          pq.StringArray `json:"banner"`
-		Logo            string         `json:"logo"`
-		SocialMedia     []SocialMedia  `json:"social_media"`
-		Organizer       string         `json:"organizer" validate:"required"`
-		Status          Status         `json:"status" validate:"required"`
-		CreatedAt       time.Time      `json:"created_at"`
-		UpdatedAt       time.Time      `json:"updated_at"`
-		Province        string         `json:"province" validate:"required"`
-		City            string         `json:"city" validate:"required"`
-		District        string         `json:"district" validate:"required"`
-		Village         string         `json:"village" validate:"required"`
-		Google_map      string         `json:"google_map" validate:"required"`
-		Organizer_email string         `json:"organizer_email" validate:"required"`
-		Organizer_phone string         `json:"organizer_phone" validate:"required"`
-		ProvinceID      string         `json:"province_id" validate:"required"`
-		CityID          string         `json:"city_id" validate:"required"`
-		DistrictID      string         `json:"district_id" validate:"required"`
-		VillageID       string         `json:"village_id" validate:"required"`
-		OrganizationID  uuid.UUID      `json:"organization_id" validate:"required"`
+		ID             uuid.UUID      `json:"id"`
+		Name           string         `json:"name" validate:"required"`
+		Address        string         `json:"address" validate:"required"`
+		Description    string         `json:"description" validate:"required"`
+		Banner         pq.StringArray `json:"banner"`
+		Logo           string         `json:"logo"`
+		SocialMedia    []SocialMedia  `json:"social_media"`
+		Organizer      string         `json:"organizer" validate:"required"`
+		Status         Status         `json:"status" validate:"required"`
+		CreatedAt      time.Time      `json:"created_at"`
+		UpdatedAt      time.Time      `json:"updated_at"`
+		Province       string         `json:"province" validate:"required"`
+		City           string         `json:"city" validate:"required"`
+		District       string         `json:"district" validate:"required"`
+		Village        string         `json:"village" validate:"required"`
+		GoogleMap      string         `json:"google_map" validate:"required"`
+		OrganizerEmail string         `json:"organizer_email" validate:"required"`
+		OrganizerPhone string         `json:"organizer_phone" validate:"required"`
+		ProvinceID     string         `json:"province_id" validate:"required"`
+		CityID         string         `json:"city_id" validate:"required"`
+		DistrictID     string         `json:"district_id" validate:"required"`
+		VillageID      string         `json:"village_id" validate:"required"`
+		OrganizationID uuid.UUID      `json:"organization_id" validate:"required"`
 	}
 
 	QueryParam struct {

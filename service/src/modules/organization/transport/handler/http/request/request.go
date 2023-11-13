@@ -27,6 +27,10 @@ type (
 		PicName     string    `json:"pic_name" validate:"required"`
 		PicPosition string    `json:"pic_position" validate:"required"`
 		PicPhone    string    `json:"pic_phone" required:"true"`
+		ProvinceId  string    `json:"province_id" validate:"required"`
+		CityId      string    `json:"city_id" validate:"required"`
+		DistrictId  string    `json:"district_id" validate:"required"`
+		VillageId   string    `json:"village_id" validate:"required"`
 	}
 
 	QueryParam struct {

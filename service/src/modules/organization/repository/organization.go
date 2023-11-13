@@ -14,14 +14,14 @@ import (
 
 func (r *Repository) CreateOrganization(ctx context.Context, obj entity.Organization) (*entity.Organization, error) {
 	insertQuery := `
-        INSERT INTO organizations (name, email, address, phone_number, description, logo, created_at, updated_at,
-        province, city, district, village, google_map, pic_name, pic_position)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+        INSERT INTO organizations (name, email, address, pic_phone, description, logo, created_at, updated_at,
+        province, city, district, village, google_map, pic_name, pic_position, province_id, city_id, district_id, village_id)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
     `
 
 	_, err := r.db.Slave.ExecContext(ctx, insertQuery,
 		obj.Name, obj.Email, obj.Address, obj.PicPhone, obj.Description, obj.Logo, time.Now(), time.Now(),
-		obj.Province, obj.City, obj.District, obj.Village, obj.Google_map, obj.PicName, obj.PicPosition)
+		obj.Province, obj.City, obj.District, obj.Village, obj.Google_map, obj.PicName, obj.PicPosition, obj.ProvinceId, obj.CityId, obj.DistrictId, obj.VillageId)
 
 	if err != nil {
 		return nil, err
@@ -53,7 +53,7 @@ func (r *Repository) GetOrganizations(ctx context.Context, params request.QueryP
         name,
         email,
         address,
-		phone_number,
+		pic_phone,
         description,
         logo,
         created_at,
@@ -64,7 +64,11 @@ func (r *Repository) GetOrganizations(ctx context.Context, params request.QueryP
         village,
         google_map,
         pic_name,
-        pic_position
+        pic_position,
+		province_id, 
+		city_id, 
+		district_id, 
+		village_id
     FROM organizations
     WHERE 1 = 1 %s `,
 		r.filterOrganizationQuery(params, &binds))
@@ -113,6 +117,10 @@ func (r *Repository) getOrganizations(ctx context.Context, query string, args ..
 			&organization.Google_map,
 			&organization.PicName,
 			&organization.PicPosition,
+			&organization.ProvinceId,
+			&organization.CityId,
+			&organization.DistrictId,
+			&organization.VillageId,
 		); err != nil {
 			return nil, err
 		}
@@ -213,7 +221,7 @@ func (r *Repository) GetOrganizationByID(ctx context.Context, id *uuid.UUID) (*e
         name,
         email,
         address,
-		phone_number,
+		pic_phone,
         description,
         logo,
         created_at,
@@ -224,7 +232,11 @@ func (r *Repository) GetOrganizationByID(ctx context.Context, id *uuid.UUID) (*e
         village,
         google_map,
         pic_name,
-        pic_position
+        pic_position,
+		province_id, 
+		city_id, 
+		district_id, 
+		village_id
     FROM organizations
         WHERE id = $1`
 
@@ -250,6 +262,10 @@ func (r *Repository) GetOrganizationByID(ctx context.Context, id *uuid.UUID) (*e
 		&result.Google_map,
 		&result.PicName,
 		&result.PicPosition,
+		&result.ProvinceId,
+		&result.CityId,
+		&result.DistrictId,
+		&result.VillageId,
 	)
 
 	result.Logo = storageURL + result.Logo
@@ -267,14 +283,14 @@ func (r *Repository) GetOrganizationByID(ctx context.Context, id *uuid.UUID) (*e
 func (r *Repository) UpdateOrganization(ctx context.Context, obj *request.Organization) (*request.Organization, error) {
 	query := `
         UPDATE organizations
-        SET name = $2, email = $3, address = $4, phone_number = $5, description = $6, logo = $7,
-        province = $8, city = $9, district = $10, village = $11, google_map = $12, pic_name = $13, pic_position = $14,
-        updated_at = $15
+        SET name = $2, email = $3, address = $4, pic_phone = $5, description = $6, logo = $7,
+        province = $8, city = $9, district = $10, village = $11, google_map = $12, pic_name = $13, pic_position = $14, province_id = $15, 
+		city_id = $16, 	district_id = $17, 	village_id = $18, updated_at = $19
         WHERE id = $1
     `
 
 	_, err := r.db.Master.ExecContext(ctx, query, obj.Id, obj.Name, obj.Email, obj.Address, obj.PicPhone, obj.Description, obj.Logo,
-		obj.Province, obj.City, obj.District, obj.Village, obj.Google_map, obj.PicName, obj.PicPosition, time.Now())
+		obj.Province, obj.City, obj.District, obj.Village, obj.Google_map, obj.PicName, obj.PicPosition, obj.ProvinceId, obj.CityId, obj.DistrictId, obj.VillageId, time.Now())
 
 	if err != nil {
 		return nil, err

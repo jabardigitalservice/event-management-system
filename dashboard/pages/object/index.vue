@@ -1,6 +1,6 @@
 <template>
   <div>
-    <BaseDataTable :headers="headerTable" :path="urlAPI" base-route="/object">
+    <BaseDataTable :headers="objectHeaders" :path="urlAPI" base-route="/object">
       <template #customeName="{ items }">
         <div class="flex flex-row">
           <div class="basis-[14%]">
@@ -37,23 +37,23 @@
       </template>
     </BaseDataTable>
     <BaseModal
-      :open-modal="isOpenDelete"
+      :open-modal="state.isOpenDelete"
       title-modal="Confirm to delete"
       desc-modal="Are you sure you want to delete your data ? "
       icon-modal="i-heroicons-exclamation-triangle"
       text-confirm="Delete"
       type-modal="danger"
-      @close="isOpenDelete = false"
+      @close="state.isOpenDelete = false"
       @confirm="deleteData()"
     />
     <BaseModal
-      :open-modal="isOpenObject"
-      :title-modal="`Confirm to ${titleObject}`"
-      :desc-modal="`Are you sure you want to ${titleObject}`" 
+      :open-modal="state.isOpenObject"
+      :title-modal="`Confirm to ${state.titleObject}`"
+      :desc-modal="`Are you sure you want to ${state.titleObject}`" 
       icon-modal="i-heroicons-question-mark-circle"
-      :text-confirm="titleObject"
+      :text-confirm="state.titleObject"
       type-modal="warning"
-      @close="isOpenObject = false"
+      @close="state.isOpenObject = false"
       @confirm="updateStatus()"
     />
   </div>
@@ -70,13 +70,14 @@
 
   const router = useRouter()
   const toast = useToast()
-  const isOpenDelete = ref(false)
-  const isOpenObject = ref(false)
-  const statusObject = ref('')
-  const titleObject = ref('')
-  const idItems = ref('')
-  const fetchObject = ref()
-  const headerTable = objectHeaders
+  const state = reactive({
+    isOpenDelete: false,
+    isOpenObject: false,
+    statusObject: '',
+    titleObject: '',
+    idItems: '',
+    fetchObject: {}
+  })
   const urlAPI: string = '/v1/event/object'
 
   const statusColors: Record<string, StatusColor> = {
@@ -139,17 +140,17 @@
   }
 
   function openModalDelete(id: string, fetch: object) {
-    idItems.value = id
-    isOpenDelete.value = true
-    fetchObject.value = fetch
+    state.idItems = id
+    state.isOpenDelete = true
+    state.fetchObject = fetch
   }
 
   function openModalStatus(row: {id: string}, fetch: object, status: string) {
-    statusObject.value = status
-    titleObject.value = (statusObject.value === 'published') ? 'Publish': 'Unpublish'
-    idItems.value = row.id
-    fetchObject.value = fetch
-    isOpenObject.value = true
+    state.statusObject = status
+    state.titleObject = (state.statusObject === 'published') ? 'Publish': 'Unpublish'
+    state.idItems = row.id
+    state.fetchObject = fetch
+    state.isOpenObject = true
   }
 
   function deleteData() {
@@ -161,8 +162,8 @@
       timeout: 2000,
       callback: async () => {
         if (!cancelled) {
-          await useDeleteData(urlAPI, idItems)
-          fetchObject.value()
+          await useDeleteData(urlAPI, state.idItems)
+          state.fetchObject()
           toast.add({
             title: 'data successfully deleted',
             icon: 'i-heroicons-check-circle',
@@ -187,22 +188,22 @@
         },
       ],
     })
-    isOpenDelete.value = false
+    state.isOpenDelete = false
   }
 
   async function updateStatus() {
     const status = {
-      status: statusObject.value
+      status: state.statusObject
     }
-    await useUpdatePatchData(urlAPI, idItems, status)
-    fetchObject.value()
+    await useUpdatePatchData(urlAPI, state.idItems, status)
+    state.fetchObject()
     toast.add({
       icon: 'i-heroicons-exclamation-triangle',
       title: 'data successfully Update',
       color: 'green',
       timeout: 1000,
     })
-    isOpenObject.value = false
+    state.isOpenObject = false
   }
 
   onMounted(() => {

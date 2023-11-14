@@ -21,7 +21,7 @@ func (r *Repository) CreateOrganization(ctx context.Context, obj entity.Organiza
 
 	_, err := r.db.Slave.ExecContext(ctx, insertQuery,
 		obj.Name, obj.Email, obj.Address, obj.PicPhone, obj.Description, obj.Logo, time.Now(), time.Now(),
-		obj.Province, obj.City, obj.District, obj.Village, obj.Google_map, obj.PicName, obj.PicPosition, obj.ProvinceId, obj.CityId, obj.DistrictId, obj.VillageId)
+		obj.Province, obj.City, obj.District, obj.Village, obj.GoogleMap, obj.PicName, obj.PicPosition, obj.ProvinceID, obj.CityID, obj.DistrictID, obj.VillageID)
 
 	if err != nil {
 		return nil, err
@@ -114,13 +114,13 @@ func (r *Repository) getOrganizations(ctx context.Context, query string, args ..
 			&organization.City,
 			&organization.District,
 			&organization.Village,
-			&organization.Google_map,
+			&organization.GoogleMap,
 			&organization.PicName,
 			&organization.PicPosition,
-			&organization.ProvinceId,
-			&organization.CityId,
-			&organization.DistrictId,
-			&organization.VillageId,
+			&organization.ProvinceID,
+			&organization.CityID,
+			&organization.DistrictID,
+			&organization.VillageID,
 		); err != nil {
 			return nil, err
 		}
@@ -259,13 +259,13 @@ func (r *Repository) GetOrganizationByID(ctx context.Context, id *uuid.UUID) (*e
 		&result.City,
 		&result.District,
 		&result.Village,
-		&result.Google_map,
+		&result.GoogleMap,
 		&result.PicName,
 		&result.PicPosition,
-		&result.ProvinceId,
-		&result.CityId,
-		&result.DistrictId,
-		&result.VillageId,
+		&result.ProvinceID,
+		&result.CityID,
+		&result.DistrictID,
+		&result.VillageID,
 	)
 
 	result.Logo = storageURL + result.Logo
@@ -290,7 +290,7 @@ func (r *Repository) UpdateOrganization(ctx context.Context, obj *request.Organi
     `
 
 	_, err := r.db.Master.ExecContext(ctx, query, obj.Id, obj.Name, obj.Email, obj.Address, obj.PicPhone, obj.Description, obj.Logo,
-		obj.Province, obj.City, obj.District, obj.Village, obj.Google_map, obj.PicName, obj.PicPosition, obj.ProvinceId, obj.CityId, obj.DistrictId, obj.VillageId, time.Now())
+		obj.Province, obj.City, obj.District, obj.Village, obj.GoogleMap, obj.PicName, obj.PicPosition, obj.ProvinceID, obj.CityID, obj.DistrictID, obj.VillageID, time.Now())
 
 	if err != nil {
 		return nil, err

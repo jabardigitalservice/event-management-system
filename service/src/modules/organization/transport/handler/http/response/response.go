@@ -9,24 +9,24 @@ import (
 type (
 	Organization struct {
 		Id          uuid.UUID `json:"id"`
-		Name        string    `json:"name" required:"true"`
-		Email       string    `json:"email" required:"true"`
-		Address     string    `json:"address" required:"true"`
-		Description string    `json:"description" required:"true"`
-		Logo        string    `json:"logo" required:"true"`
+		Name        string    `json:"name" `
+		Email       string    `json:"email" `
+		Address     string    `json:"address" `
+		Description string    `json:"description" `
+		Logo        string    `json:"logo" `
 		CreatedAt   time.Time `json:"created_at"`
 		UpdatedAt   time.Time `json:"updated_at"`
-		Province    string    `json:"province" validate:"required"`
-		City        string    `json:"city" validate:"required"`
-		District    string    `json:"district" validate:"required"`
-		Village     string    `json:"village" validate:"required"`
-		Google_map  string    `json:"google_map" validate:"required"`
-		PicName     string    `json:"pic_name" validate:"required"`
-		PicPosition string    `json:"pic_position" validate:"required"`
-		PicPhone    string    `json:"pic_phone" required:"true"`
-		ProvinceId  string    `json:"province_id" validate:"required"`
-		CityId      string    `json:"city_id" validate:"required"`
-		DistrictId  string    `json:"district_id" validate:"required"`
-		VillageId   string    `json:"village_id" validate:"required"`
+		Province    string    `json:"province" `
+		City        string    `json:"city" `
+		District    string    `json:"district" `
+		Village     string    `json:"village" `
+		GoogleMap   string    `json:"google_map" `
+		PicName     string    `json:"pic_name" `
+		PicPosition string    `json:"pic_position" `
+		PicPhone    string    `json:"pic_phone" `
+		ProvinceID  string    `json:"province_id"`
+		CityID      string    `json:"city_id" `
+		DistrictID  string    `json:"district_id" `
+		VillageID   string    `json:"village_id" `
 	}
 )

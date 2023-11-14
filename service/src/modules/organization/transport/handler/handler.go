@@ -32,6 +32,8 @@ func RenderError(w http.ResponseWriter, r *http.Request, h *Handler, err error, 
 		helperresponse.Render(w, r, h.responseMapping, httpresponse.InternalServerErrorDB, nil, result)
 	case _errors.ErrNotFound:
 		helperresponse.Render(w, r, h.responseMapping, httpresponse.NotFound, nil, result)
+	case _errors.ErrInvalidStatus:
+		helperresponse.Render(w, r, h.responseMapping, httpresponse.UnprocessableEntityDB, nil, result)
 	default:
 		helperresponse.Render(w, r, h.responseMapping, httpresponse.InternalServerError, nil, nil)
 	}

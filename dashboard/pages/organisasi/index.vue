@@ -128,7 +128,8 @@
   onMounted(() => {
     const activePage = useActivePage()
     activePage.page = 'Organisasi'
-    activePage.desc = 'Berisi semua daftar terkait organisasi yang mengelola event.'
+    activePage.navigation = false
+    
   })
 
 </script>

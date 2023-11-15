@@ -3,7 +3,7 @@ export const NAVIGATION_MENU = [
     titleMenu: '',
     menu: [
       {
-        link: '/dashboard',
+        link: '/',
         label: 'Dashboard',
         icon: 'navigation/dashboard-icon',
       }

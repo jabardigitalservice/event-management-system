@@ -209,6 +209,6 @@
   onMounted(() => {
     const activePage = useActivePage()
     activePage.page = 'Objek Wisata'
-    activePage.desc = 'Berisi semua daftar terkait objek tempat wisata.'
+    activePage.navigation = false
   })
 </script>

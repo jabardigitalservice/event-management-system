@@ -17,6 +17,7 @@
       :type="type"
       :placeholder="placeholder"
       class="mt-1"
+      :disabled="disabled"
     >
     <template #leading>
       <NuxtIcon
@@ -49,11 +50,11 @@
     },
     label: {
       type: String,
-      default: undefined,
+      default: '',
     },
     sublabel: {
       type: String,
-      default: undefined,
+      default: '',
     },
     placeholder: {
       type: String,
@@ -63,6 +64,10 @@
       type: String,
       default: '',
     },
+    disabled: {
+      type: Boolean, 
+      default: false
+    }
   })
 
   const { value, errorMessage } = useField(() => props.name)

@@ -45,8 +45,8 @@ func Init() (*App, error) {
 	slaveDB := InitPgsqlSlave(ctx, appConfig)
 
 	nrApp, err := newrelic.NewApplication(
-		newrelic.ConfigAppName("eventManagement"),
-		newrelic.ConfigLicense("eu01xx7cbed379a22ba3d1760b466361FFFFNRAL"),
+		newrelic.ConfigAppName(viper.GetString("NEW_RELIC_NAME")),
+		newrelic.ConfigLicense(viper.GetString("NEW_RELIC_APM_KEY")),
 		newrelic.ConfigAppLogForwardingEnabled(true),
 	)
 	if err != nil {

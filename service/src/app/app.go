@@ -44,12 +44,11 @@ func Init() (*App, error) {
 	masterDB := InitPgsqlMaster(ctx, appConfig)
 	slaveDB := InitPgsqlSlave(ctx, appConfig)
 
-	nrApp, err := newrelic.NewApplication(
-		newrelic.ConfigAppName(viper.GetString("NEW_RELIC_NAME")),
-		newrelic.ConfigLicense(viper.GetString("NEW_RELIC_APM_KEY")),
-		newrelic.ConfigAppLogForwardingEnabled(true),
-	)
 	if err != nil {
+		return nil, err
+	}
+
+	if err := InitNewRelic(); err != nil {
 		return nil, err
 	}
 

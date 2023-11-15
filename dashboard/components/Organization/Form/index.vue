@@ -34,6 +34,7 @@
             type="text"
             label="Nama Organisasi"
             placeholder="Masukan Nama Organisasi"
+            :disabled="state.isFormDisabled"
           />
         </div>
         <div class="mt-5 flex justify-between">
@@ -51,6 +52,7 @@
             square
             variant="solid"
             label="Pilih Alamat"
+            :disabled="state.isFormDisabled"
             @click="handleOpenDialogAddress"
           />
         </div>
@@ -62,6 +64,7 @@
             label="Logo"
             sublabel="Tipe File JPG/JPEG/PNG dengan maksimal ukuran file 2 MB"
             height-drag-and-drop="h-[224px]"
+            :disabled="state.isFormDisabled"
             :detail-drag-and-drop="state.detailDragAndDrop"
             :image-url="state.dataUrlImage"
             @preview-file="previewFile"
@@ -75,6 +78,7 @@
           type="text"
           label="Nama Pengelola"
           placeholder="Masukan Nama Pengelola"
+          :disabled="state.isFormDisabled"
         />
       </div>
       <div class="col-span-2 mt-5">
@@ -83,6 +87,7 @@
           type="text"
           label="Email"
           placeholder="Masukan Email"
+          :disabled="state.isFormDisabled"
         />
       </div>
       <div class="col-span-2 mt-5">
@@ -91,6 +96,7 @@
           type="text"
           label="Posisi Pengelola"
           placeholder="Masukan Posisi Pengelola"
+          :disabled="state.isFormDisabled"
         />
       </div>
       <div class="col-span-2 mt-5">
@@ -99,6 +105,7 @@
           type="number"
           label="No. Telp Pengelola"
           placeholder="Masukan No. Telp Pengelola"
+          :disabled="state.isFormDisabled"
         />
       </div>
       <div class="col-span-6 mt-5">
@@ -106,6 +113,7 @@
           name="description"
           label="Deskripsi Organisasi"
           placeholder="Masukan Deskripsi Organisasi"
+          :disabled="state.isFormDisabled"
         />
       </div>
       <button v-show="false" ref="submitForm" type="submit">Submit</button>
@@ -172,6 +180,7 @@
     idData: useIdData().id,
     showDialogAddress: false,
     address: {},
+    isFormDisabled: true
   })
 
   interface apiResponse {
@@ -208,7 +217,7 @@
       const response = (await useGetData(
         `/v1/event/organization/${id}`,
       )) as apiResponse
-      if (response.code == '2000800') {
+      if (response.code === '2000800') {
         const responseData = response.data as object as apiDataResponse
 
         formContainer.value?.setValues({
@@ -236,6 +245,7 @@
         state.dataUrlImage = responseData.logo
       }
     }
+    state.isFormDisabled = !state.isFormDisabled
   })
 
   const previewFile = () => {
@@ -271,16 +281,18 @@
           '',
         )
       : await postPhotoService()
-    if (Object.keys(state.address).length > 0) {
+
+    const isAlamatValidate: boolean = validateAlamat(state.address)
+    if (isAlamatValidate) {
       data.address = state.address.address
-      ;(data.province = state.address.province),
-        (data.province_id = state.address.province_id),
-        (data.city = state.address.city),
-        (data.city_id = state.address.city_id),
-        (data.district = state.address.district),
-        (data.district_id = state.address.district_id),
-        (data.village = state.address.village),
-        (data.village_id = state.address.village_id),
+      data.province = state.address.province
+      data.province_id = state.address.province_id
+      data.city = state.address.city
+      data.city_id = state.address.city_id
+      data.district = state.address.district
+      data.district_id = state.address.district_id
+      data.village = state.address.village
+      data.village_id = state.address.village_id
       data.google_map = state.address.google_map
     } else {
       return toast.add({
@@ -349,6 +361,18 @@
   const handleBack = () => {
     useIdData().id = ''
     router.push({ path: '/organisasi' })
+  }
+
+  const validateAlamat = (address: object) => {
+    if (Object.keys(address).length > 0) {
+      for (const key in address) {
+        if (address[key] === undefined) {
+          return false
+        }
+      }
+      return true
+    }
+    return false
   }
 
   const postPhotoService = async () => {

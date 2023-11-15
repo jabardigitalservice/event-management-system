@@ -1,12 +1,32 @@
 export const NAVIGATION_MENU = [
   {
-    link: '/organisasi',
-    label: 'Management Organisasi',
-    icon: 'navigation/statistic-menu-icon',
+    titleMenu: '',
+    menu: [
+      {
+        link: '/dashboard',
+        label: 'Dashboard',
+        icon: 'navigation/dashboard-icon',
+      }
+    ]
   },
   {
-    link: '/object',
-    label: 'Management Objek',
-    icon: 'navigation/page-menu-icon',
-  },
+    titleMenu: 'management',
+    menu: [
+      {
+        link: '/organisasi',
+        label: 'Management Organisasi',
+        icon: 'navigation/statistic-menu-icon',
+      },
+      {
+        link: '/object',
+        label: 'Objek Wisata',
+        icon: 'navigation/objek-wisata-icon',
+      },
+      {
+        link: '/tiket',
+        label: 'Pengaturan Tiket',
+        icon: 'navigation/pengaturan-tiket-icon',
+      },
+    ]
+  }
 ]

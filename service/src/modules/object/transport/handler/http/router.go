@@ -8,6 +8,7 @@ import (
 	"github.com/jabardigitalservice/super-app-services/event/src/constant"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/endpoint"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/transport/handler"
+	"github.com/newrelic/go-agent/v3/newrelic"
 )
 
 func Init(app *app.App, endpoint endpoint.EndpointInterface) *chi.Mux {
@@ -22,12 +23,12 @@ func Init(app *app.App, endpoint endpoint.EndpointInterface) *chi.Mux {
 		Version: app.GetVersion(),
 	}, false))
 
-	router.Post("/", h.CreateObject)
-	router.Get("/", h.GetObjects)
-	router.Get("/{id}", h.GetObjectByID)
-	router.Put("/{id}", h.UpdateObject)
-	router.Patch("/{id}", h.UpdateObjectStatus)
-	router.Delete("/{id}", h.DeleteObject)
+	router.Post(newrelic.WrapHandleFunc(app.GetNewRelic(), "/", h.CreateObject))
+	router.Get(newrelic.WrapHandleFunc(app.GetNewRelic(), "/", h.GetObjects))
+	router.Get(newrelic.WrapHandleFunc(app.GetNewRelic(), "/{id}", h.GetObjectByID))
+	router.Put(newrelic.WrapHandleFunc(app.GetNewRelic(), "/{id}", h.UpdateObject))
+	router.Patch(newrelic.WrapHandleFunc(app.GetNewRelic(), "/{id}", h.UpdateObjectStatus))
+	router.Delete(newrelic.WrapHandleFunc(app.GetNewRelic(), "/{id}", h.DeleteObject))
 
 	return router
 }

@@ -12,9 +12,13 @@ import (
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/entity"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/transport/handler/http/request"
 	"github.com/lib/pq"
+	"github.com/newrelic/go-agent/v3/newrelic"
 )
 
 func (r *Repository) CreateObject(ctx context.Context, obj request.Object) (request.Object, error) {
+	txn := newrelic.FromContext(ctx)
+	repositorySegment := txn.StartSegment("CreateObjectRepository")
+
 	socialMediaJSON, err := json.Marshal(obj.SocialMedia)
 	if err != nil {
 		return request.Object{}, err
@@ -34,11 +38,15 @@ func (r *Repository) CreateObject(ctx context.Context, obj request.Object) (requ
 	if err != nil {
 		return request.Object{}, err
 	}
-
+	repositorySegment.End()
 	return obj, nil
 }
 
 func (r *Repository) GetObjects(ctx context.Context, params request.QueryParam) ([]entity.Object, error) {
+	// Start a new New Relic transaction
+	txn := r.app.GetNewRelic().StartTransaction("GetObjectsDB")
+	defer txn.End()
+
 	binds := make([]interface{}, 0)
 
 	storageURL := r.app.GetStorageBaseUrl()
@@ -71,7 +79,6 @@ func (r *Repository) GetObjects(ctx context.Context, params request.QueryParam) 
     FROM objects
     WHERE 1 = 1 %s `,
 		r.filterObjectQuery(params, &binds))
-
 	result, err := r.getObjects(ctx, query, binds...)
 	if err != nil {
 		return nil, err
@@ -83,7 +90,6 @@ func (r *Repository) GetObjects(ctx context.Context, params request.QueryParam) 
 			result[i].Banner[j] = storageURL + result[i].Banner[j]
 		}
 	}
-
 	return result, nil
 }
 
@@ -235,6 +241,8 @@ func (r *Repository) filterObjectCountQuery(params request.QueryParam, binds *[]
 }
 
 func (r *Repository) GetObjectByID(ctx context.Context, id *uuid.UUID) (*entity.Object, error) {
+	txn := r.app.GetNewRelic().StartTransaction("GetObjectByIdDB")
+	defer txn.End()
 	query := `
         SELECT
             id,
@@ -315,6 +323,8 @@ func (r *Repository) GetObjectByID(ctx context.Context, id *uuid.UUID) (*entity.
 }
 
 func (r *Repository) UpdateObject(ctx context.Context, obj *request.Object) (*request.Object, error) {
+	txn := r.app.GetNewRelic().StartTransaction("UpdateObjectDB")
+	defer txn.End()
 	socialMediaJSON, err := json.Marshal(obj.SocialMedia)
 	if err != nil {
 		return nil, err
@@ -341,6 +351,8 @@ func (r *Repository) UpdateObject(ctx context.Context, obj *request.Object) (*re
 }
 
 func (r *Repository) UpdateObjectStatus(ctx context.Context, obj *request.Object) error {
+	txn := r.app.GetNewRelic().StartTransaction("UpdateStatusDB")
+	defer txn.End()
 	query := `
         UPDATE "objects" SET "status" = $2, "updated_at" = $3
         WHERE "id" = $1
@@ -352,6 +364,8 @@ func (r *Repository) UpdateObjectStatus(ctx context.Context, obj *request.Object
 }
 
 func (r *Repository) DeleteObject(ctx context.Context, id *uuid.UUID) error {
+	txn := r.app.GetNewRelic().StartTransaction("deleteObjectDB")
+	defer txn.End()
 	query := "DELETE FROM objects WHERE id = $1"
 
 	_, err := r.db.Master.ExecContext(ctx, query, id)

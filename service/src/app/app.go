@@ -10,16 +10,18 @@ import (
 	"github.com/jabardigitalservice/golog/logger"
 	gologlogger "github.com/jabardigitalservice/golog/logger"
 	"github.com/jabardigitalservice/super-app-services/event/src/constant"
+	"github.com/newrelic/go-agent/v3/newrelic"
 	"github.com/spf13/viper"
 	"go.elastic.co/apm/module/apmhttp"
 )
 
 type (
 	App struct {
-		ctx    context.Context
-		router *chi.Mux
-		logger *logger.Logger
-		db     *DB
+		ctx         context.Context
+		router      *chi.Mux
+		logger      *logger.Logger
+		db          *DB
+		newrelicApp *newrelic.Application
 	}
 
 	DB struct {
@@ -42,6 +44,15 @@ func Init() (*App, error) {
 	masterDB := InitPgsqlMaster(ctx, appConfig)
 	slaveDB := InitPgsqlSlave(ctx, appConfig)
 
+	nrApp, err := newrelic.NewApplication(
+		newrelic.ConfigAppName("eventManagement"),
+		newrelic.ConfigLicense("eu01xx7cbed379a22ba3d1760b466361FFFFNRAL"),
+		newrelic.ConfigAppLogForwardingEnabled(true),
+	)
+	if err != nil {
+		return nil, err
+	}
+
 	app := &App{
 		ctx: ctx,
 		router: router.InitChi(router.Config{
@@ -52,6 +63,7 @@ func Init() (*App, error) {
 			Master: masterDB,
 			Slave:  slaveDB,
 		},
+		newrelicApp: nrApp,
 	}
 
 	return app, nil
@@ -75,6 +87,10 @@ func (app *App) GetVersion() string {
 
 func (app *App) GetDB() *DB {
 	return app.db
+}
+
+func (app *App) GetNewRelic() *newrelic.Application {
+	return app.newrelicApp
 }
 
 func (app *App) GetStorageBaseUrl() string {

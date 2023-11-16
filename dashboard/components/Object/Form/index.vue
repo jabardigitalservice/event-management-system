@@ -24,6 +24,17 @@
               type="text"
               label="Nama Objek Wisata"
               placeholder="Masukan Nama Objek Wisata"
+              :disabled="state.isFormDisabled"
+            />
+          </div>
+          <div class="mt-5">
+            <BaseDropdown
+              name="organization_id"
+              type="text"
+              label="Organisasi"
+              placeholder="Pilih Organisasi"
+              :data-dropdown="state.dataOrganisasi"
+              :disabled="state.isFormDisabled"
             />
           </div>
           <div class="mt-5 flex justify-between">
@@ -41,6 +52,7 @@
               square
               variant="solid"
               label="Pilih Alamat"
+              :disabled="state.isFormDisabled"
               @click="handleOpenDialogAddress"
             />
           </div>
@@ -52,6 +64,7 @@
               label="Logo"
               sublabel="Tipe File JPG/JPEG/PNG dengan maksimal ukuran file 2 MB"
               height-drag-and-drop="h-[224px]"
+              :disabled="state.isFormDisabled"
               :detail-drag-and-drop="state.detailDragAndDrop"
               :image-url="state.dataUrlImage"
               @preview-file="previewFile"
@@ -65,6 +78,7 @@
             type="text"
             label="Nama Pengelola"
             placeholder="Masukan Nama Pengelola"
+            :disabled="state.isFormDisabled"
           />
         </div>
         <div class="col-span-3 mt-5">
@@ -73,6 +87,7 @@
             type="text"
             label="Email Pengelola"
             placeholder="Masukan Email Pengelola"
+            :disabled="state.isFormDisabled"
           />
         </div>
         <div class="col-span-3 mt-5">
@@ -81,6 +96,7 @@
             type="number"
             label="No. Telp Objek Wisata"
             placeholder="Masukan No. Telp Objek Wisata"
+            :disabled="state.isFormDisabled"
           />
         </div>
         <div class="col-span-6 mt-5">
@@ -88,6 +104,7 @@
             name="description"
             label="Deskripsi Objek"
             placeholder="Masukan Deskripsi Objek"
+            :disabled="state.isFormDisabled"
           />
         </div>
         <div class="col-span-2 mt-5">
@@ -96,6 +113,7 @@
             label="Instagram"
             placeholder="https://instagram.com/"
             icon="common/instagram"
+            :disabled="state.isFormDisabled"
           />
         </div>
         <div class="col-span-2 mt-5">
@@ -104,6 +122,7 @@
             label="Tiktok"
             placeholder="https://tiktok.com/"
             icon="common/tiktok"
+            :disabled="state.isFormDisabled"
           />
         </div>
         <div class="col-span-2 mt-5">
@@ -112,38 +131,42 @@
             label="Facebook"
             placeholder="https://facebook.com/"
             icon="common/facebook"
+            :disabled="state.isFormDisabled"
           />
         </div>
 
-        <div class="col-span-3 mt-5">
-          <BaseTextInputGroup
-            name="x"
-            label="X"
-            placeholder="https://twitter.com/"
-            icon="common/twitter"
-          />
-        </div>
-        <div class="col-span-3 mt-5">
-          <BaseTextInputGroup
-            name="youtube"
-            label="Youtube"
-            placeholder="https://youtube.com/"
-            icon="common/youtube"
-          />
-        </div>
-        <div class="col-span-6">
-          <BaseDragAndDropFileMultiple
-            ref="BaseDragAndDropFileMultiple"
-            class="mt-5"
-            label="Banner"
-            sublabel="Tipe File JPG/JPEG/PNG dengan maksimal ukuran file 2 MB"
-            height-drag-and-drop="h-[165px]"
-            :detail-drag-and-drop="state.detailDragAndDrop"
-            :image-url-multiple="state.dataUrlImageMultiple"
-            @preview-file="previewFile"
-            @delete-url-file-multiple="deleteImageMultipleUrl"
-          />
-        </div>
+      <div class="col-span-3 mt-5">
+        <BaseTextInputGroup
+          name="x"
+          label="X"
+          placeholder="https://twitter.com/"
+          icon="common/twitter"
+          :disabled="state.isFormDisabled"
+        />
+      </div>
+      <div class="col-span-3 mt-5">
+        <BaseTextInputGroup
+          name="youtube"
+          label="Youtube"
+          placeholder="https://youtube.com/"
+          icon="common/youtube"
+          :disabled="state.isFormDisabled"
+        />
+      </div>
+      <div class="col-span-6">
+        <BaseDragAndDropFileMultiple
+          ref="BaseDragAndDropFileMultiple"
+          class="mt-5"
+          label="Banner"
+          sublabel="Tipe File JPG/JPEG/PNG dengan maksimal ukuran file 2 MB"
+          height-drag-and-drop="h-[165px]"
+          :disabled="state.isFormDisabled"
+          :detail-drag-and-drop="state.detailDragAndDropMultiple"
+          :image-url-multiple="state.dataUrlImageMultiple"
+          @preview-file="previewFile"
+          @delete-url-file-multiple="deleteImageMultipleUrl"
+        />
+      </div>
 
         <button v-show="false" ref="submitForm" type="submit">Submit</button>
       </Form>
@@ -195,16 +218,27 @@
       facebook: string(),
       instagram: string(),
       x: string(),
+      organization_id: string().required('Organisasi Wajib Dipilih')
     },
     detailDragAndDrop: {
       informationSizeCompatible:
-        'Ukuran file dokumen SK tidak boleh melebihi 2 MB.',
+        'Ukuran file dokumen SK tidak boleh melebihi 1 MB.',
+      informationFormatCompatible:
+        'Hanya file yang berformat JPG/JPEG/PNG yang dapat diupload.',
+      formatTypeFile: ['image/png', 'image/svg+xml'],
+      maxSizeFile: 1097152,
+      acceptFile: '.png,.svg',
+      maxResolution: '46',
+    },
+    detailDragAndDropMultiple: {
+      informationSizeCompatible:
+        'Ukuran file dokumen SK tidak boleh melebihi 1 MB.',
       informationFormatCompatible:
         'Hanya file yang berformat JPG/JPEG/PNG yang dapat diupload.',
       formatTypeFile: ['image/jpeg', 'image/png', 'image/jpg'],
-      maxSizeFile: 2097152,
+      maxSizeFile: 1097152,
       acceptFile: '.jpg,.jpeg,.png',
-      maxResolution: '46',
+      maxResolution: [360, 170],
     },
     dataImage: {
       showDialog: false,
@@ -217,6 +251,8 @@
     idData: useIdData().id,
     showDialogAddress: false,
     address: {},
+    dataOrganisasi: [],
+    isFormDisabled: true
   })
 
   interface apiResponse {
@@ -246,49 +282,74 @@
     village: string
     village_id: string
     google_map: string
-    status: string
+    status: string,
+    organization_id: string
   }
 
   onMounted(async () => {
     const id = state.idData
     if (id) {
-      const response = (await useGetData(
+      const responseObject = (await useGetData(
         `/v1/event/object/${id}`,
       )) as apiResponse
-      if (response.code == '2000800') {
-        const responseData = response.data as object as apiDataResponse
+      if (responseObject.code === '2000800') {
+        const responseObjectData =
+          responseObject.data as object as apiDataResponse
 
+        state.selectedOrganisasi = responseObjectData?.organization_id
         formContainer.value?.setValues({
-          name: responseData?.name,
-          organizer: responseData?.organizer,
-          organizer_email: responseData?.organizer_email,
-          organizer_phone: responseData?.organizer_phone,
-          instagram: responseData?.social_media[0]?.link,
-          tiktok: responseData?.social_media[1]?.link,
-          facebook: responseData?.social_media[2]?.link,
-          x: responseData?.social_media[3]?.link,
-          youtube: responseData?.social_media[4]?.link,
-          description: responseData?.description,
+          name: responseObjectData?.name,
+          organizer: responseObjectData?.organizer,
+          organizer_email: responseObjectData?.organizer_email,
+          organizer_phone: responseObjectData?.organizer_phone,
+          instagram: responseObjectData?.social_media[0]?.link,
+          tiktok: responseObjectData?.social_media[1]?.link,
+          facebook: responseObjectData?.social_media[2]?.link,
+          x: responseObjectData?.social_media[3]?.link,
+          youtube: responseObjectData?.social_media[4]?.link,
+          description: responseObjectData?.description,
+          organization_id: responseObjectData?.organization_id,
         })
 
         state.address = {
-          address: responseData?.address,
-          province: responseData?.province,
-          province_id: responseData?.province_id,
-          city: responseData?.city,
-          city_id: responseData?.city_id,
-          district: responseData?.district,
-          district_id: responseData?.district_id,
-          village: responseData?.village,
-          village_id: responseData?.village_id,
-          google_map: responseData?.google_map,
+          address: responseObjectData?.address,
+          province: responseObjectData?.province,
+          province_id: responseObjectData?.province_id,
+          city: responseObjectData?.city,
+          city_id: responseObjectData?.city_id,
+          district: responseObjectData?.district,
+          district_id: responseObjectData?.district_id,
+          village: responseObjectData?.village,
+          village_id: responseObjectData?.village_id,
+          google_map: responseObjectData?.google_map,
         }
 
-        state.dataUrlImage = responseData.logo
-        state.dataUrlImageMultiple = responseData.banner
+        
+
+        state.dataUrlImage = responseObjectData.logo
+        state.dataUrlImageMultiple = responseObjectData.banner
       }
     }
+
+    getOrganisasi(1, 10)
+
+    state.isFormDisabled = !state.isFormDisabled
   })
+
+  const getOrganisasi = async (page: number, pageSize: number) => {
+    const responseOrganisasi = await useGetData(
+      `/v1/event/organization/?page=${page}&pageSize=${pageSize}`,
+    )
+    if (responseOrganisasi.code === '2000800') {
+      const responseOrganisasiData = responseOrganisasi.data.data
+      for (let i = 0; i < responseOrganisasiData.length; i++) {
+        state.dataOrganisasi.push({
+          id: responseOrganisasiData[i].id,
+          label: responseOrganisasiData[i].name,
+        })
+      }
+    }
+  }
 
   const previewFile = () => {
     state.dataImage.showDialog = true
@@ -347,7 +408,9 @@
       },
     ]
     data.status = 'draft'
-    if (Object.keys(state.address).length > 0) {
+
+    const isAlamatValidate: boolean = validateAlamat(state.address)
+    if (isAlamatValidate) {
       data.address = state.address.address
       data.province = state.address.province
       data.province_id = state.address.province_id
@@ -366,7 +429,7 @@
         timeout: 2500,
       })
     }
-
+    
     switch (method) {
       case 'edit':
         try {
@@ -430,13 +493,25 @@
     router.push({ path: '/object' })
   }
 
+  const validateAlamat = (address: object) => {
+    if (Object.keys(address).length > 0) {
+      for (const key in address) {
+        if (address[key] === undefined) {
+          return false
+        }
+      }
+      return true
+    }
+    return false
+  }
+
   const postPhotoService = async () => {
     const image = JSON.parse(JSON.stringify(useDataImage().dataImage))
     const imageLength = Object.keys(image).length
 
     if (!image.fileCorrect) {
       return toast.add({
-        title: 'Image Melanggar Rules',
+        title: 'Image Melanggar Rules Atau Kosong',
         color: 'red',
         icon: 'i-heroicons-x-circle',
         timeout: 2500,
@@ -455,7 +530,7 @@
       JSON.stringify(useDataImage().dataImageMultiple),
     )
     const imageMultipleLength: number = Object.keys(imageMultiple).length
-
+    
     const [dataToUpload, dataAreExist] = multipleImageValidate(
       imageMultiple,
       imageMultipleLength,
@@ -477,7 +552,15 @@
     const dataAreExist = []
     if (imageMultipleLength >= 1) {
       for (let i = 0; i < imageMultipleLength; i++) {
-        if (imageMultiple[i].url == '') {
+        if (imageMultiple[i]?.url) {
+          if (!imageMultiple[i].fileCorrect) {
+            return toast.add({
+              title: 'Banner Image Melanggar Rules',
+              color: 'red',
+              icon: 'i-heroicons-x-circle',
+              timeout: 2500,
+            })
+          }
           dataToUpload.push(imageMultiple[i])
         } else {
           dataAreExist.push({

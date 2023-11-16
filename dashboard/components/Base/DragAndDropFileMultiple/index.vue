@@ -35,7 +35,7 @@
             ref="file"
             type="file"
             class="hidden"
-            :disabled="dataFilesMultiple.length === 0 ? false : true"
+            :disabled="dataFilesMultiple.length === 0 ? false : disabled"
             :accept="detailDragAndDrop.acceptFile"
             @change="onChangeUpload"
           />
@@ -87,7 +87,7 @@
 
               <div class="flex items-center">
                 <div class="flex items-center">
-                  <img :src="data.url != '' ? data.url : fileDocument(data)" class="" />
+                  <img :src="data.url !== '' ? data.url : fileDocument(data)" />
                 </div>
               </div>
             </div>
@@ -129,6 +129,10 @@ import { array, object } from 'yup';
       type: array,
       default: [],
     },
+    disabled: {
+      type: Boolean, 
+      default: false
+    }
   })
 
   const emit = defineEmits(['previewFile', 'deleteUrlFileMultiple'])
@@ -155,7 +159,10 @@ import { array, object } from 'yup';
     data: string,
     fileSize: string,
     fileCorrect: boolean,
-    url: string
+    url: string,
+    height: number,
+    width: number,
+    fileSizeNumber: number
   }
 
   onUpdated(async () => {
@@ -170,7 +177,7 @@ import { array, object } from 'yup';
           data: '',
           fileSize: '',
           fileCorrect: false,
-          url: ''
+          url: '',
         }
         fileInputIsChange.value = true
         fileIsCorrect.value = true
@@ -199,19 +206,28 @@ import { array, object } from 'yup';
           roles: ['admin'],
           data: '',
           fileSize: '',
+          fileSizeNumber: 0,
           fileCorrect: false,
-          url: ''
+          url: '',
+          width: 0,
+          height: 0
         }
 
         files.value = fileTarget[i]
         dataFile.name = files.value.name
         dataFile.mimeType = files.value.type
+        dataFile.fileSizeNumber = files.value.size
         dataFile.fileSize = convertSize(files.value.size)
         fileInputIsChange.value = true
         convertFileToBase64(files.value, files.value.name)
-        runProgressBar()
-        checkFileValidation()
-        dataFile.fileCorrect = fileIsCorrect.value
+        let img = new Image()
+        img.src = await window.URL.createObjectURL(fileTarget[i])
+        img.onload = () => {
+          dataFile.width = img.width
+          dataFile.height = img.height
+
+          dataFile.fileCorrect = checkFileValidation(dataFile)
+        }
 
         dataFilesMultiple.value.push(dataFile)
       }
@@ -302,7 +318,7 @@ import { array, object } from 'yup';
     const reader = new FileReader()
 
     reader.onload = () => {
-      dataFilesMultiple.value.filter((x) => x.name == name)[0].data =
+      dataFilesMultiple.value.filter((x) => x.name === name)[0].data =
         reader.result.split(',')[1]
 
       useDataImage().dataImageMultiple = { ...dataFilesMultiple.value }
@@ -310,25 +326,34 @@ import { array, object } from 'yup';
     reader.readAsDataURL(FileObject)
   }
 
-  const checkFileValidation = () => {
-    if (files.value) {
-      if (fileSizeIsCompatible() && formatFileIsCompatible()) {
-        fileIsCorrect.value = true
-        disabledButton.value = false
+  const checkFileValidation = (file: Array) => {
+    if (file) {
+      if (fileSizeIsCompatible(file) && formatFileIsCompatible(file) && fileResolutionIsCompatible(file)) {
+        return true
+        
       } else {
-        fileIsCorrect.value = false
+        return false
       }
     } else {
-      fileIsCorrect.value = false
+      return false
     }
   }
 
-  const fileSizeIsCompatible = () => {
-    return files.value.size <= props.detailDragAndDrop.maxSizeFile
+  const fileSizeIsCompatible = (file: Array) => {
+    return file.fileSizeNumber <= props.detailDragAndDrop.maxSizeFile
   }
 
-  const formatFileIsCompatible = () => {
-    return props.detailDragAndDrop.formatTypeFile.includes(files.value.type)
+  const formatFileIsCompatible = (file: Array) => {
+    return props.detailDragAndDrop.formatTypeFile.includes(file.mimeType)
+  }
+
+  const fileResolutionIsCompatible = (file: Array) => {
+    
+    const validate =
+      file.width > props.detailDragAndDrop.maxResolution[0] &&
+      file.height > props.detailDragAndDrop.maxResolution[1]
+      
+    return !validate
   }
 
   const fileDocument = (file: Array) => {
@@ -340,7 +365,7 @@ import { array, object } from 'yup';
   }
 
   const imageDelete = (index: number, dataUrl: string) => {
-    if (dataUrl !== '') {
+    if (dataUrl ! == '') {
       emit('deleteUrlFileMultiple', index)
     }
 

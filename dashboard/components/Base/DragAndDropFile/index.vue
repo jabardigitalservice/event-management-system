@@ -32,7 +32,7 @@
             <p
               class="mb-2 truncate font-lato text-[14px] font-normal text-black"
             >
-              {{ dataFiles?.name }}
+              {{ dataFiles?.name || '-' }}
             </p>
             <template v-if="proggresBarIsSuccess">
               <div class="mb-1 h-1.5 w-full rounded-full bg-gray-200">
@@ -49,10 +49,10 @@
             </template>
             <template v-else>
               <p class="mb-2 font-lato text-[11px] font-normal text-gray-600">
-                Ukuran {{ dataFiles?.fileSize }}
+                Ukuran {{ dataFiles?.fileSize || '-' }}
               </p>
             </template>
-            <div v-if="imageUrl === ''">
+            <div v-if="imageUrl">
               <p
                 v-if="!fileSizeIsCompatible()"
                 class="font-lato text-[11px] font-bold text-red-600"
@@ -112,6 +112,7 @@
           ref="file"
           type="file"
           class="hidden"
+          :disabled="disabled"
           :accept="detailDragAndDrop.acceptFile"
           @change="onChangeUpload"
         />
@@ -144,6 +145,10 @@
       type: String,
       default: '',
     },
+    disabled: {
+      type: Boolean, 
+      default: false
+    }
   })
 
   const emit = defineEmits(['previewFile', 'deleteUrlFile'])
@@ -170,7 +175,7 @@
   const disabledButton = ref(true)
 
   onUpdated(async () => {
-    if (props.imageUrl != '') {
+    if (props.imageUrl) {
       const res = await $fetch(props.imageUrl)
 
       dataFiles.value.name = ''

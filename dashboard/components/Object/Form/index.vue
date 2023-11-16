@@ -336,7 +336,7 @@
         
 
         state.dataUrlImage = responseObjectData.logo
-        // state.dataUrlImageMultiple = responseObjectData.banner
+        state.dataUrlImageMultiple = responseObjectData.banner
       }
     }
 
@@ -561,7 +561,7 @@
     const dataAreExist = []
     if (imageMultipleLength >= 1) {
       for (let i = 0; i < imageMultipleLength; i++) {
-        if (imageMultiple[i].url === '') {
+        if (imageMultiple[i]?.url) {
           if (!imageMultiple[i].fileCorrect) {
             return toast.add({
               title: 'Banner Image Melanggar Rules',

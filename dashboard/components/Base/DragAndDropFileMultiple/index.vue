@@ -87,7 +87,7 @@
 
               <div class="flex items-center">
                 <div class="flex items-center">
-                  <img :src="data.url !== '' ? data.url : fileDocument(data)" class="" />
+                  <img :src="data.url !== '' ? data.url : fileDocument(data)" />
                 </div>
               </div>
             </div>

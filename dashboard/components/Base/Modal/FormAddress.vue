@@ -40,7 +40,7 @@
                   >
                     <template #label>
                       <spans
-                        v-if="state.selectedProvince?.id === undefined"
+                        v-if="state.selectedProvince?.id"
                         class="truncate"
                         >Pilih Provinsi</spans
                       >
@@ -53,7 +53,7 @@
                 <UFormGroup label="Kota/Kabupaten" class="mb-4 w-full">
                   <USelectMenu
                     v-model="state.selectedCity"
-                    :disabled="state.selectedProvince?.id === undefined"
+                    :disabled="state.selectedProvince?.id"
                     :options="state.dataCity"
                     searchable
                     @click="getCity"
@@ -61,7 +61,7 @@
                   >
                     <template #label>
                       <span
-                        v-if="state.selectedCity?.id === undefined"
+                        v-if="state.selectedCity?.id"
                         class="truncate"
                         >Pilih Kota/Kabupaten</span
                       >
@@ -74,7 +74,7 @@
                 <UFormGroup label="Kecamatan" class="mb-4 w-full">
                   <USelectMenu
                     v-model="state.selectedDistrict"
-                    :disabled="state.selectedCity?.id === undefined"
+                    :disabled="state.selectedCity?.id"
                     :options="state.dataDistrict"
                     searchable
                     @click="getDistrict"
@@ -82,7 +82,7 @@
                   >
                     <template #label>
                       <span
-                        v-if="state.selectedDistrict?.id === undefined"
+                        v-if="state.selectedDistrict?.id"
                         class="truncate"
                         >Pilih Kecamatan</span
                       >
@@ -95,14 +95,14 @@
                 <UFormGroup label="Desa/Kelurahan" class="mb-4 w-full">
                   <USelectMenu
                     v-model="state.selectedVillage"
-                    :disabled="state.selectedDistrict?.id === undefined"
+                    :disabled="state.selectedDistrict?.id"
                     :options="state.dataVillage"
                     searchable
                     @click="getVillage"
                   >
                     <template #label>
                       <span
-                        v-if="state.selectedVillage?.id === undefined"
+                        v-if="state.selectedVillage?.id"
                         class="truncate"
                         >Pilih Desa/Kelurahan</span
                       >

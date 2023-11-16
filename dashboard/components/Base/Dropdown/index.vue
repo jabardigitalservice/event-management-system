@@ -17,7 +17,7 @@
   >
     <template #label>
       <spans
-        v-if="state.selected?.id === undefined"
+        v-if="state.selected?.id"
         class="truncate"
         >{{ placeholder }}</spans
       >

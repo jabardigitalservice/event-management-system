@@ -1,124 +1,115 @@
 <template>
-  <div>
-    <div class="flex justify-between">
-      <div>
-        <UButton
-          size="lg"
-          label="Kembali"
-          color="green"
-          variant="outline"
-          icon="i-heroicons-arrow-left-20-solid"
-          @click="handleBack"
-        />
-      </div>
-      <div>
-        <UButton
-          size="lg"
-          label="Simpan"
-          color="green"
-          variant="solid"
-          @click="handleSubmit"
-        />
-      </div>
-    </div>
-    <Form
-      ref="formContainer"
-      class="message-notif-form my-5 grid grid-cols-6 gap-x-6 rounded-lg bg-white px-6 py-4"
-      :validation-schema="state.schema"
-      @submit="onSubmit"
-    >
-      <div class="col-span-3 mt-5">
-        <div>
-          <BaseTextInput
-            name="name"
-            type="text"
-            label="Nama Organisasi"
-            placeholder="Masukan Nama Organisasi"
-            :disabled="state.isFormDisabled"
-          />
-        </div>
-        <div class="mt-5 flex justify-between">
+  <TheHeader>
+    <template #buttonSave>
+      <UButton
+        size="lg"
+        :label= "!!state.idData?`Simpan Perubahan`:`Buat Organisasi`"
+        class="bg-[#1569C4] justify-self-end"
+        color="blue"
+        variant="solid"
+        @click="handleSubmit"
+      />
+    </template>
+    <template #body>
+      <Form
+        ref="formContainer"
+        class="message-notif-form my-5 grid grid-cols-6 gap-x-6 rounded-lg bg-white px-6 py-4"
+        :validation-schema="state.schema"
+        @submit="onSubmit"
+      >
+        <div class="col-span-3 mt-5">
           <div>
-            <label class="message-notif-form__label-required text-gray-800">
-              Alamat
-            </label>
-            <p class="text-[13px] text-gray-600">
-              Isikan alamat lengkap organisasi
-            </p>
+            <BaseTextInput
+              name="name"
+              type="text"
+              label="Nama Organisasi"
+              placeholder="Masukan Nama Organisasi"
+              :disabled="state.isFormDisabled"
+            />
           </div>
-          <UButton
-            size="sm"
-            color="primary"
-            square
-            variant="solid"
-            label="Pilih Alamat"
+          <div class="mt-5 flex justify-between">
+            <div>
+              <label class="message-notif-form__label-required text-gray-800">
+                Alamat
+              </label>
+              <p class="text-[13px] text-gray-600">
+                Isikan alamat lengkap organisasi
+              </p>
+            </div>
+            <UButton
+              size="sm"
+              color="primary"
+              square
+              variant="solid"
+              label="Pilih Alamat"
+              :disabled="state.isFormDisabled"
+              @click="handleOpenDialogAddress"
+            />
+          </div>
+        </div>
+        <div class="col-span-3">
+          <div>
+            <BaseDragAndDropFile
+              ref="BaseDragAndDropFile"
+              label="Logo"
+              sublabel="Tipe File JPG/JPEG/PNG dengan maksimal ukuran file 2 MB"
+              height-drag-and-drop="h-[224px]"
+              :disabled="state.isFormDisabled"
+              :detail-drag-and-drop="state.detailDragAndDrop"
+              :image-url="state.dataUrlImage"
+              @preview-file="previewFile"
+              @delete-url-file="deleteImageUrl"
+            />
+          </div>
+        </div>
+        <div class="col-span-6">
+          <BaseTextInput
+            name="pic_name"
+            type="text"
+            label="Nama Pengelola"
+            placeholder="Masukan Nama Pengelola"
             :disabled="state.isFormDisabled"
-            @click="handleOpenDialogAddress"
           />
         </div>
-      </div>
-      <div class="col-span-3">
-        <div>
-          <BaseDragAndDropFile
-            ref="BaseDragAndDropFile"
-            label="Logo"
-            sublabel="Tipe File JPG/JPEG/PNG dengan maksimal ukuran file 2 MB"
-            height-drag-and-drop="h-[224px]"
+        <div class="col-span-2 mt-5">
+          <BaseTextInput
+            name="email"
+            type="text"
+            label="Email"
+            placeholder="Masukan Email"
             :disabled="state.isFormDisabled"
-            :detail-drag-and-drop="state.detailDragAndDrop"
-            :image-url="state.dataUrlImage"
-            @preview-file="previewFile"
-            @delete-url-file="deleteImageUrl"
           />
         </div>
-      </div>
-      <div class="col-span-6">
-        <BaseTextInput
-          name="pic_name"
-          type="text"
-          label="Nama Pengelola"
-          placeholder="Masukan Nama Pengelola"
-          :disabled="state.isFormDisabled"
-        />
-      </div>
-      <div class="col-span-2 mt-5">
-        <BaseTextInput
-          name="email"
-          type="text"
-          label="Email"
-          placeholder="Masukan Email"
-          :disabled="state.isFormDisabled"
-        />
-      </div>
-      <div class="col-span-2 mt-5">
-        <BaseTextInput
-          name="pic_position"
-          type="text"
-          label="Posisi Pengelola"
-          placeholder="Masukan Posisi Pengelola"
-          :disabled="state.isFormDisabled"
-        />
-      </div>
-      <div class="col-span-2 mt-5">
-        <BaseTextInput
-          name="pic_phone"
-          type="number"
-          label="No. Telp Pengelola"
-          placeholder="Masukan No. Telp Pengelola"
-          :disabled="state.isFormDisabled"
-        />
-      </div>
-      <div class="col-span-6 mt-5">
-        <BaseTextareaInput
-          name="description"
-          label="Deskripsi Organisasi"
-          placeholder="Masukan Deskripsi Organisasi"
-          :disabled="state.isFormDisabled"
-        />
-      </div>
-      <button v-show="false" ref="submitForm" type="submit">Submit</button>
-    </Form>
-  </div>
+        <div class="col-span-2 mt-5">
+          <BaseTextInput
+            name="pic_position"
+            type="text"
+            label="Posisi Pengelola"
+            placeholder="Masukan Posisi Pengelola"
+            :disabled="state.isFormDisabled"
+          />
+        </div>
+        <div class="col-span-2 mt-5">
+          <BaseTextInput
+            name="pic_phone"
+            type="number"
+            label="No. Telp Pengelola"
+            placeholder="Masukan No. Telp Pengelola"
+            :disabled="state.isFormDisabled"
+          />
+        </div>
+        <div class="col-span-6 mt-5">
+          <BaseTextareaInput
+            name="description"
+            label="Deskripsi Organisasi"
+            placeholder="Masukan Deskripsi Organisasi"
+            :disabled="state.isFormDisabled"
+          />
+        </div>
+        <button v-show="false" ref="submitForm" type="submit">Submit</button>
+      </Form>
+    </template>
+  </TheHeader>
   <BaseViewFileModal
     title="Logo"
     :show="state.dataImage.showDialog"

@@ -44,7 +44,7 @@
     </div>
     <div class="w-50 mt-5 max-h-[300px] flex-1 overflow-auto pl-3 pr-3 pt-5">
       <RadioGroup v-show="dataFilesMultiple" v-model="selected">
-        <RadioGroupLabel class="sr-only">Server size</RadioGroupLabel>
+        <RadioGroupLabel class="sr-only sticky" />
         <div class="grid gap-4 space-y-2 md:grid-cols-2 lg:grid-cols-3">
           <RadioGroupOption
             v-for="(data, index) in dataFilesMultiple"

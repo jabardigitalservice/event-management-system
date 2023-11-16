@@ -16,6 +16,7 @@
     :type="type"
     :placeholder="placeholder"
     class="mt-1"
+    :disabled="disabled"
   />
   <p v-show="errorMessage" class="help-message text-sm text-red-500">
     {{ errorMessage }}
@@ -40,16 +41,20 @@
     },
     label: {
       type: String,
-      default: undefined,
+      default: '',
     },
     sublabel: {
       type: String,
-      default: undefined,
+      default: '',
     },
     placeholder: {
       type: String,
       default: '',
     },
+    disabled: {
+      type: Boolean, 
+      default: false
+    }
   })
 
   const { value, errorMessage } = useField(() => props.name)

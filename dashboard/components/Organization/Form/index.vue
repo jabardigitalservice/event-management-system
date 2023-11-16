@@ -282,8 +282,8 @@
         )
       : await postPhotoService()
 
-    const isAlamatValidate: boolean = validateAlamat(state.address)
-    if (isAlamatValidate) {
+    const isAddressValid: boolean = validateAlamat(state.address)
+    if (isAddressValid) {
       data.address = state.address.address
       data.province = state.address.province
       data.province_id = state.address.province_id

@@ -16,11 +16,7 @@
     @change="onChange"
   >
     <template #label>
-      <spans
-        v-if="state.selected?.id"
-        class="truncate"
-        >{{ placeholder }}</spans
-      >
+      <span v-if="state.selected?.id" class="truncate">{{ placeholder }}</span>
     </template>
     <template #option-empty="{ query }">
       <q>{{ query }}</q> not found
@@ -61,27 +57,29 @@
     },
     disabled: {
       type: Boolean,
-      default: false
+      default: false,
     },
     dataDropdown: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     dataSelected: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   })
 
   const state = reactive({
-    selected: []
-  });
+    selected: [],
+  })
 
   const { value, errorMessage } = useField(() => props.name)
 
-  onMounted( async () => { 
+  onMounted(async () => {
     if (value) {
-      const filterData = await props.dataDropdown.filter((el) => el.id === value.value)
+      const filterData = await props.dataDropdown.filter(
+        (el) => el.id === value.value,
+      )
       state.selected = filterData[0]
     }
   })
@@ -90,6 +88,4 @@
     value.value = e.id
     state.selected = e
   }
-
-  
 </script>

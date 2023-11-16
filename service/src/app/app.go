@@ -44,11 +44,7 @@ func Init() (*App, error) {
 	masterDB := InitPgsqlMaster(ctx, appConfig)
 	slaveDB := InitPgsqlSlave(ctx, appConfig)
 
-	if err != nil {
-		return nil, err
-	}
-
-	if err := InitNewRelic(); err != nil {
+	if err := InitNewRelic(appConfig); err != nil {
 		return nil, err
 	}
 

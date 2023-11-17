@@ -44,32 +44,37 @@ func (r *Repository) GetObjects(ctx context.Context, params request.QueryParam) 
 	storageURL := r.app.GetStorageBaseUrl()
 	storageURL = storageURL + "/"
 
-	var query = fmt.Sprintf(`SELECT
-        id,
-        name,
-        address,
-        description,
-        banner,
-        logo,
-        social_media,
-        organizer,
-        status,
-        created_at,
-        updated_at,
-		province,
-		city,
-		district,
-		village, 
-		google_map,
-		organizer_email,
-		organizer_phone,
-		province_id, 
-		city_id, 
-		district_id, 
-		village_id,
-		organization_id
-    FROM objects
-    WHERE 1 = 1 %s `,
+	var query = fmt.Sprintf(`
+		SELECT
+			objects.id,
+			objects.name,
+			objects.address,
+			objects.description,
+			objects.banner,
+			objects.logo,
+			objects.social_media,
+			objects.organizer,
+			objects.status,
+			objects.created_at,
+			objects.updated_at,
+			objects.province,
+			objects.city,
+			objects.district,
+			objects.village, 
+			objects.google_map,
+			objects.organizer_email,
+			objects.organizer_phone,
+			objects.province_id, 
+			objects.city_id, 
+			objects.district_id, 
+			objects.village_id,
+			objects.organization_id,
+			organizations.name AS organization_name
+		FROM
+			objects
+		JOIN
+			organizations ON objects.organization_id = organizations.id
+		WHERE 1 = 1 %s `,
 		r.filterObjectQuery(params, &binds))
 
 	result, err := r.getObjects(ctx, query, binds...)
@@ -86,7 +91,6 @@ func (r *Repository) GetObjects(ctx context.Context, params request.QueryParam) 
 
 	return result, nil
 }
-
 func (r *Repository) getObjects(ctx context.Context, query string, args ...interface{}) ([]entity.Object, error) {
 	rows, err := r.db.Slave.QueryContext(ctx, query, args...)
 	if err != nil {
@@ -129,6 +133,7 @@ func (r *Repository) getObjects(ctx context.Context, query string, args ...inter
 			&object.DistrictID,
 			&object.VillageID,
 			&object.OrganizationID,
+			&object.OrganizationName,
 		); err != nil {
 			return nil, err
 		}
@@ -237,31 +242,33 @@ func (r *Repository) filterObjectCountQuery(params request.QueryParam, binds *[]
 func (r *Repository) GetObjectByID(ctx context.Context, id *uuid.UUID) (*entity.Object, error) {
 	query := `
         SELECT
-            id,
-            name,
-            address,
-            description,
-            banner,
-            logo,
-            social_media,
-            organizer,
-            status,
-            created_at,
-            updated_at,
-			province,
-			city,
-			district,
-			village, 
-			google_map,
-			organizer_email,
-			organizer_phone,
-			province_id, 
-			city_id, 
-			district_id, 
-			village_id,
-			organization_id
+            objects.id,
+            objects.name,
+            objects.address,
+            objects.description,
+            objects.banner,
+            objects.logo,
+            objects.social_media,
+            objects.organizer,
+            objects.status,
+            objects.created_at,
+            objects.updated_at,
+			objects.province,
+			objects.city,
+			objects.district,
+			objects.village, 
+			objects.google_map,
+			objects.organizer_email,
+			objects.organizer_phone,
+			objects.province_id, 
+			objects.city_id, 
+			objects.district_id, 
+			objects.village_id,
+			objects.organization_id,
+			organizations.name AS organization_name
         FROM objects
-        WHERE id = $1`
+        JOIN organizations ON objects.organization_id = organizations.id
+        WHERE objects.id = $1`
 
 	storageURL := r.app.GetStorageBaseUrl()
 	storageURL = storageURL + "/"
@@ -294,6 +301,7 @@ func (r *Repository) GetObjectByID(ctx context.Context, id *uuid.UUID) (*entity.
 		&result.DistrictID,
 		&result.VillageID,
 		&result.OrganizationID,
+		&result.OrganizationName,
 	)
 
 	result.Logo = storageURL + result.Logo

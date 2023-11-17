@@ -29,6 +29,7 @@
 
 <script setup lang="ts">
   import { useField } from 'vee-validate'
+import { object } from 'yup';
 
   const props = defineProps({
     type: {
@@ -64,7 +65,7 @@
       default: () => [],
     },
     dataSelected: {
-      type: String,
+      type: Object,
       default: () => {},
     },
   })

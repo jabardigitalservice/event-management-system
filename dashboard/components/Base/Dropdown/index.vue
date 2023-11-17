@@ -16,7 +16,7 @@
     @change="onChange"
   >
     <template #label>
-      <span v-if="state.selected?.id" class="truncate">{{ placeholder }}</span>
+      <span v-if="!state.selected?.id" class="truncate">{{ placeholder }}</span>
     </template>
     <template #option-empty="{ query }">
       <q>{{ query }}</q> not found
@@ -65,27 +65,29 @@
     },
     dataSelected: {
       type: String,
-      default: '',
+      default: () => {},
     },
   })
 
   const state = reactive({
     selected: [],
+    updateCount: 0
   })
 
   const { value, errorMessage } = useField(() => props.name)
 
-  onMounted(async () => {
-    if (value) {
-      const filterData = await props.dataDropdown.filter(
-        (el) => el.id === value.value,
-      )
-      state.selected = filterData[0]
+  onUpdated(async () => { 
+    
+    if (state.updateCount === 0) {
+      state.selected = props.dataSelected
     }
+    
   })
 
   const onChange = (e) => {
     value.value = e.id
     state.selected = e
+
+    state.updateCount++
   }
 </script>

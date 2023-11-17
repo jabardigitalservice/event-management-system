@@ -39,10 +39,8 @@
                     @change="changeProvince"
                   >
                     <template #label>
-                      <spans
-                        v-if="state.selectedProvince?.id"
-                        class="truncate"
-                        >Pilih Provinsi</spans
+                      <span v-if="!state.selectedProvince?.id" class="truncate"
+                        >Pilih Provinsi</span
                       >
                     </template>
                     <template #option-empty="{ query }">
@@ -53,16 +51,14 @@
                 <UFormGroup label="Kota/Kabupaten" class="mb-4 w-full">
                   <USelectMenu
                     v-model="state.selectedCity"
-                    :disabled="state.selectedProvince?.id"
+                    :disabled="!state.selectedProvince?.id"
                     :options="state.dataCity"
                     searchable
                     @click="getCity"
                     @change="changeCity"
                   >
                     <template #label>
-                      <span
-                        v-if="state.selectedCity?.id"
-                        class="truncate"
+                      <span v-if="!state.selectedCity?.id" class="truncate"
                         >Pilih Kota/Kabupaten</span
                       >
                     </template>
@@ -74,18 +70,16 @@
                 <UFormGroup label="Kecamatan" class="mb-4 w-full">
                   <USelectMenu
                     v-model="state.selectedDistrict"
-                    :disabled="state.selectedCity?.id"
+                    :disabled="!state.selectedCity?.id"
                     :options="state.dataDistrict"
                     searchable
                     @click="getDistrict"
                     @change="state.selectedVillage = []"
                   >
                     <template #label>
-                      <span
-                        v-if="state.selectedDistrict?.id"
-                        class="truncate"
-                        >Pilih Kecamatan</span
-                      >
+                      <span v-if="!state.selectedDistrict?.id" class="truncate">
+                        Pilih Kecamatan
+                      </span>
                     </template>
                     <template #option-empty="{ query }">
                       <q>{{ query }}</q> not found
@@ -95,15 +89,13 @@
                 <UFormGroup label="Desa/Kelurahan" class="mb-4 w-full">
                   <USelectMenu
                     v-model="state.selectedVillage"
-                    :disabled="state.selectedDistrict?.id"
+                    :disabled="!state.selectedDistrict?.id"
                     :options="state.dataVillage"
                     searchable
                     @click="getVillage"
                   >
                     <template #label>
-                      <span
-                        v-if="state.selectedVillage?.id"
-                        class="truncate"
+                      <span v-if="!state.selectedVillage?.id" class="truncate"
                         >Pilih Desa/Kelurahan</span
                       >
                     </template>
@@ -112,11 +104,10 @@
                     </template>
                   </USelectMenu>
                 </UFormGroup>
-                <UFormGroup label="Alamat Lengkap" class="mb-4 w-full" required > 
-                  <p
-                    class="text-[13px] text-gray-600"
-                  >
-                  Silahkan masukkan detail lokasi tambahan, seperti nama jalan atau no. bangunan
+                <UFormGroup label="Alamat Lengkap" class="mb-4 w-full" required>
+                  <p class="text-[13px] text-gray-600">
+                    Silahkan masukkan detail lokasi tambahan, seperti nama jalan
+                    atau no. bangunan
                   </p>
                   <UTextarea
                     v-model="state.address"
@@ -124,7 +115,11 @@
                     class="mt-1"
                   />
                 </UFormGroup>
-                <UFormGroup label="Link Google Maps" class="mb-4 w-full" required>
+                <UFormGroup
+                  label="Link Google Maps"
+                  class="mb-4 w-full"
+                  required
+                >
                   <UInput
                     v-model="state.google_map"
                     placeholder="Masukan Link Google Maps Anda"
@@ -133,7 +128,7 @@
                     <template #leading>
                       <NuxtIcon
                         name="common/map-icon"
-                        class="text-2xl text-gray-300 "
+                        class="text-2xl text-gray-300"
                       />
                     </template>
                   </UInput>
@@ -242,30 +237,30 @@
     addressData: {
       type: Object,
       default: () => {},
-    }
+    },
   })
 
   const emit = defineEmits(['close', 'confirm'])
 
   onUpdated(() => {
-    state.address = props.addressData.address,
-    state.selectedProvince = {
-    label: props.addressData.province,
-    id: props.addressData.province_id
-    }
+    ;(state.address = props.addressData.address),
+      (state.selectedProvince = {
+        label: props.addressData.province,
+        id: props.addressData.province_id,
+      })
     state.selectedCity = {
-    label: props.addressData.city,
-    id: props.addressData.city_id
+      label: props.addressData.city,
+      id: props.addressData.city_id,
     }
     state.selectedDistrict = {
-    label: props.addressData.district,
-    id: props.addressData.district_id
+      label: props.addressData.district,
+      id: props.addressData.district_id,
     }
     state.selectedVillage = {
-    label: props.addressData.village,
-    id: props.addressData.village_id
+      label: props.addressData.village,
+      id: props.addressData.village_id,
     }
-    
+
     state.google_map = props.addressData.google_map
   })
 
@@ -283,7 +278,7 @@
       village: state.selectedVillage.label,
       village_id: state.selectedVillage.id,
       address: state.address,
-      google_map: state.google_map
+      google_map: state.google_map,
     })
   }
 </script>

@@ -39,9 +39,9 @@
                     @change="changeProvince"
                   >
                     <template #label>
-                      <span v-if="!state.selectedProvince?.id" class="truncate"
-                        >Pilih Provinsi</span
-                      >
+                      <span v-if="!state.selectedProvince?.id" class="truncate">
+                        Pilih Provinsi
+                      </span>
                     </template>
                     <template #option-empty="{ query }">
                       <q>{{ query }}</q> not found
@@ -58,9 +58,9 @@
                     @change="changeCity"
                   >
                     <template #label>
-                      <span v-if="!state.selectedCity?.id" class="truncate"
-                        >Pilih Kota/Kabupaten</span
-                      >
+                      <span v-if="!state.selectedCity?.id" class="truncate">
+                        Pilih Kota/Kabupaten
+                      </span>
                     </template>
                     <template #option-empty="{ query }">
                       <q>{{ query }}</q> not found
@@ -95,9 +95,9 @@
                     @click="getVillage"
                   >
                     <template #label>
-                      <span v-if="!state.selectedVillage?.id" class="truncate"
-                        >Pilih Desa/Kelurahan</span
-                      >
+                      <span v-if="!state.selectedVillage?.id" class="truncate">
+                        Pilih Desa/Kelurahan
+                      </span>
                     </template>
                     <template #option-empty="{ query }">
                       <q>{{ query }}</q> not found
@@ -236,18 +236,18 @@
     },
     addressData: {
       type: Object,
-      default: () => {},
+      default: () => ({}),
     },
   })
 
   const emit = defineEmits(['close', 'confirm'])
 
   onUpdated(() => {
-    ;(state.address = props.addressData.address),
-      (state.selectedProvince = {
-        label: props.addressData.province,
-        id: props.addressData.province_id,
-      })
+    state.address = props.addressData.address
+    state.selectedProvince = {
+      label: props.addressData.province,
+      id: props.addressData.province_id,
+    }
     state.selectedCity = {
       label: props.addressData.city,
       id: props.addressData.city_id,

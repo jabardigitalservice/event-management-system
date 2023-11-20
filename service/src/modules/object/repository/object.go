@@ -15,7 +15,16 @@ import (
 )
 
 func (r *Repository) CreateObject(ctx context.Context, obj request.Object) (request.Object, error) {
-	repositorySegment := r.app.GetNewRelic().StartSegment(ctx, "CreateObjectRepository")
+	datastoreSegment := r.app.GetNewRelic().StartDatastoreSegment(
+		ctx,
+		"objects",
+		"INSERT",
+		"INSERT INTO objects (name, address, description, banner, logo, social_media, organizer, status, created_at, updated_at, province, city, district, village, google_map, organizer_email, organizer_phone, province_id, city_id, district_id, village_id, organization_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22)", // Parameterized Query
+		"localhost",
+		"5433",
+		"jsa-event",
+		map[string]interface{}{},
+	)
 
 	socialMediaJSON, err := json.Marshal(obj.SocialMedia)
 	if err != nil {
@@ -36,7 +45,8 @@ func (r *Repository) CreateObject(ctx context.Context, obj request.Object) (requ
 	if err != nil {
 		return request.Object{}, err
 	}
-	repositorySegment.End()
+
+	defer datastoreSegment.End()
 	return obj, nil
 }
 

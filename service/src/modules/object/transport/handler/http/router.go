@@ -14,7 +14,7 @@ import (
 )
 
 func NewRelicMiddleware(app *app.App, handlerFunc func(http.ResponseWriter, *http.Request)) http.HandlerFunc {
-	_, wrappedHandler := newrelic.WrapHandleFunc(app.GetNewRelic(), "object", handlerFunc)
+	_, wrappedHandler := newrelic.WrapHandleFunc(app.GetNewRelic().Application, "object", handlerFunc)
 	return wrappedHandler
 }
 

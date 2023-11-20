@@ -3,7 +3,6 @@ package app
 import (
 	"context"
 	"database/sql"
-	"log"
 	"net/http"
 
 	"github.com/fazpass/goliath/v3/router"
@@ -11,7 +10,6 @@ import (
 	"github.com/jabardigitalservice/golog/logger"
 	gologlogger "github.com/jabardigitalservice/golog/logger"
 	"github.com/jabardigitalservice/super-app-services/event/src/constant"
-	"github.com/newrelic/go-agent/v3/newrelic"
 	"github.com/spf13/viper"
 	"go.elastic.co/apm/module/apmhttp"
 )
@@ -22,7 +20,7 @@ type (
 		router      *chi.Mux
 		logger      *logger.Logger
 		db          *DB
-		newrelicApp *newrelic.Application
+		newrelicApp *NewRelicManager
 	}
 
 	DB struct {
@@ -45,7 +43,8 @@ func Init() (*App, error) {
 	masterDB := InitPgsqlMaster(ctx, appConfig)
 	slaveDB := InitPgsqlSlave(ctx, appConfig)
 
-	if err := InitNewRelic(appConfig); err != nil {
+	newRelicManager, err := NewNewRelicManager(appConfig)
+	if err != nil {
 		return nil, err
 	}
 
@@ -59,7 +58,7 @@ func Init() (*App, error) {
 			Master: masterDB,
 			Slave:  slaveDB,
 		},
-		newrelicApp: nrApp,
+		newrelicApp: newRelicManager,
 	}
 
 	return app, nil
@@ -85,30 +84,8 @@ func (app *App) GetDB() *DB {
 	return app.db
 }
 
-func (app *App) GetNewRelic() *newrelic.Application {
+func (app *App) GetNewRelic() *NewRelicManager {
 	return app.newrelicApp
-}
-
-func (app *App) StartNewRelicSegment(ctx context.Context, segmentName string) newrelic.Segment {
-	txn := newrelic.FromContext(ctx)
-	if txn == nil {
-		log.Println("No New Relic transaction found in the context. Creating a default transaction.")
-		defaultTxn := app.newrelicApp.StartTransaction("defaultTranscation")
-		if defaultTxn == nil {
-			log.Println("Failed to start a default New Relic transaction.")
-			return newrelic.Segment{}
-		}
-		defer defaultTxn.End()
-		txn = defaultTxn
-	}
-
-	segment := txn.StartSegment(segmentName)
-	if segment == nil {
-		log.Println("Failed to start New Relic segment.")
-		return newrelic.Segment{}
-	}
-
-	return *segment
 }
 
 func (app *App) GetStorageBaseUrl() string {

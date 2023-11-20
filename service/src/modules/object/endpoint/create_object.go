@@ -11,7 +11,7 @@ import (
 )
 
 func (e *Endpoint) CreateObject(ctx context.Context, objData request.Object) (interface{}, error) {
-	segment := e.app.StartNewRelicSegment(ctx, "CreateObjectEndpoint")
+	endpointSegment := e.app.GetNewRelic().StartSegment(ctx, "CreateObjectEndpoint")
 
 	var validates = validator.Validate(objData)
 
@@ -29,6 +29,8 @@ func (e *Endpoint) CreateObject(ctx context.Context, objData request.Object) (in
 	if err := copier.Copy(responseObj, createdObj); err != nil {
 		return nil, err
 	}
-	defer segment.End()
+
+	defer endpointSegment.End()
+
 	return responseObj, nil
 }

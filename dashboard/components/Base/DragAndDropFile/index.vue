@@ -1,9 +1,8 @@
 <template>
   <div class="font-lato text-gray-800">
-    <slot name="header" />
     <label
       v-show="label"
-      class="message-notif-form__label-required text-gray-800"
+      class="text-gray-800"
       >{{ label }}</label
     >
     <p v-show="sublabel" class="mb-1 text-[13px] text-gray-600">
@@ -180,6 +179,7 @@
 
       dataFiles.value.name = ''
       dataFiles.value.mimeType = res.type
+      dataFiles.value.size = res.size
       dataFiles.value.fileSize = convertSize(res.size)
       fileInputIsChange.value = true
       fileIsCorrect.value = true
@@ -302,7 +302,7 @@
   }
 
   const checkFileValidation = () => {
-    if (files.value) {
+    if (dataFiles.value) {
       if (fileSizeIsCompatible() && formatFileIsCompatible()) {
         fileIsCorrect.value = true
         disabledButton.value = false
@@ -315,7 +315,7 @@
   }
 
   const fileSizeIsCompatible = () => {
-    return files.value.size <= props.detailDragAndDrop.maxSizeFile
+    return dataFiles.value.size <= props.detailDragAndDrop.maxSizeFile
   }
 
   const fileResolutionIsCompatible = () => {
@@ -327,6 +327,6 @@
   }
 
   const formatFileIsCompatible = () => {
-    return props.detailDragAndDrop.formatTypeFile.includes(files.value.type)
+    return props.detailDragAndDrop.formatTypeFile.includes(dataFiles.value.mimeType)
   }
 </script>

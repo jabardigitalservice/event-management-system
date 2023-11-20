@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"database/sql"
+	"log"
 	"net/http"
 
 	"github.com/fazpass/goliath/v3/router"
@@ -86,6 +87,28 @@ func (app *App) GetDB() *DB {
 
 func (app *App) GetNewRelic() *newrelic.Application {
 	return app.newrelicApp
+}
+
+func (app *App) StartNewRelicSegment(ctx context.Context, segmentName string) newrelic.Segment {
+	txn := newrelic.FromContext(ctx)
+	if txn == nil {
+		log.Println("No New Relic transaction found in the context. Creating a default transaction.")
+		defaultTxn := app.newrelicApp.StartTransaction("defaultTranscation")
+		if defaultTxn == nil {
+			log.Println("Failed to start a default New Relic transaction.")
+			return newrelic.Segment{}
+		}
+		defer defaultTxn.End()
+		txn = defaultTxn
+	}
+
+	segment := txn.StartSegment(segmentName)
+	if segment == nil {
+		log.Println("Failed to start New Relic segment.")
+		return newrelic.Segment{}
+	}
+
+	return *segment
 }
 
 func (app *App) GetStorageBaseUrl() string {

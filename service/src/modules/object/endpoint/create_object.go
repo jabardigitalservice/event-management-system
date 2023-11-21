@@ -11,7 +11,7 @@ import (
 )
 
 func (e *Endpoint) CreateObject(ctx context.Context, objData request.Object) (interface{}, error) {
-	endpointSegment := e.StartSegment(ctx, "CreateObjectEndpoint")
+	endpointSegment := e.newrelic.StartSegment(ctx, "CreateObjectEndpoint")
 
 	var validates = validator.Validate(objData)
 

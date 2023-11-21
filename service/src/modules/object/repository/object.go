@@ -15,6 +15,17 @@ import (
 )
 
 func (r *Repository) CreateObject(ctx context.Context, obj request.Object) (request.Object, error) {
+	datastoreSegment := r.newrelic.StartDatastoreSegment(
+		ctx,
+		"objects",
+		"INSERT",
+		"INSERT INTO objects (name, address, description, banner, logo, social_media, organizer, status, created_at, updated_at, province, city, district, village, google_map, organizer_email, organizer_phone, province_id, city_id, district_id, village_id, organization_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22)", // Parameterized Query
+		"localhost",
+		"5433",
+		"jsa-event",
+		map[string]interface{}{},
+	)
+
 	socialMediaJSON, err := json.Marshal(obj.SocialMedia)
 	if err != nil {
 		return request.Object{}, err
@@ -35,6 +46,7 @@ func (r *Repository) CreateObject(ctx context.Context, obj request.Object) (requ
 		return request.Object{}, err
 	}
 
+	defer datastoreSegment.End()
 	return obj, nil
 }
 
@@ -76,7 +88,6 @@ func (r *Repository) GetObjects(ctx context.Context, params request.QueryParam) 
 			organizations ON objects.organization_id = organizations.id
 		WHERE 1 = 1 %s `,
 		r.filterObjectQuery(params, &binds))
-
 	result, err := r.getObjects(ctx, query, binds...)
 	if err != nil {
 		return nil, err
@@ -88,7 +99,6 @@ func (r *Repository) GetObjects(ctx context.Context, params request.QueryParam) 
 			result[i].Banner[j] = storageURL + result[i].Banner[j]
 		}
 	}
-
 	return result, nil
 }
 func (r *Repository) getObjects(ctx context.Context, query string, args ...interface{}) ([]entity.Object, error) {

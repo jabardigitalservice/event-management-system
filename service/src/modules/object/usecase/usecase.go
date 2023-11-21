@@ -21,14 +21,16 @@ type (
 	}
 
 	Usecase struct {
-		app  *app.App
-		repo repository.RepositoryInterface
+		app      *app.App
+		repo     repository.RepositoryInterface
+		newrelic *app.NewRelicManager
 	}
 )
 
 func Init(app *app.App, repo repository.RepositoryInterface) UsecaseInterface {
 	return &Usecase{
-		app:  app,
-		repo: repo,
+		app:      app,
+		repo:     repo,
+		newrelic: app.GetNewRelic(),
 	}
 }

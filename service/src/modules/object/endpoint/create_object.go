@@ -11,6 +11,8 @@ import (
 )
 
 func (e *Endpoint) CreateObject(ctx context.Context, objData request.Object) (interface{}, error) {
+	endpointSegment := e.newrelic.StartSegment(ctx, "CreateObjectEndpoint")
+
 	var validates = validator.Validate(objData)
 
 	if validates != nil {
@@ -27,6 +29,8 @@ func (e *Endpoint) CreateObject(ctx context.Context, objData request.Object) (in
 	if err := copier.Copy(responseObj, createdObj); err != nil {
 		return nil, err
 	}
+
+	defer endpointSegment.End()
 
 	return responseObj, nil
 }

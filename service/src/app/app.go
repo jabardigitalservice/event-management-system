@@ -16,10 +16,11 @@ import (
 
 type (
 	App struct {
-		ctx    context.Context
-		router *chi.Mux
-		logger *logger.Logger
-		db     *DB
+		ctx         context.Context
+		router      *chi.Mux
+		logger      *logger.Logger
+		db          *DB
+		newrelicApp *NewRelicManager
 	}
 
 	DB struct {
@@ -42,6 +43,11 @@ func Init() (*App, error) {
 	masterDB := InitPgsqlMaster(ctx, appConfig)
 	slaveDB := InitPgsqlSlave(ctx, appConfig)
 
+	newRelicManager, err := NewNewRelicManager(appConfig)
+	if err != nil {
+		return nil, err
+	}
+
 	app := &App{
 		ctx: ctx,
 		router: router.InitChi(router.Config{
@@ -52,6 +58,7 @@ func Init() (*App, error) {
 			Master: masterDB,
 			Slave:  slaveDB,
 		},
+		newrelicApp : newRelicManager,
 	}
 
 	return app, nil
@@ -75,6 +82,10 @@ func (app *App) GetVersion() string {
 
 func (app *App) GetDB() *DB {
 	return app.db
+}
+
+func (app *App) GetNewRelic() *NewRelicManager {
+	return app.newrelicApp 
 }
 
 func (app *App) GetStorageBaseUrl() string {

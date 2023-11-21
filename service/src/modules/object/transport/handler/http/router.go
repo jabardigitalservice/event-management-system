@@ -1,6 +1,8 @@
 package http
 
 import (
+	"net/http"
+
 	"github.com/go-chi/chi"
 	"github.com/jabardigitalservice/golog/http/middleware"
 	gologlogger "github.com/jabardigitalservice/golog/logger"
@@ -8,7 +10,13 @@ import (
 	"github.com/jabardigitalservice/super-app-services/event/src/constant"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/endpoint"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/transport/handler"
+	"github.com/newrelic/go-agent/v3/newrelic"
 )
+
+func NewRelicMiddleware(app *app.App, handlerFunc func(http.ResponseWriter, *http.Request)) http.HandlerFunc {
+	_, wrappedHandler := newrelic.WrapHandleFunc(app.GetNewRelic().Application, "object", handlerFunc)
+	return wrappedHandler
+}
 
 func Init(app *app.App, endpoint endpoint.EndpointInterface) *chi.Mux {
 	var (
@@ -22,12 +30,12 @@ func Init(app *app.App, endpoint endpoint.EndpointInterface) *chi.Mux {
 		Version: app.GetVersion(),
 	}, false))
 
-	router.Post("/", h.CreateObject)
-	router.Get("/", h.GetObjects)
-	router.Get("/{id}", h.GetObjectByID)
-	router.Put("/{id}", h.UpdateObject)
-	router.Patch("/{id}", h.UpdateObjectStatus)
-	router.Delete("/{id}", h.DeleteObject)
+	router.Post("/", NewRelicMiddleware(app, h.CreateObject))
+	router.Get("/", NewRelicMiddleware(app, h.GetObjects))
+	router.Get("/{id}", NewRelicMiddleware(app, h.GetObjectByID))
+	router.Put("/{id}", NewRelicMiddleware(app, h.UpdateObject))
+	router.Patch("/{id}", NewRelicMiddleware(app, h.UpdateObjectStatus))
+	router.Delete("/{id}", NewRelicMiddleware(app, h.DeleteObject))
 
 	return router
 }

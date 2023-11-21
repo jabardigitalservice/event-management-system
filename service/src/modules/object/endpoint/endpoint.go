@@ -21,14 +21,16 @@ type (
 	}
 
 	Endpoint struct {
-		app     *app.App
-		usecase usecase.UsecaseInterface
+		app      *app.App
+		usecase  usecase.UsecaseInterface
+		newrelic *app.NewRelicManager
 	}
 )
 
 func Init(app *app.App, usecase usecase.UsecaseInterface) EndpointInterface {
 	return &Endpoint{
-		app:     app,
-		usecase: usecase,
+		app:      app,
+		usecase:  usecase,
+		newrelic: app.GetNewRelic(),
 	}
 }

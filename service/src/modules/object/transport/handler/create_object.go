@@ -8,9 +8,16 @@ import (
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/transport/handler/http/request"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/transport/handler/http/response"
 	httpresponse "github.com/jabardigitalservice/super-app-services/event/src/response/http"
+	"github.com/newrelic/go-agent/v3/newrelic"
 )
 
 func (h *Handler) CreateObject(w http.ResponseWriter, r *http.Request) {
+	txn := h.newrelic.StartTransaction("CreateObject")
+	defer txn.End()
+
+	ctx := newrelic.NewContext(r.Context(), txn)
+	handlerSegment := txn.StartSegment("CreateObjectHandler")
+
 	var respObj response.Object
 	if err := json.NewDecoder(r.Body).Decode(&respObj); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -29,13 +36,11 @@ func (h *Handler) CreateObject(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ctx := r.Context()
-
 	createdObj, err := h.endpoint.CreateObject(ctx, reqObj)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
+	defer handlerSegment.End()
 	helperresponse.Render(w, r, h.responseMapping, httpresponse.Created, createdObj, nil)
 }

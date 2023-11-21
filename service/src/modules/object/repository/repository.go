@@ -21,14 +21,16 @@ type (
 		DeleteObject(ctx context.Context, id *uuid.UUID) error
 	}
 	Repository struct {
-		app *app.App
-		db  *app.DB
+		app      *app.App
+		db       *app.DB
+		newrelic *app.NewRelicManager
 	}
 )
 
 func Init(app *app.App) *Repository {
 	return &Repository{
-		app: app,
-		db:  app.GetDB(),
+		app:      app,
+		db:       app.GetDB(),
+		newrelic: app.GetNewRelic(),
 	}
 }

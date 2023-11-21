@@ -14,6 +14,7 @@ type Handler struct {
 	app             *app.App
 	endpoint        endpoint.EndpointInterface
 	responseMapping map[string]*helperresponse.Response
+	newrelic        *app.NewRelicManager
 }
 
 func InitHandler(app *app.App, endpoint endpoint.EndpointInterface) *Handler {
@@ -21,6 +22,7 @@ func InitHandler(app *app.App, endpoint endpoint.EndpointInterface) *Handler {
 		app:             app,
 		endpoint:        endpoint,
 		responseMapping: httpresponse.GetResponses(),
+		newrelic:        app.GetNewRelic(),
 	}
 }
 

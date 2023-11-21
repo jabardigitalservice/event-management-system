@@ -58,7 +58,7 @@ func Init() (*App, error) {
 			Master: masterDB,
 			Slave:  slaveDB,
 		},
-		newrelicApp: newRelicManager,
+		newrelicApp : newRelicManager,
 	}
 
 	return app, nil
@@ -85,7 +85,7 @@ func (app *App) GetDB() *DB {
 }
 
 func (app *App) GetNewRelic() *NewRelicManager {
-	return app.newrelicApp
+	return app.newrelicApp 
 }
 
 func (app *App) GetStorageBaseUrl() string {

@@ -12,7 +12,7 @@ import (
 )
 
 func (h *Handler) CreateObject(w http.ResponseWriter, r *http.Request) {
-	txn := h.app.GetNewRelic().StartTransaction("CreateObject")
+	txn := h.newrelic.StartTransaction("CreateObject")
 	defer txn.End()
 
 	ctx := newrelic.NewContext(r.Context(), txn)

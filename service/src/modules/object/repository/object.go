@@ -15,7 +15,7 @@ import (
 )
 
 func (r *Repository) CreateObject(ctx context.Context, obj request.Object) (request.Object, error) {
-	datastoreSegment := r.app.GetNewRelic().StartDatastoreSegment(
+	datastoreSegment := r.newrelic.StartDatastoreSegment(
 		ctx,
 		"objects",
 		"INSERT",

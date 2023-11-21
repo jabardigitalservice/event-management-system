@@ -8,7 +8,6 @@ import (
 	"github.com/fazpass/goliath/v3/router"
 	"github.com/go-chi/chi"
 	"github.com/jabardigitalservice/golog/logger"
-	gologlogger "github.com/jabardigitalservice/golog/logger"
 	"github.com/jabardigitalservice/super-app-services/event/src/constant"
 	"github.com/spf13/viper"
 	"go.elastic.co/apm/module/apmhttp"
@@ -58,7 +57,7 @@ func Init() (*App, error) {
 			Master: masterDB,
 			Slave:  slaveDB,
 		},
-		newrelicApp : newRelicManager,
+		newrelicApp: newRelicManager,
 	}
 
 	return app, nil
@@ -85,22 +84,11 @@ func (app *App) GetDB() *DB {
 }
 
 func (app *App) GetNewRelic() *NewRelicManager {
-	return app.newrelicApp 
+	return app.newrelicApp
 }
 
 func (app *App) GetStorageBaseUrl() string {
 	return viper.GetString("STORAGE_BASE_URL")
-}
-
-func (app *App) SetLogger(module string, method string, err error, additionalInfo map[string]interface{}) {
-	app.GetLogger().Error(&gologlogger.LoggerData{
-		Category:       gologlogger.LoggerApp,
-		Service:        constant.ServiceName,
-		Module:         module,
-		Method:         method,
-		Version:        app.GetVersion(),
-		AdditionalInfo: additionalInfo,
-	}, err)
 }
 
 func (app *App) RunHttp() error {

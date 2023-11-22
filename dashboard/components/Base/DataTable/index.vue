@@ -32,7 +32,7 @@
       </UInput>
     </div>
     <div
-      class="inline-block min-w-full overflow-hidden rounded-lg border-[2px] border-neutral-100 bg-white shadow-sm"
+      class="inline-block min-w-full rounded-2xl border-[2px] border-neutral-100 bg-white shadow-sm"
     >
       <UTable
         :loading="loading"

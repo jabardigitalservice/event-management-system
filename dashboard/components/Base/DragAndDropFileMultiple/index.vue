@@ -1,99 +1,95 @@
 <template>
   <div class="flex justify-between gap-6">
-    <div class="w-50 flex-1 font-lato text-gray-800">
-      <slot name="header" />
-      <label
-        v-show="label"
-        class="message-notif-form__label-required text-gray-800"
-        >{{ label }}</label
-      >
-      <p v-show="sublabel" class="mb-1 text-[13px] text-gray-600">
-        {{ sublabel }}
-      </p>
-      <div class="mt-2 flex w-full items-center justify-center">
-        <label
-          :class="heightDragAndDrop"
-          for="drag-and-drop-file-multiple"
-          class="flex w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-4 hover:bg-gray-200"
-          @dragover="dragover"
-          @dragleave="dragleave"
-          @drop="drop"
+    <div class="w-[60%] flex-1 font-lato text-gray-800">
+      <div class="mt-2 flex h-full w-full items-center justify-center">
+      
+      <div
+      v-if="fileInputIsChange"
+      :class="[
+        dataFilesMultiple[0]?.fileCorrect
+        ? 'border-green-300 bg-green-50'
+        : 'border-red-300 bg-red-50',
+        heightDragAndDrop,
+      ]"
+        class="flex h-full w-full flex-col items-center justify-center rounded-lg border-2 border-dashed px-2"
         >
-          <div class="flex flex-col items-center justify-center">
-            <NuxtIcon
-              name="common/upload-file"
-              class="mb-3 text-4xl text-gray-300"
-            />
-            <p class="mb-2 font-lato text-[14px] text-gray-700">
-              <span>Drag File kesini</span>
-              <span class="ml-1 text-gray-500">atau</span>
-              <span class="ml-1 text-green-600 underline">Pilih File</span>
-            </p>
+        <img
+          class="w-15 h-15"
+          :src="dataFilesMultiple[0]?.url !== '' ? dataFilesMultiple[0].url : fileDocument(dataFilesMultiple[0])"
+        />
+
+        <div class="flex w-full flex-row items-center">
+          <div class="w-[100%]">
+            <template v-if="proggresBarIsSuccess">
+              <div class="mb-1 h-1.5 w-full rounded-full bg-gray-200">
+                <div
+                  class="h-1.5 rounded-full bg-green-500"
+                  :style="{ width: percentageProggres + '%' }"
+                />
+              </div>
+              <div class="mb-1">
+                <span class="font-lato text-[11px] font-normal text-gray-600">
+                  Diupload ... {{ percentageProggres }} %
+                </span>
+              </div>
+            </template>
           </div>
-          <input
-            id="drag-and-drop-file-multiple"
-            ref="file"
-            type="file"
-            class="hidden"
-            :disabled="dataFilesMultiple.length === 0 ? false : disabled"
-            :accept="detailDragAndDrop.acceptFile"
-            @change="onChangeUpload"
+        </div>
+      </div>
+      <label
+        v-else
+        :class="heightDragAndDrop"
+        class="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-4"
+        @dragover="dragover"
+        @dragleave="dragleave"
+        @drop="drop"
+      >
+        <div class="flex flex-col items-center justify-center">
+          <NuxtIcon
+            name="common/default-photo"
+            class="text-3xl text-gray-300"
           />
-        </label>
+        </div>
+      </label>
       </div>
     </div>
-    <div class="w-50 mt-5 max-h-[300px] flex-1 overflow-auto pl-3 pr-3 pt-5">
-      <RadioGroup v-show="dataFilesMultiple" v-model="selected">
-        <RadioGroupLabel class="sr-only sticky" />
-        <div class="grid gap-4 space-y-2 md:grid-cols-2 lg:grid-cols-3">
-          <RadioGroupOption
-            v-for="(data, index) in dataFilesMultiple"
-            v-slot="{ active, checked }"
-            :key="index"
-            :value="index"
-            as="template"
-            @click="imageClicked(data, index)"
+    <div class="ml-2 mt-3 w-[40%]">
+      <label v-show="label" class="font-bold text-gray-800">{{ label }}</label>
+      <p v-show="sublabel" class="mb-2 text-[13px] text-gray-600">
+        {{ sublabel }}
+      </p>
+      <div class="flex flex-row">
+        <UButton
+          for="dragAndDropFile"
+          color="blue"
+          variant="outline"
+          size="lg"
+          :disabled="fileInputIsChange"
+          @click="inputFileHandle"
+        >
+          Pilih File
+        </UButton>
+        <div v-if="fileInputIsChange" class="flex flex-row">
+          <UButton
+            class="ml-2"
+            color="red"
+            variant="soft"
+            size="lg"
+            @click="imageDelete(0, dataFilesMultiple[0]?.url)"
           >
-            <div
-              :class="[
-                active
-                  ? 'ring-2 ring-white ring-opacity-60 ring-offset-2 ring-offset-sky-300'
-                  : '',
-                checked ? 'bg-sky-900 bg-opacity-75 text-white ' : 'bg-white ',
-              ]"
-              class="relative flex cursor-pointer rounded-lg p-2 shadow-md focus:outline-none"
-            >
-              <div class="absolute -translate-x-3 translate-y-6">
-                <UBadge
-                  :label="index + 1"
-                  size="sm"
-                  color="green"
-                  square
-                  variant="solid"
-                  class="absolute"
-                />
-              </div>
-              <div class="absolute -translate-x-3 -translate-y-3">
-                <UButton
-                  icon="i-heroicons-trash"
-                  size="sm"
-                  color="red"
-                  square
-                  variant="solid"
-                  class="absolute"
-                  @click="imageDelete(index, data?.url)"
-                />
-              </div>
-
-              <div class="flex items-center">
-                <div class="flex items-center">
-                  <img :src="data.url !== '' ? data.url : fileDocument(data)" />
-                </div>
-              </div>
-            </div>
-          </RadioGroupOption>
+            <NuxtIcon name="common/trash" filled class="text-lg text-red-600" />
+          </UButton>
         </div>
-      </RadioGroup>
+      </div>
+      <input
+        id="dragAndDropFileMultiple"
+        ref="dragAndDropFileMultiple"
+        type="file"
+        class="hidden"
+        :disabled="dataFilesMultiple.length === 0 ? false : disabled"
+        :accept="detailDragAndDrop.acceptFile"
+        @change="onChangeUpload"
+      />
     </div>
   </div>
 </template>
@@ -106,7 +102,7 @@
     RadioGroupLabel,
     RadioGroupOption,
   } from '@headlessui/vue'
-import { array, object } from 'yup';
+  import { array, object } from 'yup'
 
   const props = defineProps({
     detailDragAndDrop: {
@@ -130,13 +126,14 @@ import { array, object } from 'yup';
       default: [],
     },
     disabled: {
-      type: Boolean, 
-      default: false
-    }
+      type: Boolean,
+      default: false,
+    },
   })
 
   const emit = defineEmits(['previewFile', 'deleteUrlFileMultiple'])
   const files = ref()
+  const dragAndDropFileMultiple = ref()
   const dataFilesMultiple: Ref<object[]> = ref([])
   const fileInputIsChange = ref(false)
   const proggresBarIsSuccess = ref(false)
@@ -152,22 +149,21 @@ import { array, object } from 'yup';
   const selected = ref(dataFilesMultiple.value[0])
 
   interface dataFile {
-    name: string,
-    isConfidental: boolean,
-    mimeType: string,
-    roles: object,
-    data: string,
-    fileSize: string,
-    fileCorrect: boolean,
-    url: string,
-    height: number,
-    width: number,
+    name: string
+    isConfidental: boolean
+    mimeType: string
+    roles: object
+    data: string
+    fileSize: string
+    fileCorrect: boolean
+    url: string
+    height: number
+    width: number
     fileSizeNumber: number
   }
 
   onUpdated(async () => {
     if (counterImageLoad.value < props.imageUrlMultiple.length) {
-      
       for (let i = 0; i < props.imageUrlMultiple.length; i++) {
         const dataFile: dataFile = {
           name: '',
@@ -183,7 +179,7 @@ import { array, object } from 'yup';
         fileIsCorrect.value = true
         dataFile.fileCorrect = true
         dataFile.url = props.imageUrlMultiple[i]
-        
+
         dataFilesMultiple.value.push(dataFile)
         counterImageLoad.value++
       }
@@ -192,6 +188,9 @@ import { array, object } from 'yup';
     }
   })
 
+  const inputFileHandle = () => {
+    dragAndDropFileMultiple.value.click()
+  }
 
   const onChangeUpload = async (e: Event): Promise<void> => {
     let element = e.target as HTMLInputElement
@@ -210,7 +209,7 @@ import { array, object } from 'yup';
           fileCorrect: false,
           url: '',
           width: 0,
-          height: 0
+          height: 0,
         }
 
         files.value = fileTarget[i]
@@ -328,9 +327,12 @@ import { array, object } from 'yup';
 
   const checkFileValidation = (file: Array) => {
     if (file) {
-      if (fileSizeIsCompatible(file) && formatFileIsCompatible(file) && fileResolutionIsCompatible(file)) {
+      if (
+        fileSizeIsCompatible(file) &&
+        formatFileIsCompatible(file) &&
+        fileResolutionIsCompatible(file)
+      ) {
         return true
-        
       } else {
         return false
       }
@@ -348,11 +350,10 @@ import { array, object } from 'yup';
   }
 
   const fileResolutionIsCompatible = (file: Array) => {
-    
     const validate =
       file.width > props.detailDragAndDrop.maxResolution[0] &&
       file.height > props.detailDragAndDrop.maxResolution[1]
-      
+
     return !validate
   }
 
@@ -365,12 +366,12 @@ import { array, object } from 'yup';
   }
 
   const imageDelete = (index: number, dataUrl: string) => {
-    if (dataUrl ! == '') {
+    if (dataUrl !== '') {
       emit('deleteUrlFileMultiple', index)
     }
-
+    
+    fileInputIsChange.value = false
     dataFilesMultiple.value.splice(index, 1)
-
     dataImage.dataImageMultiple = { ...dataFilesMultiple.value }
   }
 </script>

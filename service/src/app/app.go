@@ -7,7 +7,7 @@ import (
 
 	"github.com/fazpass/goliath/v3/router"
 	"github.com/go-chi/chi"
-	"github.com/jabardigitalservice/golog/logger"
+	gologlogger "github.com/jabardigitalservice/golog/logger"
 	"github.com/jabardigitalservice/super-app-services/event/src/constant"
 	"github.com/spf13/viper"
 	"go.elastic.co/apm/module/apmhttp"
@@ -17,7 +17,8 @@ type (
 	App struct {
 		ctx         context.Context
 		router      *chi.Mux
-		logger      *logger.Logger
+		logger      *gologlogger.Logger
+		AppLogger   *AppLogger
 		db          *DB
 		newrelicApp *NewRelicManager
 	}
@@ -37,7 +38,7 @@ func Init() (*App, error) {
 		return nil, err
 	}
 
-	log := logger.Init()
+	log := gologlogger.Init()
 
 	masterDB := InitPgsqlMaster(ctx, appConfig)
 	slaveDB := InitPgsqlSlave(ctx, appConfig)
@@ -71,8 +72,12 @@ func (app *App) GetHttpRouter() *chi.Mux {
 	return app.router
 }
 
-func (app *App) GetLogger() *logger.Logger {
+func (app *App) GetLogger() *gologlogger.Logger {
 	return app.logger
+}
+
+func (app *App) GetAppLogger() *AppLogger {
+	return app.AppLogger
 }
 
 func (app *App) GetVersion() string {
@@ -104,8 +109,8 @@ func (app *App) RunHttp() error {
 
 	var host = hostname + ":" + port
 
-	app.logger.Info(&logger.LoggerData{
-		Category: logger.LoggerApp,
+	app.logger.Info(&gologlogger.LoggerData{
+		Category: gologlogger.LoggerApp,
 		Service:  constant.ServiceName,
 		Method:   "startup",
 		Version:  app.GetVersion(),

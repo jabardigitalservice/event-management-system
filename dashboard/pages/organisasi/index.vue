@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-  import { useActivePage, useIdData } from '@/store/index'
+  import { useActivePage } from '@/store/index'
   import { organisasiHeaders } from "~/common/constant/organisasi"
 
   const router = useRouter()
@@ -63,8 +63,7 @@
           icon: 'i-heroicons-pencil-square-20-solid',
           iconClass: 'bg-green-500',
           click: () => {
-            useIdData().id = items.id
-            router.push({ path: '/organisasi/form' })
+            router.push({ path: '/organisasi/form', query: {id: items.id} })
           }
         },
       ],

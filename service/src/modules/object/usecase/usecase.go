@@ -29,6 +29,15 @@ type (
 	}
 )
 
+const (
+	MethodCreateObject       = "Object:Create-Object"
+	MethodGetObjects         = "Object:Get-Objects"
+	MethodGetObjectByID      = "Object:Get-Objects-By-ID"
+	MethodUpdateObject       = "Object:Update-Object"
+	MethodUpdateObjectStatus = "Object:Update-Object-Status"
+	MethodDeleteObject       = "Object:Delete-Object"
+)
+
 func Init(app *app.App, repo repository.RepositoryInterface) UsecaseInterface {
 	return &Usecase{
 		app:      app,

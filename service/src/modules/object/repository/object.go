@@ -14,8 +14,7 @@ import (
 	"github.com/lib/pq"
 )
 
-func (r *Repository) CreateObject(ctx context.Context, obj request.Object) (request.Object, error) {
-	method := "CreateObjectDB"
+func (r *Repository) CreateObject(ctx context.Context, obj request.Object, method string) (request.Object, error) {
 	datastoreSegment := r.newrelic.StartDatastoreSegment(
 		ctx,
 		"objects",

@@ -8,12 +8,11 @@ import (
 )
 
 func (uc *Usecase) CreateObject(ctx context.Context, obj request.Object) (*request.Object, error) {
-	method := "CreateObjectUsecase"
 	usecaseSegment := uc.newrelic.StartSegment(ctx, "CreateObjectUsecase")
 
-	createdObj, err := uc.repo.CreateObject(ctx, obj)
+	createdObj, err := uc.repo.CreateObject(ctx, obj, MethodCreateObject)
 	if err != nil {
-		uc.Log(ctx, constant.LogCategoryApp).Error(method, err)
+		uc.Log(ctx, constant.LogCategoryApp).Error(MethodCreateObject, err)
 		return nil, err
 	}
 	defer usecaseSegment.End()

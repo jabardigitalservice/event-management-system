@@ -3,8 +3,8 @@
     <template #buttonSave>
       <UButton
         size="lg"
-        :label= "!!state.idData?`Simpan Perubahan`:`Buat Objek Wisata`"
-        class="bg-[#1569C4] justify-self-end"
+        :label="!!state.idData ? `Simpan Perubahan` : `Buat Objek Wisata`"
+        class="justify-self-end bg-[#1569C4]"
         color="blue"
         variant="solid"
         @click="handleSubmit"
@@ -12,16 +12,48 @@
     </template>
     <template #body>
       <div class="overflow-y-auto">
-        <div class=" items-center flex flex-col h-full py-5 max-h-screen">
+        <div class="flex h-full max-h-screen flex-col items-center py-5">
           <div class="max-w-xl">
             <Form
               ref="formContainer"
-              class="message-notif-form my-5 grid grid-cols-6 gap-x-6 rounded-lg bg-white px-6 py-4"
+              class="message-notif-form my-5 grid grid-cols-2 gap-x-6 rounded-lg bg-white px-6 py-4"
               :validation-schema="state.schema"
               @submit="onSubmit"
             >
-              <div class="col-span-3 mt-5">
+              <div class="col-span-1"></div>
+              <div class="col-span-2">
                 <div>
+                  <BaseDragAndDropFileMultiple
+                    ref="BaseDragAndDropFileMultiple"
+                    class="mt-6"
+                    label="Banner"
+                    sublabel="Jenis file (.jpg, .png) resolusi 360 x 170 px. Maksimal 1 MB."
+                    height-drag-and-drop="h-[165px]"
+                    :disabled="state.isFormDisabled"
+                    :detail-drag-and-drop="state.detailDragAndDropMultiple"
+                    :image-url-multiple="state.dataUrlImageMultiple"
+                    @preview-file="previewFile"
+                    @delete-url-file-multiple="deleteImageMultipleUrl"
+                  />
+                </div>
+              </div>
+              <div class="col-span-1 mt-6">
+                <div>
+                  <BaseDragAndDropFile
+                    ref="BaseDragAndDropFile"
+                    label="Logo"
+                    sublabel="Jenis file (.png, .svg) resolusi 46x46, maksimal 1 MB"
+                    height-drag-and-drop="h-[200px]"
+                    :disabled="state.isFormDisabled"
+                    :detail-drag-and-drop="state.detailDragAndDrop"
+                    :image-url="state.dataUrlImage"
+                    @preview-file="previewFile"
+                    @delete-url-file="deleteImageUrl"
+                  />
+                </div>
+              </div>
+              <div class="col-span-2">
+                <div class="mt-6">
                   <BaseTextInput
                     name="name"
                     type="text"
@@ -30,19 +62,36 @@
                     :disabled="state.isFormDisabled"
                   />
                 </div>
-                <div class="mt-5">
+              </div>
+              <div class="col-span-2">
+                <div class="mt-6">
                   <BaseDropdown
                     name="organization_id"
                     type="text"
                     label="Organisasi"
                     placeholder="Pilih Organisasi"
+                    :data-selected="state.selectedOrganisasi"
                     :data-dropdown="state.dataOrganisasi"
                     :disabled="state.isFormDisabled"
                   />
                 </div>
-                <div class="mt-5 flex justify-between">
+              </div>
+              <div class="col-span-2">
+                <div class="mt-6">
+                  <BaseTextareaInput
+                    name="description"
+                    label="Deskripsi Objek"
+                    placeholder="Masukan Deskripsi Objek"
+                    :disabled="state.isFormDisabled"
+                  />
+                </div>
+              </div>
+              <div class="col-span-2">
+                <div class="mt-6 flex justify-between">
                   <div>
-                    <label class="message-notif-form__label-required text-gray-800">
+                    <label
+                      class="message-notif-form__label-required text-gray-800"
+                    >
                       Alamat
                     </label>
                     <p class="text-[13px] text-gray-600">
@@ -60,22 +109,10 @@
                   />
                 </div>
               </div>
-              <div class="col-span-3">
-                <div>
-                  <BaseDragAndDropFile
-                    ref="BaseDragAndDropFile"
-                    label="Logo"
-                    sublabel="Tipe File JPG/JPEG/PNG dengan maksimal ukuran file 2 MB"
-                    height-drag-and-drop="h-[224px]"
-                    :disabled="state.isFormDisabled"
-                    :detail-drag-and-drop="state.detailDragAndDrop"
-                    :image-url="state.dataUrlImage"
-                    @preview-file="previewFile"
-                    @delete-url-file="deleteImageUrl"
-                  />
-                </div>
+              <div class="col-span-2 my-8">
+                <hr />
               </div>
-              <div class="col-span-6">
+              <div class="col-span-2">
                 <BaseTextInput
                   name="organizer"
                   type="text"
@@ -84,7 +121,7 @@
                   :disabled="state.isFormDisabled"
                 />
               </div>
-              <div class="col-span-3 mt-5">
+              <div class="col-span-2 mt-6">
                 <BaseTextInput
                   name="organizer_email"
                   type="text"
@@ -93,7 +130,7 @@
                   :disabled="state.isFormDisabled"
                 />
               </div>
-              <div class="col-span-3 mt-5">
+              <div class="col-span-2 mt-6">
                 <BaseTextInput
                   name="organizer_phone"
                   type="number"
@@ -102,15 +139,10 @@
                   :disabled="state.isFormDisabled"
                 />
               </div>
-              <div class="col-span-6 mt-5">
-                <BaseTextareaInput
-                  name="description"
-                  label="Deskripsi Objek"
-                  placeholder="Masukan Deskripsi Objek"
-                  :disabled="state.isFormDisabled"
-                />
+              <div class="col-span-2 my-8">
+                <hr />
               </div>
-              <div class="col-span-2 mt-5">
+              <div class="col-span-2">
                 <BaseTextInputGroup
                   name="instagram"
                   label="Instagram"
@@ -119,7 +151,7 @@
                   :disabled="state.isFormDisabled"
                 />
               </div>
-              <div class="col-span-2 mt-5">
+              <div class="col-span-2 mt-6">
                 <BaseTextInputGroup
                   name="tiktok"
                   label="Tiktok"
@@ -128,7 +160,7 @@
                   :disabled="state.isFormDisabled"
                 />
               </div>
-              <div class="col-span-2 mt-5">
+              <div class="col-span-2 mt-6">
                 <BaseTextInputGroup
                   name="facebook"
                   label="Facebook"
@@ -137,41 +169,28 @@
                   :disabled="state.isFormDisabled"
                 />
               </div>
-    
-            <div class="col-span-3 mt-5">
-              <BaseTextInputGroup
-                name="x"
-                label="X"
-                placeholder="https://twitter.com/"
-                icon="common/twitter"
-                :disabled="state.isFormDisabled"
-              />
-            </div>
-            <div class="col-span-3 mt-5">
-              <BaseTextInputGroup
-                name="youtube"
-                label="Youtube"
-                placeholder="https://youtube.com/"
-                icon="common/youtube"
-                :disabled="state.isFormDisabled"
-              />
-            </div>
-            <div class="col-span-6">
-              <BaseDragAndDropFileMultiple
-                ref="BaseDragAndDropFileMultiple"
-                class="mt-5"
-                label="Banner"
-                sublabel="Tipe File JPG/JPEG/PNG dengan maksimal ukuran file 2 MB"
-                height-drag-and-drop="h-[165px]"
-                :disabled="state.isFormDisabled"
-                :detail-drag-and-drop="state.detailDragAndDropMultiple"
-                :image-url-multiple="state.dataUrlImageMultiple"
-                @preview-file="previewFile"
-                @delete-url-file-multiple="deleteImageMultipleUrl"
-              />
-            </div>
-    
-              <button v-show="false" ref="submitForm" type="submit">Submit</button>
+
+              <div class="col-span-2 mt-6">
+                <BaseTextInputGroup
+                  name="x"
+                  label="X"
+                  placeholder="https://twitter.com/"
+                  icon="common/twitter"
+                  :disabled="state.isFormDisabled"
+                />
+              </div>
+              <div class="col-span-2 mt-6">
+                <BaseTextInputGroup
+                  name="youtube"
+                  label="Youtube"
+                  placeholder="https://youtube.com/"
+                  icon="common/youtube"
+                  :disabled="state.isFormDisabled"
+                />
+              </div>
+              <button v-show="false" ref="submitForm" type="submit">
+                Submit
+              </button>
             </Form>
           </div>
         </div>
@@ -224,13 +243,13 @@
       facebook: string(),
       instagram: string(),
       x: string(),
-      organization_id: string().required('Organisasi Wajib Dipilih')
+      organization_id: string().required('Organisasi Wajib Dipilih'),
     },
     detailDragAndDrop: {
       informationSizeCompatible:
         'Ukuran file dokumen SK tidak boleh melebihi 1 MB.',
       informationFormatCompatible:
-        'Hanya file yang berformat JPG/JPEG/PNG yang dapat diupload.',
+        'Hanya file yang berformat PNG/SVG yang dapat diupload.',
       formatTypeFile: ['image/png', 'image/svg+xml'],
       maxSizeFile: 1097152,
       acceptFile: '.png,.svg',
@@ -258,7 +277,8 @@
     showDialogAddress: false,
     address: {},
     dataOrganisasi: [],
-    isFormDisabled: true
+    isFormDisabled: true,
+    selectedOrganisasi: {},
   })
 
   interface apiResponse {
@@ -288,8 +308,9 @@
     village: string
     village_id: string
     google_map: string
-    status: string,
+    status: string
     organization_id: string
+    organization_name: string
   }
 
   onMounted(async () => {
@@ -302,7 +323,6 @@
         const responseObjectData =
           responseObject.data as object as apiDataResponse
 
-        state.selectedOrganisasi = responseObjectData?.organization_id
         formContainer.value?.setValues({
           name: responseObjectData?.name,
           organizer: responseObjectData?.organizer,
@@ -316,6 +336,10 @@
           description: responseObjectData?.description,
           organization_id: responseObjectData?.organization_id,
         })
+        state.selectedOrganisasi = {
+          id: responseObjectData?.organization_id,
+          label: responseObjectData?.organization_name,
+        }
 
         state.address = {
           address: responseObjectData?.address,
@@ -329,8 +353,6 @@
           village_id: responseObjectData?.village_id,
           google_map: responseObjectData?.google_map,
         }
-
-        
 
         state.dataUrlImage = responseObjectData.logo
         state.dataUrlImageMultiple = responseObjectData.banner
@@ -435,7 +457,7 @@
         timeout: 2500,
       })
     }
-    
+
     switch (method) {
       case 'edit':
         try {
@@ -536,7 +558,7 @@
       JSON.stringify(useDataImage().dataImageMultiple),
     )
     const imageMultipleLength: number = Object.keys(imageMultiple).length
-    
+
     const [dataToUpload, dataAreExist] = multipleImageValidate(
       imageMultiple,
       imageMultipleLength,

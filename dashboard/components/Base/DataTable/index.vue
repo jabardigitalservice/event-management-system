@@ -1,11 +1,22 @@
 <template>
   <div>
     <div class="mb-5 flex h-auto place-items-end justify-between align-middle">
+      <UButton
+        class="bg-[#1569C4]"
+        icon="i-heroicons-pencil-square"
+        size="md"
+        color="blue"
+        variant="solid"
+        :label="`Tambah ${activePage.page}`"
+        :trailing="false"
+        :to="props.baseRoute + '/form'"
+        @click="useIdData().id = ''"
+      />
       <UInput
         v-model="search"
         :placeholder="'Search ' + activePage.page"
         icon="i-heroicons-magnifying-glass-20-solid"
-        class="w-1/5"
+        class="w-[386px]"
         :ui="{ icon: { trailing: { pointer: '' } } }"
       >
         <template #trailing>
@@ -19,19 +30,10 @@
           />
         </template>
       </UInput>
-      <UButton
-        class="bg-green-700"
-        icon="i-heroicons-pencil-square"
-        size="md"
-        color="primary"
-        variant="solid"
-        label="Create"
-        :trailing="false"
-        :to="props.baseRoute + '/form'"
-        @click="useIdData().id = ''"
-      />
     </div>
-    <div class="inline-block min-w-full overflow-hidden rounded-lg bg-white">
+    <div
+      class="inline-block min-w-full overflow-hidden rounded-lg border-[2px] border-neutral-100 bg-white shadow-sm"
+    >
       <UTable
         :loading="loading"
         :loading-state="{
@@ -51,41 +53,99 @@
           <slot name="customeAction" :items="row" :fetch="fetchData" />
         </template>
       </UTable>
-    </div>
-    <div class="float-left mt-4 flex w-56 flex-row">
-      <div class="basis-1/5 self-center">
-        <span class="text-sm font-semibold text-gray-500 dark:text-white"
-          >Show</span
+      <div class="border-t-[1px] border-neutral-200 px-4">
+        <div class="float-left mt-4 flex w-auto flex-row">
+          <div class="mr-2 basis-1/5 self-center">
+            <span class="text-sm text-gray-500 dark:text-white"
+              >Menampilkan</span
+            >
+          </div>
+          <div class="mr-2 basis-1/4">
+            <USelectMenu
+              v-model="selectedLimit"
+              :options="listLimit"
+              name="labels"
+            />
+          </div>
+          <div class="basis-1/2 self-center">
+            <span class="text-sm text-gray-500 dark:text-white"
+              >Dari <span class="font-semibold">{{ total }}</span> item</span
+            >
+          </div>
+        </div>
+
+        <UPagination
+          v-model="page"
+          class="my-4 justify-end"
+          :page-count="selectedLimit"
+          :total="total"
+          :value="page"
+          :active-button="{ color: 'blue', variant: 'solid' }"
+          :inactive-button="{ color: 'blue', variant: 'ghost' }"
+          :ui="{
+            wrapper: 'flex items-center gap-2',
+            rounded: '!rounded-md min-w-[32px] justify-center',
+            color: {
+              blue: {
+                solid: 'bg-white dark:bg-gray-900'
+              }
+            }
+          }"
+          @click="onClickPagination(page)"
         >
-      </div>
-      <div class="mr-2 basis-1/4">
-        <USelectMenu v-model="selectedLimit" :options="listLimit" />
-      </div>
-      <div class="basis-1/2 self-center">
-        <span class="text-sm font-semibold text-gray-500 dark:text-white"
-          >Entries from {{ total }}</span
-        >
+          <template #prev="{ onClick }">
+            <UTooltip text="Previous page">
+              <UButton
+                variant="outline"
+                :ui="{
+                  rounded: 'rounded-md',
+                  variant: {
+                    outline:
+                      'ring-1 ring-inset ring-current text-neutral-100 hover:bg-neutral-50 disabled:bg-transparent border-neutral-300 stroke-slate-800',
+                  },
+                }"
+                class="me-2 rtl:[&_span:first-child]:rotate-180"
+                @click="onClick"
+              >
+                <template #trailing>
+                  <NuxtIcon
+                    name="navigation/previous-icon"
+                    filled
+                    class="m-[6px] stroke-[#1569C4] text-[10px]"
+                  />
+                </template>
+              </UButton>
+            </UTooltip>
+          </template>
+
+          <template #next="{ onClick }">
+            <UTooltip text="Next page">
+              <UButton
+                color="blue"
+                variant="outline"
+                :ui="{
+                  rounded: 'rounded-md',
+                  variant: {
+                    outline:
+                      'ring-1 ring-inset ring-current text-neutral-100 hover:bg-neutral-50 disabled:bg-transparent border-neutral-300 stroke-slate-800',
+                  },
+                }"
+                class="ms-2 rtl:[&_span:last-child]:rotate-180"
+                @click="onClick"
+              >
+                <template #trailing>
+                  <NuxtIcon
+                    name="navigation/next-icon"
+                    filled
+                    class="m-[6px] stroke-[#1569C4] text-[10px]"
+                  />
+                </template>
+              </UButton>
+            </UTooltip>
+          </template>
+        </UPagination>
       </div>
     </div>
-    <UPagination
-      v-model="page"
-      class="mb-10 mt-5 justify-end"
-      :page-count="selectedLimit"
-      :total="total"
-      :value="page"
-      :prev-button="{
-        icon: 'i-heroicons-arrow-small-left-20-solid',
-        label: 'Prev',
-        color: 'gray',
-      }"
-      :next-button="{
-        icon: 'i-heroicons-arrow-small-right-20-solid',
-        trailing: true,
-        label: 'Next',
-        color: 'gray',
-      }"
-      @click="onClickPagination(page)"
-    />
     <UNotifications />
   </div>
 </template>
@@ -164,18 +224,18 @@
 
 <style>
   thead {
-    @apply rounded-lg border-b-2 border-gray-200 bg-green-700 px-5 py-3 text-left text-sm font-semibold tracking-wider text-white;
+    @apply rounded-lg border-b border-gray-200 px-5 py-3 text-left text-sm font-semibold tracking-wider text-[#737373];
   }
   th > button > span {
-    @apply text-white;
+    @apply text-[#737373];
   }
   th > span {
-    @apply text-white;
+    @apply text-[#737373];
   }
   .form-input {
     @apply h-10;
   }
   .hover\:bg-gray-50:hover {
-    @apply bg-green-800;
+    @apply bg-[#FAFAFA];
   }
 </style>

@@ -3,13 +3,11 @@
     <BaseDataTable :headers="objectHeaders" :path="urlAPI" base-route="/object">
       <template #customeName="{ items }">
         <div class="flex flex-row">
-          <div class="basis-[14%]">
-            <img
-              :src= items.logo
-              :alt=items.name
-              width="20"
-              height="20"
-              class="self-start"
+          <div class="basis-[13%]">
+            <UAvatar
+              size="xs"
+              :src="items.logo"
+              :alt="items.name"
             />
           </div>
           <div class="basis-1/2">
@@ -20,18 +18,76 @@
       <template #customeStatus="{ items }">
         <UBadge
           :color="statusColors[items.status].color"
-          :variant="statusColors[items.status].variant"
+          variant="soft"
+          :ui="{ rounded: 'rounded-full' }"
           class="uppercase"
           >{{ items.status }}
         </UBadge>
       </template>
       <template #customeAction="{ items, fetch }">
-        <UDropdown :items="itemActions(items, fetch)">
+        <UTooltip text="Laporan" :popper="{ offsetDistance: 16 }">
           <UButton
-            color="green"
-            variant="outline"
-            icon="i-heroicons-chevron-down"
-            >Actions
+            class="mr-1"
+            variant="ghost"
+            color="blue"
+            :ui="{
+              rounded: 'rounded-md',
+            }"
+          >
+            <template #trailing>
+              <NuxtIcon
+                name="navigation/laporan-icon"
+                filled
+                class="stroke-[#737373] text-[19px]"
+              />
+            </template>
+          </UButton>
+        </UTooltip>
+        <UTooltip text="Atur Tiket" :popper="{ offsetDistance: 16 }">
+          <UButton
+            class="mr-1"
+            variant="ghost"
+            color="blue"
+            :ui="{
+              rounded: 'rounded-md',
+            }"
+          >
+            <template #trailing>
+              <NuxtIcon
+                name="navigation/tiket-icon"
+                filled
+                class="stroke-[#737373] text-[19px]"
+              />
+            </template>
+          </UButton>
+        </UTooltip>
+        <UTooltip text="Detail" :popper="{ offsetDistance: 16 }">
+          <UButton
+            class="mr-1"
+            variant="ghost"
+            color="blue"
+            :ui="{
+              rounded: 'rounded-md',
+            }"
+          >
+            <template #trailing>
+              <NuxtIcon
+                name="navigation/eye-icon"
+                filled
+                class="stroke-[#737373] text-[19px]"
+              />
+            </template>
+          </UButton>
+        </UTooltip>
+        <UDropdown :items="itemActions(items, fetch)">
+          <UButton color="blue" variant="ghost">
+            <template #trailing>
+              <NuxtIcon
+                name="navigation/dots-icon"
+                filled
+                class="stroke-[#737373] text-[15px] p-[2px]"
+              />
+            </template>
           </UButton>
         </UDropdown>
       </template>
@@ -65,7 +121,6 @@
 
   interface StatusColor {
     color: string
-    variant: string
   }
 
   const router = useRouter()
@@ -81,10 +136,10 @@
   const urlAPI: string = '/v1/event/object'
 
   const statusColors: Record<string, StatusColor> = {
-    draft: { color: 'red', variant: 'subtle' },
-    published: { color: 'green', variant: 'subtle' },
-    unpublished: { color: 'orange', variant: 'subtle' },
-  }
+    draft: { color: 'red' },
+    published: { color: 'green' },
+    unpublished: { color: 'orange' },
+};
   const itemActions = (
     items: { id: string; status: string },
     fetch: object,
@@ -94,7 +149,7 @@
         {
           label: 'Edit',
           icon: 'i-heroicons-pencil-square-20-solid',
-          iconClass: 'bg-green-500',
+          iconClass: 'bg-blue-700',
           click: () => {
             useIdData().id = items.id
             router.push({ path: '/object/form' })
@@ -103,14 +158,14 @@
         {
           label: 'Detail',
           icon: 'i-heroicons-document-magnifying-glass-20-solid',
-          iconClass: 'bg-green-500',
+          iconClass: 'bg-blue-700',
         },
       ],
       [
         {
           label: 'Delete',
           icon: 'i-heroicons-trash-20-solid',
-          iconClass: 'bg-green-500',
+          iconClass: 'bg-blue-700',
           click: () => openModalDelete(items.id, fetch),
         },
       ],
@@ -121,7 +176,7 @@
         {
           label: 'Publish',
           icon: 'i-heroicons-check-badge-20-solid',
-          iconClass: 'bg-green-500',
+          iconClass: 'bg-blue-700',
           click: () => openModalStatus(items, fetch, 'published'),
         },
       ])
@@ -130,7 +185,7 @@
         {
           label: 'Unpublish',
           icon: 'i-heroicons-x-circle-20-solid',
-          iconClass: 'bg-green-500',
+          iconClass: 'bg-blue-700',
           click: () => openModalStatus(items, fetch, 'unpublished'),
         },
       ])

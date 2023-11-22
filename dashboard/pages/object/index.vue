@@ -60,7 +60,7 @@
 </template>
 
 <script setup lang="ts">
-  import { useActivePage, useIdData } from '@/store/index'
+  import { useActivePage } from '@/store/index'
   import { objectHeaders } from '~/common/constant/object'
 
   interface StatusColor {
@@ -96,8 +96,7 @@
           icon: 'i-heroicons-pencil-square-20-solid',
           iconClass: 'bg-green-500',
           click: () => {
-            useIdData().id = items.id
-            router.push({ path: '/object/form' })
+            router.push({ path: '/object/form', query: {id: items.id} })
           }
         },
         {

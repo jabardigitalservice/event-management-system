@@ -17,13 +17,13 @@
         :validation-schema="state.schema"
         @submit="onSubmit"
       >
-        <div class="col-span-1">
+        <div class="col-span-2 mt-3">
+          <p class="style-bold text-xl">{{useRoute().query?.id ? "Ubah" : "Tambah"}} Objek Wisata</p>
         </div>
-        <div class="col-span-2">
+        <div class="col-span-2 mt-4">
           <div>
             <BaseDragAndDropFileMultiple
               ref="BaseDragAndDropFileMultiple"
-              class="mt-6"
               label="Banner"
               sublabel="Jenis file (.jpg, .png) resolusi 360 x 170 px. Maksimal 1 MB."
               height-drag-and-drop="h-[165px]"
@@ -35,7 +35,7 @@
             />
           </div>
         </div>
-        <div class="col-span-1 mt-6">
+        <div class="col-span-2 mt-4">
           <div>
             <BaseDragAndDropFile
               ref="BaseDragAndDropFile"
@@ -96,7 +96,7 @@
             </div>
             <UButton
               size="sm"
-              color="primary"
+              color="blue"
               square
               variant="solid"
               label="Pilih Alamat"
@@ -206,7 +206,7 @@
 </template>
 <script setup lang="ts">
   import { Form } from 'vee-validate'
-  import { useDataImage, useIdData } from '@/store/index'
+  import { useDataImage } from '@/store/index'
   import { object, string } from 'yup'
   import {
     usePostServicePhoto,
@@ -215,7 +215,6 @@
     usePutData,
   } from '~/composables/useFetchData'
 
-  const router = useRouter()
   const formContainer = ref<HTMLInputElement | null>(null)
   const submitForm = ref<HTMLInputElement>()
   const toast = useToast()
@@ -264,7 +263,7 @@
     },
     dataUrlImage: '',
     dataUrlImageMultiple: [],
-    idData: useIdData().id,
+    idData: useRoute().query?.id,
     showDialogAddress: false,
     address: {},
     dataOrganisasi: [],
@@ -394,7 +393,7 @@
   }
 
   const onSubmit = async (values: object) => {
-    const method = state.idData !== '' ? 'edit' : 'add'
+    const method = state.idData ? 'edit' : 'add'
 
     let data = values as apiDataResponse
     data.logo = state.dataUrlImage
@@ -508,8 +507,7 @@
   }
 
   const handleBack = () => {
-    useIdData().id = ''
-    router.push({ path: '/object' })
+    useRouter().push({ path: '/object' })
   }
 
   const validateAlamat = (address: object) => {
@@ -556,6 +554,7 @@
     )
 
     if (dataToUpload.length >= 1) {
+      
       const result = await usePostServicePhoto(dataToUpload[0])
       dataToUpload[0] = result.path
     }
@@ -571,7 +570,7 @@
     const dataAreExist = []
     if (imageMultipleLength >= 1) {
       for (let i = 0; i < imageMultipleLength; i++) {
-        if (imageMultiple[i]?.url) {
+        if (!imageMultiple[i]?.url) {
           if (!imageMultiple[i].fileCorrect) {
             return toast.add({
               title: 'Banner Image Melanggar Rules',

@@ -3,14 +3,8 @@
     <BaseDataTable :headers="objectHeaders" :path="urlAPI" base-route="/object">
       <template #customeName="{ items }">
         <div class="flex flex-row">
-          <div class="basis-[14%]">
-            <img
-              :src= items.logo
-              :alt=items.name
-              width="20"
-              height="20"
-              class="self-start"
-            />
+          <div class="basis-[13%]">
+            <UAvatar size="xs" :src="items.logo" :alt="items.name" />
           </div>
           <div class="basis-1/2">
             {{ items.name }}
@@ -20,18 +14,84 @@
       <template #customeStatus="{ items }">
         <UBadge
           :color="statusColors[items.status].color"
-          :variant="statusColors[items.status].variant"
-          class="uppercase"
+          variant="soft"
+          :ui="{
+            rounded: 'rounded-full',
+            variant: {
+              soft: 'bg-{color}-100 dark:bg-{color}-400 dark:bg-opacity-10 text-{color}-500 dark:text-{color}-400',
+            },
+          }"
+          class="capitalize"
           >{{ items.status }}
         </UBadge>
       </template>
       <template #customeAction="{ items, fetch }">
-        <UDropdown :items="itemActions(items, fetch)">
+        <UTooltip text="Laporan" :popper="{ offsetDistance: 16 }">
           <UButton
-            color="green"
-            variant="outline"
-            icon="i-heroicons-chevron-down"
-            >Actions
+            class="mr-1"
+            variant="ghost"
+            color="blue"
+            :ui="{
+              rounded: 'rounded-md',
+            }"
+          >
+            <template #trailing>
+              <NuxtIcon
+                name="navigation/laporan-icon"
+                filled
+                class="stroke-[#737373] text-[19px]"
+              />
+            </template>
+          </UButton>
+        </UTooltip>
+        <UTooltip text="Atur Tiket" :popper="{ offsetDistance: 16 }">
+          <UButton
+            class="mr-1"
+            variant="ghost"
+            color="blue"
+            :ui="{
+              rounded: 'rounded-md',
+            }"
+          >
+            <template #trailing>
+              <NuxtIcon
+                name="navigation/tiket-icon"
+                filled
+                class="stroke-[#737373] text-[19px]"
+              />
+            </template>
+          </UButton>
+        </UTooltip>
+        <UTooltip text="Detail" :popper="{ offsetDistance: 16 }">
+          <UButton
+            class="mr-1"
+            variant="ghost"
+            color="blue"
+            :ui="{
+              rounded: 'rounded-md',
+            }"
+            @click="
+              router.push({ path: 'object/detail', query: { id: items.id } })
+            "
+          >
+            <template #trailing>
+              <NuxtIcon
+                name="navigation/eye-icon"
+                filled
+                class="stroke-[#737373] text-[19px]"
+              />
+            </template>
+          </UButton>
+        </UTooltip>
+        <UDropdown :items="itemActions(items, fetch)">
+          <UButton color="blue" variant="ghost">
+            <template #trailing>
+              <NuxtIcon
+                name="navigation/dots-icon"
+                filled
+                class="stroke-[#737373] p-[2px] text-[15px]"
+              />
+            </template>
           </UButton>
         </UDropdown>
       </template>
@@ -49,7 +109,7 @@
     <BaseModal
       :open-modal="state.isOpenObject"
       :title-modal="`Confirm to ${state.titleObject}`"
-      :desc-modal="`Are you sure you want to ${state.titleObject}`" 
+      :desc-modal="`Are you sure you want to ${state.titleObject}`"
       icon-modal="i-heroicons-question-mark-circle"
       :text-confirm="state.titleObject"
       type-modal="warning"
@@ -63,11 +123,6 @@
   import { useActivePage } from '@/store/index'
   import { objectHeaders } from '~/common/constant/object'
 
-  interface StatusColor {
-    color: string
-    variant: string
-  }
-
   const router = useRouter()
   const toast = useToast()
   const state = reactive({
@@ -76,15 +131,16 @@
     statusObject: '',
     titleObject: '',
     idItems: '',
-    fetchObject: {}
+    fetchObject: {},
   })
   const urlAPI: string = '/v1/event/object'
 
-  const statusColors: Record<string, StatusColor> = {
-    draft: { color: 'red', variant: 'subtle' },
-    published: { color: 'green', variant: 'subtle' },
-    unpublished: { color: 'orange', variant: 'subtle' },
+  const statusColors: Record<string, { color: string }> = {
+    draft: { color: 'orange' },
+    published: { color: 'green' },
+    unpublished: { color: 'red' },
   }
+
   const itemActions = (
     items: { id: string; status: string },
     fetch: object,
@@ -94,7 +150,7 @@
         {
           label: 'Edit',
           icon: 'i-heroicons-pencil-square-20-solid',
-          iconClass: 'bg-green-500',
+          iconClass: 'bg-blue-700',
           click: () => {
             router.push({ path: '/object/form', query: {id: items.id} })
           }
@@ -102,14 +158,14 @@
         {
           label: 'Detail',
           icon: 'i-heroicons-document-magnifying-glass-20-solid',
-          iconClass: 'bg-green-500',
+          iconClass: 'bg-blue-700',
         },
       ],
       [
         {
           label: 'Delete',
           icon: 'i-heroicons-trash-20-solid',
-          iconClass: 'bg-green-500',
+          iconClass: 'bg-blue-700',
           click: () => openModalDelete(items.id, fetch),
         },
       ],
@@ -120,7 +176,7 @@
         {
           label: 'Publish',
           icon: 'i-heroicons-check-badge-20-solid',
-          iconClass: 'bg-green-500',
+          iconClass: 'bg-blue-700',
           click: () => openModalStatus(items, fetch, 'published'),
         },
       ])
@@ -129,7 +185,7 @@
         {
           label: 'Unpublish',
           icon: 'i-heroicons-x-circle-20-solid',
-          iconClass: 'bg-green-500',
+          iconClass: 'bg-blue-700',
           click: () => openModalStatus(items, fetch, 'unpublished'),
         },
       ])
@@ -144,9 +200,10 @@
     state.fetchObject = fetch
   }
 
-  function openModalStatus(row: {id: string}, fetch: object, status: string) {
+  function openModalStatus(row: { id: string }, fetch: object, status: string) {
     state.statusObject = status
-    state.titleObject = (state.statusObject === 'published') ? 'Publish': 'Unpublish'
+    state.titleObject =
+      state.statusObject === 'published' ? 'Publish' : 'Unpublish'
     state.idItems = row.id
     state.fetchObject = fetch
     state.isOpenObject = true
@@ -192,7 +249,7 @@
 
   async function updateStatus() {
     const status = {
-      status: state.statusObject
+      status: state.statusObject,
     }
     await useUpdatePatchData(urlAPI, state.idItems, status)
     state.fetchObject()

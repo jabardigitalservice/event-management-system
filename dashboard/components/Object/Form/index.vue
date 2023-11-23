@@ -11,181 +11,190 @@
       />
     </template>
     <template #body>
-      <Form
-        ref="formContainer"
-        class="message-notif-form my-5 grid grid-cols-2 gap-x-6 rounded-lg bg-white px-6 py-4"
-        :validation-schema="state.schema"
-        @submit="onSubmit"
-      >
-        <div class="col-span-1">
-        </div>
-        <div class="col-span-2">
-          <div>
-            <BaseDragAndDropFileMultiple
-              ref="BaseDragAndDropFileMultiple"
-              class="mt-6"
-              label="Banner"
-              sublabel="Jenis file (.jpg, .png) resolusi 360 x 170 px. Maksimal 1 MB."
-              height-drag-and-drop="h-[165px]"
-              :disabled="state.isFormDisabled"
-              :detail-drag-and-drop="state.detailDragAndDropMultiple"
-              :image-url-multiple="state.dataUrlImageMultiple"
-              @preview-file="previewFile"
-              @delete-url-file-multiple="deleteImageMultipleUrl"
-            />
-          </div>
-        </div>
-        <div class="col-span-1 mt-6">
-          <div>
-            <BaseDragAndDropFile
-              ref="BaseDragAndDropFile"
-              label="Logo"
-              sublabel="Jenis file (.png, .svg) resolusi 46x46, maksimal 1 MB"
-              height-drag-and-drop="h-[200px]"
-              :disabled="state.isFormDisabled"
-              :detail-drag-and-drop="state.detailDragAndDrop"
-              :image-url="state.dataUrlImage"
-              @preview-file="previewFile"
-              @delete-url-file="deleteImageUrl"
-            />
-          </div>
-        </div>
-        <div class="col-span-2">
-          <div class="mt-6">
-            <BaseTextInput
-              name="name"
-              type="text"
-              label="Nama Objek Wisata"
-              placeholder="Masukan Nama Objek Wisata"
-              :disabled="state.isFormDisabled"
-            />
-          </div>
-        </div>
-        <div class="col-span-2">
-          <div class="mt-6">
-            <BaseDropdown
-              name="organization_id"
-              type="text"
-              label="Organisasi"
-              placeholder="Pilih Organisasi"
-              :data-selected="state.selectedOrganisasi"
-              :data-dropdown="state.dataOrganisasi"
-              :disabled="state.isFormDisabled"
-            />
-          </div>
-        </div>
-        <div class="col-span-2">
-          <div class="mt-6">
-            <BaseTextareaInput
-              name="description"
-              label="Deskripsi Objek"
-              placeholder="Masukan Deskripsi Objek"
-              :disabled="state.isFormDisabled"
-            />
-          </div>
-        </div>
-        <div class="col-span-2">
-          <div class="mt-6 flex justify-between">
-            <div>
-              <label class="message-notif-form__label-required text-gray-800">
-                Alamat
-              </label>
-              <p class="text-[13px] text-gray-600">
-                Isikan alamat lengkap tempat objek wisata
-              </p>
-            </div>
-            <UButton
-              size="sm"
-              color="primary"
-              square
-              variant="solid"
-              label="Pilih Alamat"
-              :disabled="state.isFormDisabled"
-              @click="handleOpenDialogAddress"
-            />
-          </div>
-        </div>
-        <div class="col-span-2 my-8">
-          <hr />
-        </div>
-        <div class="col-span-2">
-          <BaseTextInput
-            name="organizer"
-            type="text"
-            label="Nama Pengelola"
-            placeholder="Masukan Nama Pengelola"
-            :disabled="state.isFormDisabled"
-          />
-        </div>
-        <div class="col-span-2 mt-6">
-          <BaseTextInput
-            name="organizer_email"
-            type="text"
-            label="Email Pengelola"
-            placeholder="Masukan Email Pengelola"
-            :disabled="state.isFormDisabled"
-          />
-        </div>
-        <div class="col-span-2 mt-6">
-          <BaseTextInput
-            name="organizer_phone"
-            type="number"
-            label="No. Telp Objek Wisata"
-            placeholder="Masukan No. Telp Objek Wisata"
-            :disabled="state.isFormDisabled"
-          />
-        </div>
-        <div class="col-span-2 my-8">
-          <hr />
-        </div>
-        <div class="col-span-2">
-          <BaseTextInputGroup
-            name="instagram"
-            label="Instagram"
-            placeholder="https://instagram.com/"
-            icon="common/instagram"
-            :disabled="state.isFormDisabled"
-          />
-        </div>
-        <div class="col-span-2 mt-6">
-          <BaseTextInputGroup
-            name="tiktok"
-            label="Tiktok"
-            placeholder="https://tiktok.com/"
-            icon="common/tiktok"
-            :disabled="state.isFormDisabled"
-          />
-        </div>
-        <div class="col-span-2 mt-6">
-          <BaseTextInputGroup
-            name="facebook"
-            label="Facebook"
-            placeholder="https://facebook.com/"
-            icon="common/facebook"
-            :disabled="state.isFormDisabled"
-          />
-        </div>
+      <div class="overflow-y-auto">
+        <div class="flex h-full max-h-screen flex-col items-center py-5">
+          <div class="max-w-xl">
+            <Form
+              ref="formContainer"
+              class="message-notif-form my-5 grid grid-cols-2 gap-x-6 rounded-lg bg-white px-6 py-4"
+              :validation-schema="state.schema"
+              @submit="onSubmit"
+            >
+              <div class="col-span-1"></div>
+              <div class="col-span-2">
+                <div>
+                  <BaseDragAndDropFileMultiple
+                    ref="BaseDragAndDropFileMultiple"
+                    class="mt-6"
+                    label="Banner"
+                    sublabel="Jenis file (.jpg, .png) resolusi 360 x 170 px. Maksimal 1 MB."
+                    height-drag-and-drop="h-[165px]"
+                    :disabled="state.isFormDisabled"
+                    :detail-drag-and-drop="state.detailDragAndDropMultiple"
+                    :image-url-multiple="state.dataUrlImageMultiple"
+                    @preview-file="previewFile"
+                    @delete-url-file-multiple="deleteImageMultipleUrl"
+                  />
+                </div>
+              </div>
+              <div class="col-span-1 mt-6">
+                <div>
+                  <BaseDragAndDropFile
+                    ref="BaseDragAndDropFile"
+                    label="Logo"
+                    sublabel="Jenis file (.png, .svg) resolusi 46x46, maksimal 1 MB"
+                    height-drag-and-drop="h-[200px]"
+                    :disabled="state.isFormDisabled"
+                    :detail-drag-and-drop="state.detailDragAndDrop"
+                    :image-url="state.dataUrlImage"
+                    @preview-file="previewFile"
+                    @delete-url-file="deleteImageUrl"
+                  />
+                </div>
+              </div>
+              <div class="col-span-2">
+                <div class="mt-6">
+                  <BaseTextInput
+                    name="name"
+                    type="text"
+                    label="Nama Objek Wisata"
+                    placeholder="Masukan Nama Objek Wisata"
+                    :disabled="state.isFormDisabled"
+                  />
+                </div>
+              </div>
+              <div class="col-span-2">
+                <div class="mt-6">
+                  <BaseDropdown
+                    name="organization_id"
+                    type="text"
+                    label="Organisasi"
+                    placeholder="Pilih Organisasi"
+                    :data-selected="state.selectedOrganisasi"
+                    :data-dropdown="state.dataOrganisasi"
+                    :disabled="state.isFormDisabled"
+                  />
+                </div>
+              </div>
+              <div class="col-span-2">
+                <div class="mt-6">
+                  <BaseTextareaInput
+                    name="description"
+                    label="Deskripsi Objek"
+                    placeholder="Masukan Deskripsi Objek"
+                    :disabled="state.isFormDisabled"
+                  />
+                </div>
+              </div>
+              <div class="col-span-2">
+                <div class="mt-6 flex justify-between">
+                  <div>
+                    <label
+                      class="message-notif-form__label-required text-gray-800"
+                    >
+                      Alamat
+                    </label>
+                    <p class="text-[13px] text-gray-600">
+                      Isikan alamat lengkap tempat objek wisata
+                    </p>
+                  </div>
+                  <UButton
+                    size="sm"
+                    color="primary"
+                    square
+                    variant="solid"
+                    label="Pilih Alamat"
+                    :disabled="state.isFormDisabled"
+                    @click="handleOpenDialogAddress"
+                  />
+                </div>
+              </div>
+              <div class="col-span-2 my-8">
+                <hr />
+              </div>
+              <div class="col-span-2">
+                <BaseTextInput
+                  name="organizer"
+                  type="text"
+                  label="Nama Pengelola"
+                  placeholder="Masukan Nama Pengelola"
+                  :disabled="state.isFormDisabled"
+                />
+              </div>
+              <div class="col-span-2 mt-6">
+                <BaseTextInput
+                  name="organizer_email"
+                  type="text"
+                  label="Email Pengelola"
+                  placeholder="Masukan Email Pengelola"
+                  :disabled="state.isFormDisabled"
+                />
+              </div>
+              <div class="col-span-2 mt-6">
+                <BaseTextInput
+                  name="organizer_phone"
+                  type="number"
+                  label="No. Telp Objek Wisata"
+                  placeholder="Masukan No. Telp Objek Wisata"
+                  :disabled="state.isFormDisabled"
+                />
+              </div>
+              <div class="col-span-2 my-8">
+                <hr />
+              </div>
+              <div class="col-span-2">
+                <BaseTextInputGroup
+                  name="instagram"
+                  label="Instagram"
+                  placeholder="https://instagram.com/"
+                  icon="common/instagram"
+                  :disabled="state.isFormDisabled"
+                />
+              </div>
+              <div class="col-span-2 mt-6">
+                <BaseTextInputGroup
+                  name="tiktok"
+                  label="Tiktok"
+                  placeholder="https://tiktok.com/"
+                  icon="common/tiktok"
+                  :disabled="state.isFormDisabled"
+                />
+              </div>
+              <div class="col-span-2 mt-6">
+                <BaseTextInputGroup
+                  name="facebook"
+                  label="Facebook"
+                  placeholder="https://facebook.com/"
+                  icon="common/facebook"
+                  :disabled="state.isFormDisabled"
+                />
+              </div>
 
-        <div class="col-span-2 mt-6">
-          <BaseTextInputGroup
-            name="x"
-            label="X"
-            placeholder="https://twitter.com/"
-            icon="common/twitter"
-            :disabled="state.isFormDisabled"
-          />
+              <div class="col-span-2 mt-6">
+                <BaseTextInputGroup
+                  name="x"
+                  label="X"
+                  placeholder="https://twitter.com/"
+                  icon="common/twitter"
+                  :disabled="state.isFormDisabled"
+                />
+              </div>
+              <div class="col-span-2 mt-6">
+                <BaseTextInputGroup
+                  name="youtube"
+                  label="Youtube"
+                  placeholder="https://youtube.com/"
+                  icon="common/youtube"
+                  :disabled="state.isFormDisabled"
+                />
+              </div>
+              <button v-show="false" ref="submitForm" type="submit">
+                Submit
+              </button>
+            </Form>
+          </div>
         </div>
-        <div class="col-span-2 mt-6">
-          <BaseTextInputGroup
-            name="youtube"
-            label="Youtube"
-            placeholder="https://youtube.com/"
-            icon="common/youtube"
-            :disabled="state.isFormDisabled"
-          />
-        </div>
-        <button v-show="false" ref="submitForm" type="submit">Submit</button>
-      </Form>
+      </div>
     </template>
   </TheHeader>
   <BaseViewFileModal

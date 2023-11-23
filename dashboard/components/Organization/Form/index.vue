@@ -111,7 +111,8 @@
             :disabled="state.isFormDisabled"
           />
         </div>
-      </div>
+        <button v-show="false" ref="submitForm" type="submit">Submit</button>
+      </Form>
     </template>
   </TheHeader>
   <BaseViewFileModal

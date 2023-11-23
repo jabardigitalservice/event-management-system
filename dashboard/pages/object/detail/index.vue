@@ -68,6 +68,15 @@
             </div>
           </div>
         </template>
+        <template #pengaturan>
+          <div class="w-screen bg-white h-screen">
+            <div class="flex px-3 overflow-y-scroll no-scrollbar h-[82vh] -mt-2 mb-20 place-content-center">
+              <div class="max-w-xl flex flex-col py-5">
+                <ObjectDetailPengaturan :data="fetchData()" />
+              </div>
+            </div>
+          </div>
+        </template>
       </UTabs>
     </template>
   </TheHeader>

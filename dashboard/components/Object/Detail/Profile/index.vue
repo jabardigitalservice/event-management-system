@@ -43,7 +43,11 @@
         class="h-9"
         color="blue"
         variant="outline"
-        :ui="{ rounded: 'rounded-lg' }"
+        :ui="{ rounded: 'rounded-lg', 
+        variant: { 
+          outline: 'text-[#1569C4]'
+          }
+        }"
         @click="
           router.push({ path: '/object/form', query: { id: state.items.id } })
         "

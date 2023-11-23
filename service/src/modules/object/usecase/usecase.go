@@ -13,6 +13,7 @@ import (
 
 type (
 	UsecaseInterface interface {
+		Log(ctx context.Context, category string) *app.AppLogger
 		CreateObject(ctx context.Context, obj request.Object) (*request.Object, error)
 		GetObjects(ctx context.Context, params request.QueryParam) ([]entity.Object, int, error)
 		GetObjectByID(ctx context.Context, id *uuid.UUID) (*entity.Object, error)

@@ -15,7 +15,7 @@
               xs: 'text-[10px] px-2 pt-1 h-5',
             },
             variant: {
-              soft: 'bg-{color}-100 dark:bg-{color}-400 dark:bg-opacity-10 text-{color}-500 dark:text-{color}-400',
+              soft: `${statusColors[state.dataDetail.status].background}  text-{color}-500`,
             },
           }"
           >{{ state.dataDetail.status }}</UBadge
@@ -113,10 +113,15 @@
     }
   }
 
-  const statusColors: Record<string, { color: string }> = {
-    draft: { color: 'orange' },
-    published: { color: 'green' },
-    unpublished: { color: 'red' },
+  interface statusColor {
+    color: string,
+    background: string
+  }
+
+  const statusColors: Record<string, statusColor> = {
+    draft: { color: 'orange', background: 'bg-orange-100' },
+    published: { color: 'green', background: 'bg-green-50' },
+    unpublished: { color: 'red', background: 'bg-red-100' },
   }
 
   const router = useRoute()

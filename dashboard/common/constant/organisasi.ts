@@ -8,5 +8,5 @@ export const organisasiHeaders: IOrganizationHeader[] = [
     { label: "Organisasi", key: "name", sortable: true },
     { label: "Email", key: "email", sortable: true },
     { label: "Address", key: "address" },
-    { key: 'actions' }
+    { label: "Aksi", key: 'actions' }
 ];

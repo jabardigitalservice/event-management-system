@@ -1,7 +1,7 @@
 <template>
   <div class="h-screen overflow-hidden flex flex-col">
     <header
-      class="h-[64px] flex w-full items-center bg-white px-3 shadow-md sticky">
+      class=" min-h-[64px] flex w-full items-center bg-white px-3 shadow-md sticky">
       <UButton
         :padded="false"
         color="gray"
@@ -34,9 +34,7 @@
       </div>
       <slot name="buttonSave" />
     </header>
-    <div class="xl:px-[444px] lg:px-[296px] md:px-[148px] px-[66px] flex flex-col h-full overflow-y-auto py-5 max-h-screen">
       <slot name="body" />
-    </div>
   </div>
 </template>
 

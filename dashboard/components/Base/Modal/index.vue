@@ -42,7 +42,7 @@
                     @click="confirmModal">{{ props.textConfirm }}
                 </UButton>
                 <UButton 
-                    color="green" 
+                    color="blue" 
                     class="mr-3 w-20 justify-center" 
                     variant="soft"
                     @click="closedModal"> Cancel
@@ -104,8 +104,8 @@
         circleAlert = 'mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-orange-100 sm:mx-0 sm:h-10 sm:w-10'
       break;
     default:
-        colorIcon = 'bg-green-600'
-        circleAlert = 'mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10'
+        colorIcon = 'bg-blue-600'
+        circleAlert = 'mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10'
       break;
   }
 

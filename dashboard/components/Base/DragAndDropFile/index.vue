@@ -1,38 +1,23 @@
 <template>
-  <div class="font-lato text-gray-800">
-    <label
-      v-show="label"
-      class="text-gray-800"
-      >{{ label }}</label
-    >
-    <p v-show="sublabel" class="mb-1 text-[13px] text-gray-600">
-      {{ sublabel }}
-    </p>
-    <div class="mt-2 flex w-full items-center justify-center">
+  <div class="flex font-lato text-gray-800">
+    <div class="mt-2 flex h-[120px] w-[120px] items-center justify-center">
       <div
         v-if="fileInputIsChange"
         :class="[
-          fileIsCorrect
+          dataFiles.fileCorrect
             ? 'border-green-300 bg-green-50'
             : 'border-red-300 bg-red-50',
           heightDragAndDrop,
         ]"
-        class="flex w-full flex-col justify-center rounded-lg border-2 border-dashed px-4"
+        class="flex h-full w-full flex-col items-center justify-center rounded-full border-2 border-dashed px-2"
       >
-        <div class="mb-3 flex items-center justify-center">
-          <NuxtIcon
-            name="common/document"
-            class="h-9 w-9 text-4xl text-gray-600"
-          />
-        </div>
+        <img
+          class="w-15 h-15"
+          :src="dataFiles?.url !== '' ? dataFiles.url : fileDocument(dataFiles)"
+        />
 
-        <div class="flex w-full flex-row items-center justify-between">
-          <div class="w-[85%]">
-            <p
-              class="mb-2 truncate font-lato text-[14px] font-normal text-black"
-            >
-              {{ dataFiles?.name || '-' }}
-            </p>
+        <div class="flex w-full flex-row items-center">
+          <div class="w-[100%]">
             <template v-if="proggresBarIsSuccess">
               <div class="mb-1 h-1.5 w-full rounded-full bg-gray-200">
                 <div
@@ -46,82 +31,69 @@
                 </span>
               </div>
             </template>
-            <template v-else>
-              <p class="mb-2 font-lato text-[11px] font-normal text-gray-600">
-                Ukuran {{ dataFiles?.fileSize || '-' }}
-              </p>
-            </template>
-            <div v-if="imageUrl">
-              <p
-                v-if="!fileSizeIsCompatible()"
-                class="font-lato text-[11px] font-bold text-red-600"
-              >
-                {{ detailDragAndDrop.informationSizeCompatible }}
-              </p>
-              <p
-                v-if="!formatFileIsCompatible()"
-                class="font-lato text-[11px] font-bold text-red-600"
-              >
-                {{ detailDragAndDrop.informationFormatCompatible }}.
-              </p>
-              <p
-                v-if="fileResolutionIsCompatible()"
-                class="font-lato text-[11px] font-bold text-red-600"
-              >
-                Resolusi gambar max {{ detailDragAndDrop.maxResolution }}px
-              </p>
-            </div>
-          </div>
-          <div class="flex flex-row">
-            <button class="w-4" @click="resetDataFile">
-              <NuxtIcon name="common/trash" class="h-4 w-4 text-red-600" />
-            </button>
-            <button class="ml-5 w-4" @click.prevent="previewFile">
-              <NuxtIcon
-                v-if="!proggresBarIsSuccess"
-                name="common/eyes"
-                class="h-4 w-4 text-green-600"
-              />
-            </button>
           </div>
         </div>
       </div>
       <label
         v-else
         :class="heightDragAndDrop"
-        for="drag-and-drop-file"
-        class="flex w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-4 hover:bg-gray-200"
+        class="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-full border-2 border-dashed border-gray-300 bg-gray-50 px-4"
         @dragover="dragover"
         @dragleave="dragleave"
         @drop="drop"
       >
         <div class="flex flex-col items-center justify-center">
           <NuxtIcon
-            name="common/upload-file"
-            class="mb-3 text-4xl text-gray-300"
+            name="common/default-photo"
+            class="text-3xl text-gray-300"
           />
-          <p class="mb-2 font-lato text-[14px] text-gray-700">
-            <span>Drag File kesini</span>
-            <span class="ml-1 text-gray-500">atau</span>
-            <span class="ml-1 text-green-600 underline">Pilih File</span>
-          </p>
         </div>
-        <input
-          id="drag-and-drop-file"
-          ref="file"
-          type="file"
-          class="hidden"
-          :disabled="disabled"
-          :accept="detailDragAndDrop.acceptFile"
-          @change="onChangeUpload"
-        />
       </label>
+    </div>
+    <div class="ml-4 mt-3">
+      <label v-show="label" class="text-gray-800 font-bold">{{ label }}</label>
+      <p v-show="sublabel" class="mb-2 text-[13px] text-gray-600">
+        {{ sublabel }}
+      </p>
+      <div class="flex flex-row">
+        <UButton
+          for="dragAndDropFile"
+          color="blue"
+          variant="outline"
+          size="lg"
+          :disabled="fileInputIsChange"
+          @click="inputFileHandle"
+        >
+          Pilih File
+        </UButton>
+        <div  v-if="fileInputIsChange" class="flex flex-row">
+          <UButton
+            class="ml-2"
+            color="red"
+            variant="soft"
+            size="lg"
+            @click="resetDataFile"
+          >
+            <NuxtIcon name="common/trash" filled class="text-red-600 text-lg" />
+          </UButton>
+        </div>
+      </div>
+      <input
+        id="dragAndDropFile"
+        ref="dragAndDropFile"
+        type="file"
+        :disabled="disabled"
+        class="hidden"
+        :accept="detailDragAndDrop.acceptFile"
+        @change="onChangeUpload"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
   import { useDataImage } from '@/store/index'
+  import { base64ToBlobUrl } from '~/utils'
 
   const props = defineProps({
     detailDragAndDrop: {
@@ -145,14 +117,15 @@
       default: '',
     },
     disabled: {
-      type: Boolean, 
-      default: false
-    }
+      type: Boolean,
+      default: false,
+    },
   })
 
   const emit = defineEmits(['previewFile', 'deleteUrlFile'])
 
   const files = ref()
+  const dragAndDropFile = ref()
   const dataFiles = ref({
     name: '',
     isConfidental: false,
@@ -163,6 +136,8 @@
     fileCorrect: false,
     height: 0,
     width: 0,
+    size: 0,
+    url: '',
   })
   const fileInputIsChange = ref(false)
   const proggresBarIsSuccess = ref(false)
@@ -180,6 +155,7 @@
       dataFiles.value.name = ''
       dataFiles.value.mimeType = res.type
       dataFiles.value.size = res.size
+      dataFiles.value.url = props.imageUrl
       dataFiles.value.fileSize = convertSize(res.size)
       fileInputIsChange.value = true
       fileIsCorrect.value = true
@@ -188,23 +164,30 @@
     }
   })
 
+  const inputFileHandle = () => {
+    dragAndDropFile.value.click()
+  }
+
   const onChangeUpload = (e) => {
     if (e.target.files[0]) {
+      
       files.value = e.target.files[0]
-      let img = new Image()
-      img.src = window.URL.createObjectURL(e.target.files[0])
-      img.onload = () => {
-        dataFiles.value.width = img.width
-        dataFiles.value.height = img.height
-      }
+      dataFiles.value.url = ''
       dataFiles.value.name = files.value.name
       dataFiles.value.mimeType = files.value.type
       dataFiles.value.fileSize = convertSize(files.value.size)
       fileInputIsChange.value = true
       convertFileToBase64(files.value)
+      let img = new Image()
+      img.src = window.URL.createObjectURL(e.target.files[0])
+      img.onload = () => {
+        dataFiles.value.width = img.width
+        dataFiles.value.height = img.height
+
+        dataFiles.value.fileCorrect = checkFileValidation(dataFiles)
+      }
       runProgressBar()
-      checkFileValidation()
-      dataFiles.value.fileCorrect = fileIsCorrect.value
+      disabledButton.value = true
       useDataImage().dataImage = JSON.parse(JSON.stringify(dataFiles.value))
     }
   }
@@ -281,6 +264,10 @@
     responseImage.value = ''
     fileIsCorrect.value = false
     disabledButton.value = true
+    dataFiles.value.url = ''
+    dataFiles.value.name = ''
+    dataFiles.value.mimeType = ''
+    dataFiles.value.fileSize = ''
 
     emit('deleteUrlFile')
 
@@ -301,32 +288,38 @@
     reader.readAsDataURL(FileObject)
   }
 
-  const checkFileValidation = () => {
-    if (dataFiles.value) {
-      if (fileSizeIsCompatible() && formatFileIsCompatible()) {
-        fileIsCorrect.value = true
-        disabledButton.value = false
+  const checkFileValidation = (file: Array) => {
+    if (file) {
+      if (fileSizeIsCompatible(file) && formatFileIsCompatible(file) && fileResolutionIsCompatible(file)) {
+        return true
+        
       } else {
-        fileIsCorrect.value = false
+        return false
       }
     } else {
-      fileIsCorrect.value = false
+      return false
     }
   }
 
-  const fileSizeIsCompatible = () => {
-    return dataFiles.value.size <= props.detailDragAndDrop.maxSizeFile
+  const fileSizeIsCompatible = (file: Array) => {
+    return file.value.size <= props.detailDragAndDrop.maxSizeFile
   }
 
-  const fileResolutionIsCompatible = () => {
+  const fileResolutionIsCompatible = (file: Array) => {
     const validate =
-      dataFiles.value.width > props.detailDragAndDrop.maxResolution &&
-      dataFiles.value.height > props.detailDragAndDrop.maxResolution
-    fileIsCorrect.value = !validate
-    return validate
+    file.value.width > props.detailDragAndDrop.maxResolution &&
+    file.value.height > props.detailDragAndDrop.maxResolution
+    
+      return !validate
   }
 
-  const formatFileIsCompatible = () => {
-    return props.detailDragAndDrop.formatTypeFile.includes(dataFiles.value.mimeType)
+  const formatFileIsCompatible = (file: Array) => {
+    return props.detailDragAndDrop.formatTypeFile.includes(
+      file.value.mimeType,
+    )
+  }
+
+  const fileDocument = (file: Array) => {
+    return file?.data ? base64ToBlobUrl(file.data, file.mimeType) : ''
   }
 </script>

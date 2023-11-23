@@ -99,8 +99,8 @@
 </template>
 
 <script setup lang="ts">
-  import { useActivePage, useIdData } from '@/store/index'
-  import { organisasiHeaders } from '~/common/constant/organisasi'
+  import { useActivePage } from '@/store/index'
+  import { organisasiHeaders } from "~/common/constant/organisasi"
 
   const router = useRouter()
   const toast = useToast()
@@ -122,9 +122,8 @@
           icon: 'i-heroicons-pencil-square-20-solid',
           iconClass: 'bg-blue-700',
           click: () => {
-            useIdData().id = items.id
-            router.push({ path: '/organisasi/form' })
-          },
+            router.push({ path: '/organisasi/form', query: {id: items.id} })
+          }
         },
       ],
       [

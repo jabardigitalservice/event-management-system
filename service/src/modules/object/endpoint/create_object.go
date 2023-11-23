@@ -36,5 +36,6 @@ func (e *Endpoint) CreateObject(ctx context.Context, objData request.Object) (in
 
 	defer endpointSegment.End()
 
+	e.logger.Success(usecase.MethodCreateObject, "success")
 	return responseObj, nil
 }

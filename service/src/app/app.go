@@ -18,7 +18,7 @@ type (
 		ctx         context.Context
 		router      *chi.Mux
 		logger      *gologlogger.Logger
-		AppLogger   *AppLogger
+		appLogger   *AppLogger
 		db          *DB
 		newrelicApp *NewRelicManager
 	}
@@ -39,6 +39,7 @@ func Init() (*App, error) {
 	}
 
 	log := gologlogger.Init()
+	appLogger := InitAppLogger(&appConfig, constant.ServiceName)
 
 	masterDB := InitPgsqlMaster(ctx, appConfig)
 	slaveDB := InitPgsqlSlave(ctx, appConfig)
@@ -53,7 +54,8 @@ func Init() (*App, error) {
 		router: router.InitChi(router.Config{
 			Debug: viper.GetBool("APP_DEBUG"),
 		}),
-		logger: log,
+		logger:    log,
+		appLogger: appLogger,
 		db: &DB{
 			Master: masterDB,
 			Slave:  slaveDB,
@@ -77,7 +79,7 @@ func (app *App) GetLogger() *gologlogger.Logger {
 }
 
 func (app *App) GetAppLogger() *AppLogger {
-	return app.AppLogger
+	return app.appLogger
 }
 
 func (app *App) GetVersion() string {

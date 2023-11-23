@@ -30,6 +30,16 @@
           />
         </template>
       </UInput>
+      <UButton
+        class="bg-green-700"
+        icon="i-heroicons-pencil-square"
+        size="md"
+        color="primary"
+        variant="solid"
+        label="Create"
+        :trailing="false"
+        :to="props.baseRoute + '/form'"
+      />
     </div>
     <div
       class="inline-block min-w-full rounded-2xl border-[2px] border-neutral-100 bg-white shadow-sm"
@@ -152,7 +162,7 @@
 
 <script setup lang="ts">
   import { useFetchData } from '~/composables/useFetchData'
-  import { useActivePage, useIdData } from '@/store/index'
+  import { useActivePage } from '@/store/index'
 
   interface ApiResponse {
     current_page: number

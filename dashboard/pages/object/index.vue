@@ -120,7 +120,7 @@
 </template>
 
 <script setup lang="ts">
-  import { useActivePage, useIdData } from '@/store/index'
+  import { useActivePage } from '@/store/index'
   import { objectHeaders } from '~/common/constant/object'
 
   const router = useRouter()
@@ -152,9 +152,8 @@
           icon: 'i-heroicons-pencil-square-20-solid',
           iconClass: 'bg-blue-700',
           click: () => {
-            useIdData().id = items.id
-            router.push({ path: '/object/form' })
-          },
+            router.push({ path: '/object/form', query: {id: items.id} })
+          }
         },
         {
           label: 'Detail',

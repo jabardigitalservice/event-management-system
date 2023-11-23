@@ -9,7 +9,7 @@ import (
 func (uc *Usecase) CreateObject(ctx context.Context, obj request.Object) (*request.Object, error) {
 	usecaseSegment := uc.newrelic.StartSegment(ctx, "CreateObjectUsecase")
 
-	createdObj, err := uc.repo.CreateObject(ctx, obj)
+	createdObj, err := uc.repo.CreateObject(ctx, obj, MethodCreateObject)
 	if err != nil {
 		return nil, err
 	}

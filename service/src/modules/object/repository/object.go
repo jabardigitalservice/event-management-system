@@ -14,7 +14,7 @@ import (
 	"github.com/lib/pq"
 )
 
-func (r *Repository) CreateObject(ctx context.Context, obj request.Object) (request.Object, error) {
+func (r *Repository) CreateObject(ctx context.Context, obj request.Object, method string) (request.Object, error) {
 	datastoreSegment := r.newrelic.StartDatastoreSegment(
 		ctx,
 		"objects",
@@ -43,6 +43,8 @@ func (r *Repository) CreateObject(ctx context.Context, obj request.Object) (requ
 	).Scan(&obj.ID, &obj.CreatedAt, &obj.UpdatedAt)
 
 	if err != nil {
+		r.Log(ctx).Error(method, err)
+
 		return request.Object{}, err
 	}
 

@@ -7,7 +7,6 @@ import (
 
 	"github.com/fazpass/goliath/v3/router"
 	"github.com/go-chi/chi"
-	"github.com/jabardigitalservice/golog/logger"
 	gologlogger "github.com/jabardigitalservice/golog/logger"
 	"github.com/jabardigitalservice/super-app-services/event/src/constant"
 	"github.com/spf13/viper"
@@ -18,7 +17,8 @@ type (
 	App struct {
 		ctx         context.Context
 		router      *chi.Mux
-		logger      *logger.Logger
+		logger      *gologlogger.Logger
+		AppLogger   *AppLogger
 		db          *DB
 		newrelicApp *NewRelicManager
 	}
@@ -38,7 +38,7 @@ func Init() (*App, error) {
 		return nil, err
 	}
 
-	log := logger.Init()
+	log := gologlogger.Init()
 
 	masterDB := InitPgsqlMaster(ctx, appConfig)
 	slaveDB := InitPgsqlSlave(ctx, appConfig)
@@ -58,7 +58,7 @@ func Init() (*App, error) {
 			Master: masterDB,
 			Slave:  slaveDB,
 		},
-		newrelicApp : newRelicManager,
+		newrelicApp: newRelicManager,
 	}
 
 	return app, nil
@@ -72,8 +72,12 @@ func (app *App) GetHttpRouter() *chi.Mux {
 	return app.router
 }
 
-func (app *App) GetLogger() *logger.Logger {
+func (app *App) GetLogger() *gologlogger.Logger {
 	return app.logger
+}
+
+func (app *App) GetAppLogger() *AppLogger {
+	return app.AppLogger
 }
 
 func (app *App) GetVersion() string {
@@ -85,22 +89,11 @@ func (app *App) GetDB() *DB {
 }
 
 func (app *App) GetNewRelic() *NewRelicManager {
-	return app.newrelicApp 
+	return app.newrelicApp
 }
 
 func (app *App) GetStorageBaseUrl() string {
 	return viper.GetString("STORAGE_BASE_URL")
-}
-
-func (app *App) SetLogger(module string, method string, err error, additionalInfo map[string]interface{}) {
-	app.GetLogger().Error(&gologlogger.LoggerData{
-		Category:       gologlogger.LoggerApp,
-		Service:        constant.ServiceName,
-		Module:         module,
-		Method:         method,
-		Version:        app.GetVersion(),
-		AdditionalInfo: additionalInfo,
-	}, err)
 }
 
 func (app *App) RunHttp() error {
@@ -116,8 +109,8 @@ func (app *App) RunHttp() error {
 
 	var host = hostname + ":" + port
 
-	app.logger.Info(&logger.LoggerData{
-		Category: logger.LoggerApp,
+	app.logger.Info(&gologlogger.LoggerData{
+		Category: gologlogger.LoggerApp,
 		Service:  constant.ServiceName,
 		Method:   "startup",
 		Version:  app.GetVersion(),

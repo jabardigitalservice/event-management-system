@@ -5,6 +5,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jabardigitalservice/super-app-services/event/src/app"
+	"github.com/jabardigitalservice/super-app-services/event/src/constant"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/transport/handler/http/request"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/transport/handler/http/response"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/usecase"
@@ -24,6 +25,7 @@ type (
 		app      *app.App
 		usecase  usecase.UsecaseInterface
 		newrelic *app.NewRelicManager
+		logger   *app.AppLogger
 	}
 )
 
@@ -32,5 +34,10 @@ func Init(app *app.App, usecase usecase.UsecaseInterface) EndpointInterface {
 		app:      app,
 		usecase:  usecase,
 		newrelic: app.GetNewRelic(),
+		logger:   app.GetAppLogger(),
 	}
+}
+
+func (e *Endpoint) Log(ctx context.Context, category string) *app.AppLogger {
+	return e.logger.Log(ctx, category, constant.ModuleNameobject)
 }

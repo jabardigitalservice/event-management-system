@@ -13,6 +13,7 @@
     :disabled="disabled"
     :options="dataDropdown"
     searchable
+    :ui="{ color: 'blue' }"
     @change="onChange"
   >
     <template #label>

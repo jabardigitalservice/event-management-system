@@ -12,7 +12,7 @@
     :id="name"
     v-model="value"
     :name="name"
-    :color="errorMessage ? 'red' : 'green'"
+    :color="errorMessage ? 'red' : 'blue'"
     :type="type"
     :placeholder="placeholder"
     class="mt-1"

@@ -1,10 +1,19 @@
 <template>
-  <div v-if="state.isLoading" role="status" class="absolute -translate-x-1/2 -translate-y-1/2 top-[38%] left-1/2">
-    <NuxtIcon
-        name="common/loading"
-        filled
-        class="text-3xl"
-      />
+  <div
+    v-if="state.isLoading"
+    role="status"
+    class="absolute left-1/2 top-[35%] -translate-x-1/2 -translate-y-1/2"
+  >
+    <div class="flex">
+      <div class="relative">
+        <div
+          class="absolute h-10 w-10 rounded-full border-4 border-solid border-gray-200"
+        ></div>
+        <div
+          class="absolute h-10 w-10 animate-spin rounded-full border-4 border-solid border-blue-500 border-t-transparent shadow-md"
+        ></div>
+      </div>
+    </div>
   </div>
   <div v-if="!state.isLoading" class="pb-14 text-[14px] font-[400]">
     <img :src="state.items.banner" class="mt-5 h-[264px] w-full rounded-md" />
@@ -39,7 +48,11 @@
           router.push({ path: '/object/form', query: { id: state.items.id } })
         "
       >
-        <NuxtIcon name="common/pencil" filled class="justify-self-end text-xl" />
+        <NuxtIcon
+          name="common/pencil"
+          filled
+          class="justify-self-end text-xl"
+        />
         Ubah</UButton
       >
     </div>
@@ -119,13 +132,13 @@
   const router = useRouter()
   const state = reactive({
     items: {} as apiDataResponse,
-    isLoading: true
+    isLoading: true,
   })
 
   const props = defineProps({
     data: {
       type: Object,
-      default: () => ({})
+      default: () => ({}),
     },
   })
 

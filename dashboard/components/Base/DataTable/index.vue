@@ -10,7 +10,6 @@
         :label="`Tambah ${activePage.page}`"
         :trailing="false"
         :to="props.baseRoute + '/form'"
-        @click="useIdData().id = ''"
       />
       <UInput
         v-model="search"
@@ -30,16 +29,6 @@
           />
         </template>
       </UInput>
-      <UButton
-        class="bg-green-700"
-        icon="i-heroicons-pencil-square"
-        size="md"
-        color="primary"
-        variant="solid"
-        label="Create"
-        :trailing="false"
-        :to="props.baseRoute + '/form'"
-      />
     </div>
     <div
       class="inline-block min-w-full rounded-2xl border-[2px] border-neutral-100 bg-white shadow-sm"

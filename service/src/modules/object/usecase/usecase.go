@@ -30,12 +30,12 @@ type (
 )
 
 const (
-	MethodCreateObject       = "Object:Create-Object"
-	MethodGetObjects         = "Object:Get-Objects"
-	MethodGetObjectByID      = "Object:Get-Objects-By-ID"
-	MethodUpdateObject       = "Object:Update-Object"
-	MethodUpdateObjectStatus = "Object:Update-Object-Status"
-	MethodDeleteObject       = "Object:Delete-Object"
+	MethodCreateObject       = "object:create-object"
+	MethodGetObjects         = "object:get-objects"
+	MethodGetObjectByID      = "object:get-objects-by-id"
+	MethodUpdateObject       = "object:update-object"
+	MethodUpdateObjectStatus = "object:update-object-status"
+	MethodDeleteObject       = "object:delete-object"
 )
 
 func Init(app *app.App, repo repository.RepositoryInterface) UsecaseInterface {

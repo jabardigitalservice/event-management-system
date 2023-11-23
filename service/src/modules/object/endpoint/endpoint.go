@@ -39,5 +39,5 @@ func Init(app *app.App, usecase usecase.UsecaseInterface) EndpointInterface {
 }
 
 func (e *Endpoint) Log(ctx context.Context, category string) *app.AppLogger {
-	return e.logger.Log(ctx, category, constant.ModuleNameobject)
+	return e.logger.Log(ctx, category, constant.ModuleNameObject)
 }

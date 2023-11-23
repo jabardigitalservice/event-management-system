@@ -18,7 +18,7 @@ func Init(app *app.App, endpoint endpoint.EndpointInterface) *chi.Mux {
 
 	router.Use(middleware.Logger(app.GetLogger(), &gologlogger.LoggerData{
 		Service: constant.ServiceName,
-		Module:  constant.ModuleNameorganization,
+		Module:  constant.ModuleNameOrganization,
 		Version: app.GetVersion(),
 	}, false))
 

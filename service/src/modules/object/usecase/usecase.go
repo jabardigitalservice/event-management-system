@@ -49,5 +49,5 @@ func Init(app *app.App, repo repository.RepositoryInterface) UsecaseInterface {
 }
 
 func (uc *Usecase) Log(ctx context.Context, category string) *app.AppLogger {
-	return uc.logger.Log(ctx, category, constant.ModuleNameobject)
+	return uc.logger.Log(ctx, category, constant.ModuleNameObject)
 }

@@ -13,6 +13,7 @@ type (
 	UsecaseInterface interface {
 		Createcategory(ctx context.Context, cat request.Category) (*request.Category, error)
 		Getcategories(ctx context.Context, params request.QueryParam) ([]entity.Category, int, error)
+		UpdateCategory(ctx context.Context, obj *request.Category) (*request.Category, error)
 	}
 
 	Usecase struct {

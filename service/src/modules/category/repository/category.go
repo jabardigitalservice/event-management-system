@@ -148,3 +148,19 @@ func (r *Repository) filterCategoryCountQuery(params request.QueryParam, binds *
 
 	return query
 }
+
+func (r *Repository) UpdateCategory(ctx context.Context, obj *request.Category) (*request.Category, error) {
+	query := `
+        UPDATE categories
+        SET name = $2
+        WHERE id = $1
+    `
+
+	_, err := r.db.Master.ExecContext(ctx, query, obj.ID, obj.Name)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return obj, nil
+}

@@ -24,6 +24,7 @@ func Init(app *app.App, endpoint endpoint.EndpointInterface) *chi.Mux {
 
 	router.Post("/", h.Createcategory)
 	router.Get("/", h.GetCategories)
+	router.Put("/{id}", h.UpdateCategory)
 
 	return router
 }

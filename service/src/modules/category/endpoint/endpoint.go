@@ -13,6 +13,7 @@ type (
 	EndpointInterface interface {
 		Createcategory(ctx context.Context, catData request.Category) (interface{}, error)
 		Getcategories(ctx context.Context, params request.QueryParam) ([]response.Category, int, error)
+		UpdateCategory(ctx context.Context, obj *request.Category) (interface{}, error)
 	}
 
 	Endpoint struct {

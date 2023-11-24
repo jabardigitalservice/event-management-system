@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 
+	"github.com/google/uuid"
 	_errors "github.com/jabardigitalservice/super-app-services/event/src/error"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/category/entity"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/category/transport/handler/http/request"
@@ -147,6 +148,31 @@ func (r *Repository) filterCategoryCountQuery(params request.QueryParam, binds *
 	}
 
 	return query
+}
+
+func (r *Repository) GetCategoryByID(ctx context.Context, id *uuid.UUID) (*entity.Category, error) {
+	query := `
+        SELECT
+        id,
+        name
+    FROM categories
+    WHERE id = $1`
+
+	var result entity.Category
+
+	err := r.db.Slave.QueryRowContext(ctx, query, id).Scan(
+		&result.ID,
+		&result.Name,
+	)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, _errors.ErrNotFound
+		}
+		return nil, err
+	}
+
+	return &result, nil
 }
 
 func (r *Repository) UpdateCategory(ctx context.Context, obj *request.Category) (*request.Category, error) {

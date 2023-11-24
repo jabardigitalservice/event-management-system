@@ -5,12 +5,14 @@ import (
 
 	"github.com/jabardigitalservice/super-app-services/event/src/app"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/category/transport/handler/http/request"
+	"github.com/jabardigitalservice/super-app-services/event/src/modules/category/transport/handler/http/response"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/category/usecase"
 )
 
 type (
 	EndpointInterface interface {
 		Createcategory(ctx context.Context, catData request.Category) (interface{}, error)
+		Getcategories(ctx context.Context, params request.QueryParam) ([]response.Category, int, error)
 	}
 
 	Endpoint struct {

@@ -23,6 +23,7 @@ func Init(app *app.App, endpoint endpoint.EndpointInterface) *chi.Mux {
 	}, false))
 
 	router.Post("/", h.Createcategory)
+	router.Get("/", h.GetCategories)
 
 	return router
 }

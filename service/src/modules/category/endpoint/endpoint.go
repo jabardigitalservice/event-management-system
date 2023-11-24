@@ -16,6 +16,7 @@ type (
 		Getcategories(ctx context.Context, params request.QueryParam) ([]response.Category, int, error)
 		GetcategoryByID(ctx context.Context, id *uuid.UUID) (interface{}, error)
 		UpdateCategory(ctx context.Context, obj *request.Category) (interface{}, error)
+		DeleteCategory(ctx context.Context, id *uuid.UUID) error
 	}
 
 	Endpoint struct {

@@ -190,3 +190,14 @@ func (r *Repository) UpdateCategory(ctx context.Context, obj *request.Category) 
 
 	return obj, nil
 }
+
+func (r *Repository) DeleteCategory(ctx context.Context, id *uuid.UUID) error {
+	query := "DELETE FROM categories WHERE id = $1"
+
+	_, err := r.db.Master.ExecContext(ctx, query, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

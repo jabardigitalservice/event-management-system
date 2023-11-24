@@ -2,7 +2,6 @@ package handler
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 
 	"github.com/go-chi/chi"
@@ -32,7 +31,6 @@ func (h *Handler) UpdateCategory(w http.ResponseWriter, r *http.Request) {
 
 	updatedObj, err := h.endpoint.UpdateCategory(ctx, &obj)
 	if err != nil {
-		log.Printf("error : %v", err)
 		RenderError(w, r, h, err, nil)
 		return
 	}

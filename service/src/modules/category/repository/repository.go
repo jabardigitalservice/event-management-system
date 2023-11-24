@@ -14,6 +14,7 @@ type (
 		Createcategory(ctx context.Context, obj request.Category) (*request.Category, error)
 		Getcategories(ctx context.Context, params request.QueryParam) ([]entity.Category, error)
 		CountFilteredCategories(ctx context.Context, params request.QueryParam) (int, error)
+		UpdateCategory(ctx context.Context, obj *request.Category) (*request.Category, error)
 	}
 	Repository struct {
 		app *app.App

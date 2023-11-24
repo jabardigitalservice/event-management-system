@@ -18,7 +18,7 @@
           :ui="{
             rounded: 'rounded-full',
             variant: {
-              soft: 'bg-{color}-100 dark:bg-{color}-400 dark:bg-opacity-10 text-{color}-500 dark:text-{color}-400',
+              soft: `${statusColors[items.status].background}  text-{color}-500`,
             },
           }"
           class="capitalize"
@@ -123,6 +123,11 @@
   import { useActivePage } from '@/store/index'
   import { objectHeaders } from '~/common/constant/object'
 
+  interface statusColor{
+    color: string,
+    background: string
+  }
+
   const router = useRouter()
   const toast = useToast()
   const state = reactive({
@@ -135,10 +140,10 @@
   })
   const urlAPI: string = '/v1/event/object'
 
-  const statusColors: Record<string, { color: string }> = {
-    draft: { color: 'orange' },
-    published: { color: 'green' },
-    unpublished: { color: 'red' },
+  const statusColors: Record<string, statusColor> = {
+    draft: { color: 'orange', background: 'bg-orange-100' },
+    published: { color: 'green', background: 'bg-green-50' },
+    unpublished: { color: 'red', background: 'bg-red-100' },
   }
 
   const itemActions = (

@@ -39,5 +39,5 @@ func Init(app *app.App) *Repository {
 }
 
 func (r *Repository) Log(ctx context.Context) *app.AppLogger {
-	return r.logger.Log(ctx, constant.LogCategoryApp, constant.ModuleNameobject)
+	return r.logger.Log(ctx, constant.LogCategoryApp, constant.ModuleNameObject)
 }

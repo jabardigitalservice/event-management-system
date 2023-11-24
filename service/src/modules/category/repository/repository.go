@@ -17,6 +17,7 @@ type (
 		CountFilteredCategories(ctx context.Context, params request.QueryParam) (int, error)
 		GetCategoryByID(ctx context.Context, id *uuid.UUID) (*entity.Category, error)
 		UpdateCategory(ctx context.Context, obj *request.Category) (*request.Category, error)
+		DeleteCategory(ctx context.Context, id *uuid.UUID) error
 	}
 	Repository struct {
 		app *app.App

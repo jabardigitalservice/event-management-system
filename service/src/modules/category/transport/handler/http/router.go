@@ -26,6 +26,7 @@ func Init(app *app.App, endpoint endpoint.EndpointInterface) *chi.Mux {
 	router.Get("/", h.GetCategories)
 	router.Get("/{id}", h.GetCategoryByID)
 	router.Put("/{id}", h.UpdateCategory)
+	router.Delete("/{id}", h.DeleteCategory)
 
 	return router
 }

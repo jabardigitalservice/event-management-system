@@ -16,6 +16,7 @@ type (
 		Getcategories(ctx context.Context, params request.QueryParam) ([]entity.Category, int, error)
 		GetcategoryByID(ctx context.Context, id *uuid.UUID) (*entity.Category, error)
 		UpdateCategory(ctx context.Context, obj *request.Category) (*request.Category, error)
+		DeleteCategory(ctx context.Context, id *uuid.UUID) error
 	}
 
 	Usecase struct {

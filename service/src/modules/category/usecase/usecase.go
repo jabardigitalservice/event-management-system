@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/jabardigitalservice/super-app-services/event/src/app"
+	"github.com/jabardigitalservice/super-app-services/event/src/modules/category/entity"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/category/repository"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/category/transport/handler/http/request"
 )
@@ -11,6 +12,7 @@ import (
 type (
 	UsecaseInterface interface {
 		Createcategory(ctx context.Context, cat request.Category) (*request.Category, error)
+		Getcategories(ctx context.Context, params request.QueryParam) ([]entity.Category, int, error)
 	}
 
 	Usecase struct {

@@ -82,8 +82,8 @@
   </TheHeader>
 </template>
 <script setup lang="ts">
-  import { useActivePage } from '@/store/index'
-  import { useGetData } from '~/composables/useFetchData'
+import { useActivePage } from '@/store/index'
+import { useGetData } from '~/composables/useFetchData'
 
   const items = [{
     slot: 'profile',
@@ -150,6 +150,7 @@
   state.dataDetail = await fetchData()
 
   definePageMeta({
+    layout:'header-base',
     middleware: ['auth'],
   })
   

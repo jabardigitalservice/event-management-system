@@ -5,6 +5,7 @@
   import { useActivePage } from '@/store/index'
 
   definePageMeta({
+    layout:'header-base',
     middleware: ['auth'],
   })
   onMounted(() => {

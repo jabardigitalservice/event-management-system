@@ -30,7 +30,7 @@
                   <BaseDragAndDropFile
                     ref="BaseDragAndDropFile"
                     label="Logo"
-                    sublabel="Tipe File JPG/JPEG/PNG dengan maksimal ukuran file 2 MB"
+                    sublabel="Jenis file (.png, .svg) resolusi 46x46, maksimal 1 MB"
                     height-drag-and-drop="h-[224px]"
                     :disabled="isFormDisabled"
                     :detail-drag-and-drop="detailDragAndDrop"

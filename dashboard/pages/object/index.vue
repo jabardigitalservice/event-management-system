@@ -3,7 +3,7 @@
     <BaseDataTable :headers="objectHeaders" :path="urlAPI" base-route="/object">
       <template #customeName="{ items }">
         <div class="flex flex-row">
-          <div class="basis-[13%]">
+          <div class="basis-[8%]">
             <UAvatar size="xs" :src="items.logo" :alt="items.name" />
           </div>
           <div class="basis-1/2">

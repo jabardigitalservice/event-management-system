@@ -41,9 +41,14 @@
         }"
         :columns="props.headers"
         :rows="itemTable"
-      >
+      > 
+        <template #no-data>
+          <div>{{ number(page, selectedLimit) }}</div>
+        </template>
         <template #name-data="{ row }">
-          <slot name="customeName" :items="row" />
+          <slot 
+            name="customeName" 
+            :items="row" />
         </template>
         <template #status-data="{ row }">
           <slot name="customeStatus" :items="row" />
@@ -191,6 +196,7 @@
   let total: number = 1
   const listLimit = [5, 10, 25, 30]
   const selectedLimit = ref(listLimit[0])
+  let numberIteration = 0
 
   async function fetchData() {
     loading.value = true
@@ -199,7 +205,8 @@
       page,
       search,
       selectedLimit,
-    )) as ApiResponse
+      )) as ApiResponse
+    numberIteration = 0
     page.value = result.data.meta.page
     itemTable.value = result.data.data
     total = result.data.meta.total_data
@@ -208,6 +215,13 @@
 
   function onClickPagination(getPage: number) {
     page.value = getPage
+  }
+
+  function number(page: number, limit: number){
+   const start = ((page - 1) * limit + 1) - 1
+   numberIteration = numberIteration + 1
+   const  numberRows = start + numberIteration
+   return numberRows
   }
 
   fetchData()
@@ -236,5 +250,8 @@
   }
   .hover\:bg-gray-50:hover {
     @apply bg-[#FAFAFA];
+  }
+  td:first-child {
+    @apply w-6 text-center;
   }
 </style>

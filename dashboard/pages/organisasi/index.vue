@@ -6,7 +6,7 @@
   >
     <template #customeName="{ items }">
       <div class="flex flex-row">
-        <div class="basis-[13%]">
+        <div class="basis-[12%]">
           <UAvatar
             size="xs"
             :src="items.logo"

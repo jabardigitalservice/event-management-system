@@ -13,12 +13,14 @@ import (
 func (e *Endpoint) GetObjectByID(ctx context.Context, id *uuid.UUID) (interface{}, error) {
 	object, err := e.usecase.GetObjectByID(ctx, id)
 	if err != nil {
+		e.Log(ctx, constant.LogCategoryUsecase).Error(usecase.MethodGetObjectByID, err)
 		return nil, err
 	}
 
 	responseObj := &response.Object{}
 
 	if err := copier.Copy(responseObj, object); err != nil {
+		e.Log(ctx, constant.LogCategoryUsecase).Error(usecase.MethodGetObjectByID, err)
 		return nil, err
 	}
 

@@ -16,17 +16,20 @@ func (e *Endpoint) UpdateObject(ctx context.Context, obj *request.Object) (inter
 	var validates = validator.Validate(obj)
 
 	if validates != nil {
+		e.Log(ctx, constant.LogCategoryUsecase).Error(usecase.MethodUpdateObject, _errors.ErrPayloadValidation)
 		return validates, _errors.ErrPayloadValidation
 	}
 	updatedObj, err := e.usecase.UpdateObject(ctx, obj)
 
 	if err != nil {
+		e.Log(ctx, constant.LogCategoryUsecase).Error(usecase.MethodUpdateObject, err)
 		return nil, err
 	}
 
 	responseObj := &response.Object{}
 
 	if err := copier.Copy(responseObj, updatedObj); err != nil {
+		e.Log(ctx, constant.LogCategoryUsecase).Error(usecase.MethodUpdateObject, err)
 		return nil, err
 	}
 

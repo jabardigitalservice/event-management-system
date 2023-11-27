@@ -11,6 +11,7 @@ import (
 func (e *Endpoint) UpdateObjectStatus(ctx context.Context, obj *request.Object) error {
 	err := e.usecase.UpdateObjectStatus(ctx, obj)
 	if err != nil {
+		e.Log(ctx, constant.LogCategoryUsecase).Error(usecase.MethodUpdateObjectStatus, err)
 		return err
 	}
 

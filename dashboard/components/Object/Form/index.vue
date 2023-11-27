@@ -3,7 +3,7 @@
     <template #buttonSave>
       <UButton
         size="lg"
-        :label="!!state.idData ? `Simpan Perubahan` : `Buat Objek Wisata`"
+        :label="!!idData ? `Simpan Perubahan` : `Buat Objek Wisata`"
         class="justify-self-end bg-[#1569C4]"
         color="blue"
         variant="solid"
@@ -17,12 +17,12 @@
             <Form
               ref="formContainer"
               class="message-notif-form my-5 grid grid-cols-2 gap-x-6 rounded-lg bg-white px-6 py-4"
-              :validation-schema="state.schema"
+              :validation-schema="schema"
               @submit="onSubmit"
             >
               <div class="col-span-2 mt-3">
                 <p class="style-bold text-xl">
-                  {{ useRoute().query?.id ? 'Ubah' : 'Tambah' }} Objek Wisata
+                  {{ !!idData ? 'Ubah' : 'Tambah' }} Objek Wisata
                 </p>
               </div>
               <div class="col-span-2 mt-4">
@@ -32,10 +32,9 @@
                     label="Banner"
                     sublabel="Jenis file (.jpg, .png) resolusi 360 x 170 px. Maksimal 1 MB."
                     height-drag-and-drop="h-[165px]"
-                    :disabled="state.isFormDisabled"
-                    :detail-drag-and-drop="state.detailDragAndDropMultiple"
-                    :image-url-multiple="state.dataUrlImageMultiple"
-                    @preview-file="previewFile"
+                    :disabled="isFormDisabled"
+                    :detail-drag-and-drop="detailDragAndDropMultiple"
+                    :image-url-multiple="dataUrlImageMultiple"
                     @delete-url-file-multiple="deleteImageMultipleUrl"
                   />
                 </div>
@@ -47,10 +46,9 @@
                     label="Logo"
                     sublabel="Jenis file (.png, .svg) resolusi 46x46, maksimal 1 MB"
                     height-drag-and-drop="h-[200px]"
-                    :disabled="state.isFormDisabled"
-                    :detail-drag-and-drop="state.detailDragAndDrop"
-                    :image-url="state.dataUrlImage"
-                    @preview-file="previewFile"
+                    :disabled="isFormDisabled"
+                    :detail-drag-and-drop="detailDragAndDrop"
+                    :image-url="dataUrlImage"
                     @delete-url-file="deleteImageUrl"
                   />
                 </div>
@@ -62,7 +60,7 @@
                     type="text"
                     label="Nama Objek Wisata"
                     placeholder="Masukan Nama Objek Wisata"
-                    :disabled="state.isFormDisabled"
+                    :disabled="isFormDisabled"
                   />
                 </div>
               </div>
@@ -73,9 +71,9 @@
                     type="text"
                     label="Organisasi"
                     placeholder="Pilih Organisasi"
-                    :data-selected="state.selectedOrganisasi"
-                    :data-dropdown="state.dataOrganisasi"
-                    :disabled="state.isFormDisabled"
+                    :data-selected="selectedOrganisasi"
+                    :data-dropdown="dataOrganisasi"
+                    :disabled="isFormDisabled"
                   />
                 </div>
               </div>
@@ -85,18 +83,14 @@
                     name="description"
                     label="Deskripsi Objek"
                     placeholder="Masukan Deskripsi Objek"
-                    :disabled="state.isFormDisabled"
+                    :disabled="isFormDisabled"
                   />
                 </div>
               </div>
               <div class="col-span-2">
                 <div class="mt-6 flex justify-between">
                   <div>
-                    <label
-                      class="text-gray-800"
-                    >
-                      Alamat
-                    </label>
+                    <label class="text-gray-800"> Alamat </label>
                     <p class="text-[13px] text-gray-600">
                       Isikan alamat lengkap tempat objek wisata
                     </p>
@@ -105,10 +99,19 @@
                     size="sm"
                     color="blue"
                     square
-                    variant="solid"
+                    variant="outline"
                     label="Pilih Alamat"
-                    :disabled="state.isFormDisabled"
+                    :disabled="isFormDisabled"
                     @click="handleOpenDialogAddress"
+                  />
+                </div>
+              </div>
+              <div class="col-span-2">
+                <div class="mt-3">
+                  <BaseTextareaInput
+                    name="address_all"
+                    :value="address_all"
+                    :disabled="true"
                   />
                 </div>
               </div>
@@ -121,7 +124,7 @@
                   type="text"
                   label="Nama Pengelola"
                   placeholder="Masukan Nama Pengelola"
-                  :disabled="state.isFormDisabled"
+                  :disabled="isFormDisabled"
                 />
               </div>
               <div class="col-span-2 mt-6">
@@ -130,7 +133,7 @@
                   type="text"
                   label="Email Pengelola"
                   placeholder="Masukan Email Pengelola"
-                  :disabled="state.isFormDisabled"
+                  :disabled="isFormDisabled"
                 />
               </div>
               <div class="col-span-2 mt-6">
@@ -139,7 +142,7 @@
                   type="number"
                   label="No. Telp Objek Wisata"
                   placeholder="Masukan No. Telp Objek Wisata"
-                  :disabled="state.isFormDisabled"
+                  :disabled="isFormDisabled"
                 />
               </div>
               <div class="col-span-2 my-8">
@@ -151,7 +154,7 @@
                   label="Instagram"
                   placeholder="https://instagram.com/"
                   icon="common/instagram"
-                  :disabled="state.isFormDisabled"
+                  :disabled="isFormDisabled"
                 />
               </div>
               <div class="col-span-2 mt-6">
@@ -160,7 +163,7 @@
                   label="Tiktok"
                   placeholder="https://tiktok.com/"
                   icon="common/tiktok"
-                  :disabled="state.isFormDisabled"
+                  :disabled="isFormDisabled"
                 />
               </div>
               <div class="col-span-2 mt-6">
@@ -169,7 +172,7 @@
                   label="Facebook"
                   placeholder="https://facebook.com/"
                   icon="common/facebook"
-                  :disabled="state.isFormDisabled"
+                  :disabled="isFormDisabled"
                 />
               </div>
 
@@ -179,7 +182,7 @@
                   label="X"
                   placeholder="https://twitter.com/"
                   icon="common/twitter"
-                  :disabled="state.isFormDisabled"
+                  :disabled="isFormDisabled"
                 />
               </div>
               <div class="col-span-2 mt-6">
@@ -188,7 +191,7 @@
                   label="Youtube"
                   placeholder="https://youtube.com/"
                   icon="common/youtube"
-                  :disabled="state.isFormDisabled"
+                  :disabled="isFormDisabled"
                 />
               </div>
               <button v-show="false" ref="submitForm" type="submit">
@@ -202,16 +205,16 @@
   </TheHeader>
   <BaseViewFileModal
     title="Logo"
-    :show="state.dataImage.showDialog"
-    :file="state.dataImage.fileId"
-    :mime-type="state.dataImage.mimeType"
-    :with-url-path="state.dataImage.withUrlPath"
-    @close="state.dataImage.showDialog = false"
+    :show="dataImage.showDialog"
+    :file="dataImage.fileId"
+    :mime-type="dataImage.mimeType"
+    :with-url-path="dataImage.withUrlPath"
+    @close="dataImage.showDialog = false"
   />
   <BaseModalFormAddress
-    :open-modal="state.showDialogAddress"
-    :address-data="state.address"
-    @close="state.showDialogAddress = false"
+    :open-modal="showDialogAddress"
+    :address-data="address"
+    @close="showDialogAddress = false"
     @confirm="handleSubmitAddress"
   />
   <UNotifications />
@@ -219,7 +222,7 @@
 <script setup lang="ts">
   import { Form } from 'vee-validate'
   import { useDataImage } from '@/store/index'
-  import { object, string } from 'yup'
+  import { string } from 'yup'
   import {
     usePostServicePhoto,
     usePostData,
@@ -231,57 +234,57 @@
   const submitForm = ref<HTMLInputElement>()
   const toast = useToast()
 
-  const state = reactive({
-    schema: {
-      name: string().required('Nama Objek Wisata wajib diisi'),
-      organizer: string().required('Nama Pengelola wajib diisi'),
-      organizer_email: string()
-        .email('Format Email Tidak Sesuai')
-        .required('Email Pengelola wajib diisi'),
-      organizer_phone: string()
-        .max(13)
-        .required('No. Telp Objek Wisata wajib diisi'),
-      description: string().required('Deskripsi Objek Wisata wajib diisi'),
-      facebook: string(),
-      instagram: string(),
-      x: string(),
-      organization_id: string().required('Organisasi Wajib Dipilih'),
-    },
-    detailDragAndDrop: {
-      informationSizeCompatible:
-        'Ukuran file dokumen SK tidak boleh melebihi 1 MB.',
-      informationFormatCompatible:
-        'Hanya file yang berformat PNG/SVG yang dapat diupload.',
-      formatTypeFile: ['image/png', 'image/svg+xml'],
-      maxSizeFile: 1097152,
-      acceptFile: '.png,.svg',
-      maxResolution: '46',
-    },
-    detailDragAndDropMultiple: {
-      informationSizeCompatible:
-        'Ukuran file dokumen SK tidak boleh melebihi 1 MB.',
-      informationFormatCompatible:
-        'Hanya file yang berformat JPG/JPEG/PNG yang dapat diupload.',
-      formatTypeFile: ['image/jpeg', 'image/png', 'image/jpg'],
-      maxSizeFile: 1097152,
-      acceptFile: '.jpg,.jpeg,.png',
-      maxResolution: [360, 170],
-    },
-    dataImage: {
-      showDialog: false,
-      fileId: '',
-      mimeType: '',
-      withUrlPath: false,
-    },
-    dataUrlImage: '',
-    dataUrlImageMultiple: [],
-    idData: useRoute().query?.id,
-    showDialogAddress: false,
-    address: {},
-    dataOrganisasi: [],
-    isFormDisabled: true,
-    selectedOrganisasi: {},
+  const schema = reactive({
+    name: string().required('Nama Objek Wisata wajib diisi'),
+    organizer: string().required('Nama Pengelola wajib diisi'),
+    organizer_email: string()
+      .email('Format Email Tidak Sesuai')
+      .required('Email Pengelola wajib diisi'),
+    organizer_phone: string()
+      .max(13)
+      .required('No. Telp Objek Wisata wajib diisi'),
+    description: string().required('Deskripsi Objek Wisata wajib diisi'),
+    organization_id: string().required('Organisasi Wajib Dipilih'),
   })
+
+  const detailDragAndDrop = reactive({
+    informationSizeCompatible:
+      'Ukuran file dokumen SK tidak boleh melebihi 1 MB.',
+    informationFormatCompatible:
+      'Hanya file yang berformat PNG/SVG yang dapat diupload.',
+    formatTypeFile: ['image/png', 'image/svg+xml'],
+    maxSizeFile: 1097152,
+    acceptFile: '.png,.svg',
+    maxResolution: '46',
+  })
+
+  const detailDragAndDropMultiple = reactive({
+    informationSizeCompatible:
+      'Ukuran file dokumen SK tidak boleh melebihi 1 MB.',
+    informationFormatCompatible:
+      'Hanya file yang berformat JPG/JPEG/PNG yang dapat diupload.',
+    formatTypeFile: ['image/jpeg', 'image/png', 'image/jpg'],
+    maxSizeFile: 1097152,
+    acceptFile: '.jpg,.jpeg,.png',
+    maxResolution: [360, 170],
+  })
+
+  const dataImage = reactive({
+    showDialog: false,
+    fileId: '',
+    mimeType: '',
+    withUrlPath: false,
+  })
+
+  const idData = ref(useRoute().query?.id)
+  const dataUrlImage = ref('')
+  const dataUrlImageMultiple = ref([])
+  const showDialogAddress = ref(false)
+  const address = ref({})
+  const dataOrganisasi = ref([])
+  const isFormDisabled = ref(true)
+  const selectedOrganisasi = ref({})
+  const address_all = ref('')
 
   interface apiResponse {
     code: string
@@ -316,7 +319,7 @@
   }
 
   onMounted(async () => {
-    const id = state.idData
+    const id = idData.value
     if (id) {
       const responseObject = (await useGetData(
         `/v1/event/object/${id}`,
@@ -338,12 +341,12 @@
           description: responseObjectData?.description,
           organization_id: responseObjectData?.organization_id,
         })
-        state.selectedOrganisasi = {
+        selectedOrganisasi.value = {
           id: responseObjectData?.organization_id,
           label: responseObjectData?.organization_name,
         }
 
-        state.address = {
+        address.value = {
           address: responseObjectData?.address,
           province: responseObjectData?.province,
           province_id: responseObjectData?.province_id,
@@ -356,14 +359,15 @@
           google_map: responseObjectData?.google_map,
         }
 
-        state.dataUrlImage = responseObjectData.logo
-        state.dataUrlImageMultiple = responseObjectData.banner
+        setViewAlamat()
+        dataUrlImage.value = responseObjectData.logo
+        dataUrlImageMultiple.value = responseObjectData.banner
       }
     }
 
     getOrganisasi(1, 10)
 
-    state.isFormDisabled = !state.isFormDisabled
+    isFormDisabled.value = !isFormDisabled.value
   })
 
   const getOrganisasi = async (page: number, pageSize: number) => {
@@ -373,7 +377,7 @@
     if (responseOrganisasi.code === '2000800') {
       const responseOrganisasiData = responseOrganisasi.data.data
       for (let i = 0; i < responseOrganisasiData.length; i++) {
-        state.dataOrganisasi.push({
+        dataOrganisasi.value.push({
           id: responseOrganisasiData[i].id,
           label: responseOrganisasiData[i].name,
         })
@@ -381,35 +385,35 @@
     }
   }
 
-  const previewFile = () => {
-    state.dataImage.showDialog = true
-    state.dataImage.fileId =
-      state.dataUrlImage !== ''
-        ? state.dataUrlImage
-        : useDataImage().dataImage?.data
-    state.dataImage.withUrlPath = state.dataUrlImage !== '' ? true : false
-    state.dataImage.mimeType = useDataImage().dataImage?.mimeType
-  }
-
   const handleOpenDialogAddress = () => {
-    state.showDialogAddress = true
+    showDialogAddress.value = true
   }
 
-  const handleSubmitAddress = (address: object) => {
-    state.address = address
-    state.showDialogAddress = false
+  const handleSubmitAddress = (updatedAddress: object) => {
+    address.value = updatedAddress
+    showDialogAddress.value = false
+
+    setViewAlamat()
   }
 
   const handleSubmit = async () => {
     submitForm.value?.click()
   }
 
+  const setViewAlamat = () => {
+    address_all.value = `${address.value?.address || ''}, KEL. ${
+      address.value?.village || ''
+    }, KEC. ${address.value?.district || ''}, ${address.value?.city || ''}, ${
+      address.value?.province || ''
+    }. ${address.value?.google_map || ''}`
+  }
+
   const onSubmit = async (values: object) => {
-    const method = state.idData ? 'edit' : 'add'
+    const method = idData.value ? 'edit' : 'add'
 
     let data = values as apiDataResponse
-    data.logo = state.dataUrlImage
-      ? state.dataUrlImage.replace(
+    data.logo = dataUrlImage.value
+      ? dataUrlImage.value.replace(
           'https://file.digitalservice.id/superapp-utilities-public/',
           '',
         )
@@ -439,18 +443,18 @@
     ]
     data.status = 'draft'
 
-    const isAlamatValidate: boolean = validateAlamat(state.address)
+    const isAlamatValidate: boolean = validateAlamat(address.value)
     if (isAlamatValidate) {
-      data.address = state.address.address
-      data.province = state.address.province
-      data.province_id = state.address.province_id
-      data.city = state.address.city
-      data.city_id = state.address.city_id
-      data.district = state.address.district
-      data.district_id = state.address.district_id
-      data.village = state.address.village
-      data.village_id = state.address.village_id
-      data.google_map = state.address.google_map
+      data.address = address.value.address
+      data.province = address.value.province
+      data.province_id = address.value.province_id
+      data.city = address.value.city
+      data.city_id = address.value.city_id
+      data.district = address.value.district
+      data.district_id = address.value.district_id
+      data.village = address.value.village
+      data.village_id = address.value.village_id
+      data.google_map = address.value.google_map
     } else {
       return toast.add({
         title: 'Data Alamat Wajib Diisi',
@@ -463,7 +467,7 @@
     switch (method) {
       case 'edit':
         try {
-          usePutData(`/v1/event/object/${state.idData}`, data).then((res) => {
+          usePutData(`/v1/event/object/${idData.value}`, data).then((res) => {
             if (res.code === '2010800') {
               toast.add({
                 icon: 'i-heroicons-exclamation-triangle',
@@ -509,13 +513,13 @@
   }
 
   const deleteImageUrl = () => {
-    state.dataUrlImage = ''
+    dataUrlImage.value = ''
   }
 
   const deleteImageMultipleUrl = (index: number) => {
-    state.dataUrlImageMultiple.splice(index, 1)
+    dataUrlImageMultiple.value.splice(index, 1)
 
-    state.dataUrlImageMultiple = { ...state.dataUrlImageMultiple }
+    dataUrlImageMultiple.value = { ...dataUrlImageMultiple.value }
   }
 
   const handleBack = () => {

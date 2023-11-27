@@ -9,15 +9,15 @@
     {{ sublabel }}
   </p>
   <USelectMenu
-    v-model="state.selected"
+    v-model="selected"
     :disabled="disabled"
     :options="dataDropdown"
     searchable
-    :ui="{ color: 'blue' }"
+    :color="errorMessage ? 'red' : 'white'"
     @change="onChange"
   >
     <template #label>
-      <span v-if="!state.selected?.id" class="truncate">{{ placeholder }}</span>
+      <span v-if="!selected?.id" class="truncate">{{ placeholder }}</span>
     </template>
     <template #option-empty="{ query }">
       <q>{{ query }}</q> not found
@@ -30,7 +30,6 @@
 
 <script setup lang="ts">
   import { useField } from 'vee-validate'
-import { object } from 'yup';
 
   const props = defineProps({
     type: {
@@ -71,25 +70,21 @@ import { object } from 'yup';
     },
   })
 
-  const state = reactive({
-    selected: [],
-    updateCount: 0
-  })
-
+  
+  const selected = ref([])
+  const updateCount = ref(0)
   const { value, errorMessage } = useField(() => props.name)
 
   onUpdated(async () => { 
-    
-    if (state.updateCount === 0) {
-      state.selected = props.dataSelected
+    if (updateCount.value === 0) {
+      selected.value = props.dataSelected
     }
-    
   })
 
   const onChange = (e) => {
     value.value = e.id
-    state.selected = e
+    selected.value = e
 
-    state.updateCount++
+    updateCount.value++
   }
 </script>

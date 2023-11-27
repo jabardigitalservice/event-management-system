@@ -22,11 +22,6 @@ export const NAVIGATION_MENU = [
         label: 'Objek Wisata',
         icon: 'navigation/objek-wisata-icon',
       },
-      {
-        link: '/tiket',
-        label: 'Pengaturan Tiket',
-        icon: 'navigation/pengaturan-tiket-icon',
-      },
     ]
   }
 ]

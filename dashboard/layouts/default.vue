@@ -3,11 +3,11 @@
     <Head>
       <Title>Event Management System</Title>
     </Head>
-    <div :class="`grid h-full min-w-0 overflow-hidden ${state.styleGridSidebar}`">
-      <TheSidebar v-if="!activePage.navigation"/>
+    <div class="grid h-full min-w-0 overflow-hidden grid-cols-[260px,1fr]">
+      <TheSidebar />
       <main class="h-screen overflow-y-auto bg-gray-100">
-        <div :class="`w-full ${state.stylePaddingSidebar}`">
-          <p v-if="!activePage.navigation" class="font-[500] text-[22px] mb-6">{{ activePage.page }}</p>
+        <div class="w-full mt-10 px-24">
+          <p class="font-[500] text-[22px] mb-6">{{ activePage.page }}</p>
             <slot />
         </div>
       </main>
@@ -17,15 +17,6 @@
 <script setup lang="ts">
   import { useActivePage } from '@/store/index'
   const activePage = useActivePage()
-  const state = reactive({
-    styleGridSidebar: '',
-    stylePaddingSidebar: ''
-  })
-  
-  watch([activePage], ()=>{
-    state.styleGridSidebar = !activePage.navigation? 'grid-cols-[260px,1fr]': ''
-    state.stylePaddingSidebar = !activePage.navigation? 'mt-10 px-24': ''
-  })
   
 </script>
 <style>

@@ -13,7 +13,7 @@
     <template #body>
       <div class="overflow-y-auto">
         <div class="flex h-full max-h-screen flex-col items-center py-5">
-          <div class="max-w-xl">
+          <div class="max-w-xl w-full">
             <Form
               ref="formContainer"
               class="message-notif-form my-5 grid grid-cols-6 gap-x-6 rounded-lg bg-white px-6 py-4"

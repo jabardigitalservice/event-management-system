@@ -12,8 +12,6 @@
       </div>
     </div>
   </template>
-  <script setup lang="ts">
-  </script>
   <style>
     .nuxt-icon svg {
       @apply mb-0;

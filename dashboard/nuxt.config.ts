@@ -29,6 +29,14 @@ export default defineNuxtConfig({
   colorMode: {
     preference: 'light'
   },
+  app: {
+    head: {
+      title: "Ticketing Management System",
+      link: [
+        { rel: "icon", type: "image/svg", href: "/logos/sapawarga.svg" }
+      ]
+    }
+  },
   runtimeConfig: {
     // Public keys that are exposed to the client
     public: {

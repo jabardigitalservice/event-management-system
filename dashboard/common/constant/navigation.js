@@ -1,15 +1,5 @@
 export const NAVIGATION_MENU = [
   {
-    titleMenu: '',
-    menu: [
-      {
-        link: '/',
-        label: 'Dashboard',
-        icon: 'navigation/dashboard-icon',
-      }
-    ]
-  },
-  {
     titleMenu: 'management',
     menu: [
       {

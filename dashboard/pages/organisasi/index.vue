@@ -19,69 +19,8 @@
       </div>
     </template>
     <template #customeAction="{ items, fetch }">
-      <UTooltip text="Laporan" :popper="{ offsetDistance: 16 }">
-        <UButton
-          class="mr-1"
-          variant="ghost"
-          color="blue"
-          :ui="{
-            rounded: 'rounded-md',
-          }"
-        >
-          <template #trailing>
-            <NuxtIcon
-              name="navigation/laporan-icon"
-              filled
-              class="stroke-[#737373] text-[19px]"
-            />
-          </template>
-        </UButton>
-      </UTooltip>
-      <UTooltip text="Atur Tiket" :popper="{ offsetDistance: 16 }">
-        <UButton
-          class="mr-1"
-          variant="ghost"
-          color="blue"
-          :ui="{
-            rounded: 'rounded-md',
-          }"
-        >
-          <template #trailing>
-            <NuxtIcon
-              name="navigation/tiket-icon"
-              filled
-              class="stroke-[#737373] text-[19px]"
-            />
-          </template>
-        </UButton>
-      </UTooltip>
-      <UTooltip text="Detail" :popper="{ offsetDistance: 16 }">
-        <UButton
-          class="mr-1"
-          variant="ghost"
-          color="blue"
-          :ui="{
-            rounded: 'rounded-md',
-          }"
-        >
-          <template #trailing>
-            <NuxtIcon
-              name="navigation/eye-icon"
-              filled
-              class="stroke-[#737373] text-[19px]"
-            />
-          </template>
-        </UButton>
-      </UTooltip>
       <UDropdown :items="itemActions(items, fetch)">
-        <UButton color="blue" variant="ghost">
-          <template #trailing>
-            <NuxtIcon
-              name="navigation/dots-icon"
-              filled
-              class="stroke-[#737373] text-[15px] p-[2px]"
-            />
-          </template>
+        <UButton color="blue" variant="ghost"> Detail
         </UButton>
       </UDropdown>
     </template>
@@ -192,5 +131,8 @@
 <style>
   th:last-child {
     @apply w-48;
+  }
+  td:last-child {
+    @apply pl-0;
   }
 </style>

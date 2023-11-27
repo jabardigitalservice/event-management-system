@@ -109,8 +109,8 @@
               <div class="col-span-2">
                 <div class="mt-3">
                   <BaseTextareaInput
-                    name="address_all"
-                    :value="address_all"
+                    name="addressAll"
+                    :value="addressAll"
                     :disabled="true"
                   />
                 </div>
@@ -284,7 +284,7 @@
   const dataOrganisasi = ref([])
   const isFormDisabled = ref(true)
   const selectedOrganisasi = ref({})
-  const address_all = ref('')
+  const addressAll = ref('')
 
   interface apiResponse {
     code: string
@@ -401,7 +401,7 @@
   }
 
   const setViewAlamat = () => {
-    address_all.value = `${address.value?.address || ''}, KEL. ${
+    addressAll.value = `${address.value?.address || ''}, KEL. ${
       address.value?.village || ''
     }, KEC. ${address.value?.district || ''}, ${address.value?.city || ''}, ${
       address.value?.province || ''

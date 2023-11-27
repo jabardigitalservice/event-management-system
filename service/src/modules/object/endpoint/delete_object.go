@@ -4,6 +4,8 @@ import (
 	"context"
 
 	"github.com/google/uuid"
+	"github.com/jabardigitalservice/super-app-services/event/src/constant"
+	"github.com/jabardigitalservice/super-app-services/event/src/modules/object/usecase"
 )
 
 func (e *Endpoint) DeleteObject(ctx context.Context, id *uuid.UUID) error {
@@ -13,5 +15,6 @@ func (e *Endpoint) DeleteObject(ctx context.Context, id *uuid.UUID) error {
 		return err
 	}
 
+	e.usecase.Log(ctx, constant.LogCategoryUsecase).Success(usecase.MethodDeleteObject, "success")
 	return nil
 }

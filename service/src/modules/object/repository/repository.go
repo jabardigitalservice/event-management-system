@@ -14,12 +14,12 @@ import (
 type (
 	RepositoryInterface interface {
 		CreateObject(ctx context.Context, obj request.Object, method string) (request.Object, error)
-		GetObjects(ctx context.Context, params request.QueryParam) ([]entity.Object, error)
-		CountFilteredObjects(ctx context.Context, params request.QueryParam) (int, error)
-		GetObjectByID(ctx context.Context, id *uuid.UUID) (*entity.Object, error)
-		UpdateObject(ctx context.Context, obj *request.Object) (*request.Object, error)
-		UpdateObjectStatus(ctx context.Context, obj *request.Object) error
-		DeleteObject(ctx context.Context, id *uuid.UUID) error
+		GetObjects(ctx context.Context, params request.QueryParam, method string) ([]entity.Object, error)
+		CountFilteredObjects(ctx context.Context, params request.QueryParam, method string) (int, error)
+		GetObjectByID(ctx context.Context, id *uuid.UUID, method string) (*entity.Object, error)
+		UpdateObject(ctx context.Context, obj *request.Object, method string) (*request.Object, error)
+		UpdateObjectStatus(ctx context.Context, obj *request.Object, method string) error
+		DeleteObject(ctx context.Context, id *uuid.UUID, method string) error
 	}
 	Repository struct {
 		app      *app.App

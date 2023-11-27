@@ -8,12 +8,12 @@ import (
 )
 
 func (uc *Usecase) GetObjects(ctx context.Context, params request.QueryParam) ([]entity.Object, int, error) {
-	objects, err := uc.repo.GetObjects(ctx, params)
+	objects, err := uc.repo.GetObjects(ctx, params, MethodGetObjects)
 	if err != nil {
 		return nil, 0, err
 	}
 
-	count, err := uc.repo.CountFilteredObjects(ctx, params)
+	count, err := uc.repo.CountFilteredObjects(ctx, params, MethodGetObjects)
 	if err != nil {
 		return nil, 0, err
 	}

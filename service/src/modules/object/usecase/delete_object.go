@@ -7,7 +7,7 @@ import (
 )
 
 func (uc *Usecase) DeleteObject(ctx context.Context, id *uuid.UUID) error {
-	err := uc.repo.DeleteObject(ctx, id)
+	err := uc.repo.DeleteObject(ctx, id, MethodDeleteObject)
 
 	if err != nil {
 		return err

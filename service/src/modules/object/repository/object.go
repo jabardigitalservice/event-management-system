@@ -44,7 +44,6 @@ func (r *Repository) CreateObject(ctx context.Context, obj request.Object, metho
 
 	if err != nil {
 		r.Log(ctx).Error(method, err)
-
 		return request.Object{}, err
 	}
 
@@ -52,7 +51,7 @@ func (r *Repository) CreateObject(ctx context.Context, obj request.Object, metho
 	return obj, nil
 }
 
-func (r *Repository) GetObjects(ctx context.Context, params request.QueryParam) ([]entity.Object, error) {
+func (r *Repository) GetObjects(ctx context.Context, params request.QueryParam, method string) ([]entity.Object, error) {
 	binds := make([]interface{}, 0)
 
 	storageURL := r.app.GetStorageBaseUrl()
@@ -90,8 +89,9 @@ func (r *Repository) GetObjects(ctx context.Context, params request.QueryParam) 
 			organizations ON objects.organization_id = organizations.id
 		WHERE 1 = 1 %s `,
 		r.filterObjectQuery(params, &binds))
-	result, err := r.getObjects(ctx, query, binds...)
+	result, err := r.getObjects(ctx, method, query, binds...)
 	if err != nil {
+		r.Log(ctx).Error(method, err)
 		return nil, err
 	}
 
@@ -103,9 +103,11 @@ func (r *Repository) GetObjects(ctx context.Context, params request.QueryParam) 
 	}
 	return result, nil
 }
-func (r *Repository) getObjects(ctx context.Context, query string, args ...interface{}) ([]entity.Object, error) {
+func (r *Repository) getObjects(ctx context.Context, method string, query string, args ...interface{}) ([]entity.Object, error) {
 	rows, err := r.db.Slave.QueryContext(ctx, query, args...)
 	if err != nil {
+		additionalInfo := map[string]interface{}{"query": query, "args": args}
+		r.Log(ctx).WithAdditionalInfo(additionalInfo).Error(method, err)
 		if err == sql.ErrNoRows {
 			return nil, _errors.ErrNotFound
 		}
@@ -147,12 +149,15 @@ func (r *Repository) getObjects(ctx context.Context, query string, args ...inter
 			&object.OrganizationID,
 			&object.OrganizationName,
 		); err != nil {
+			additionalInfo := map[string]interface{}{"object": object}
+			r.Log(ctx).WithAdditionalInfo(additionalInfo).Error(method, err)
 			return nil, err
 		}
 
 		object.Banner = []string(banner)
 
 		if err := json.Unmarshal(socialMediaJSON, &object.SocialMedia); err != nil {
+			r.Log(ctx).Error(method, err)
 			return nil, err
 		}
 
@@ -204,23 +209,26 @@ func (r *Repository) filterObjectQuery(params request.QueryParam, binds *[]inter
 	return query
 }
 
-func (r *Repository) CountFilteredObjects(ctx context.Context, params request.QueryParam) (int, error) {
+func (r *Repository) CountFilteredObjects(ctx context.Context, params request.QueryParam, method string) (int, error) {
 	binds := make([]interface{}, 0)
 
 	query := fmt.Sprintf(`SELECT COUNT(1) FROM objects WHERE 1 = 1 %s`, r.filterObjectCountQuery(params, &binds))
 
-	count, err := r.countfilteredObjects(ctx, query, binds...)
+	count, err := r.countfilteredObjects(ctx, query, method, binds...)
 	if err != nil {
+		r.Log(ctx).Error(method, err)
 		return 0, err
 	}
 
 	return count, nil
 }
 
-func (r *Repository) countfilteredObjects(ctx context.Context, query string, args ...interface{}) (int, error) {
+func (r *Repository) countfilteredObjects(ctx context.Context, query string, method string, args ...interface{}) (int, error) {
 	var count int
 	err := r.db.Slave.QueryRowContext(ctx, query, args...).Scan(&count)
 	if err != nil {
+		additionalInfo := map[string]interface{}{"filterCount": query, "args": args}
+		r.Log(ctx).WithAdditionalInfo(additionalInfo).Error(method, err)
 		return 0, err
 	}
 
@@ -251,7 +259,7 @@ func (r *Repository) filterObjectCountQuery(params request.QueryParam, binds *[]
 	return query
 }
 
-func (r *Repository) GetObjectByID(ctx context.Context, id *uuid.UUID) (*entity.Object, error) {
+func (r *Repository) GetObjectByID(ctx context.Context, id *uuid.UUID, method string) (*entity.Object, error) {
 	query := `
         SELECT
             objects.id,
@@ -323,20 +331,24 @@ func (r *Repository) GetObjectByID(ctx context.Context, id *uuid.UUID) (*entity.
 	}
 
 	if err != nil {
+		additionalInfo := map[string]interface{}{"query": query}
+		r.Log(ctx).WithAdditionalInfo(additionalInfo).Error(method, err)
 		if err == sql.ErrNoRows {
 			return nil, _errors.ErrNotFound
 		}
 		return nil, err
 	}
 	if err := json.Unmarshal(socialMediaJSON, &result.SocialMedia); err != nil {
+		r.Log(ctx).Error(method, err)
 		return nil, err
 	}
 	return &result, nil
 }
 
-func (r *Repository) UpdateObject(ctx context.Context, obj *request.Object) (*request.Object, error) {
+func (r *Repository) UpdateObject(ctx context.Context, obj *request.Object, method string) (*request.Object, error) {
 	socialMediaJSON, err := json.Marshal(obj.SocialMedia)
 	if err != nil {
+		r.Log(ctx).Error(method, err)
 		return nil, err
 	}
 	bannerArray := pq.StringArray(obj.Banner)
@@ -354,13 +366,14 @@ func (r *Repository) UpdateObject(ctx context.Context, obj *request.Object) (*re
 	)
 
 	if err != nil {
+		r.Log(ctx).Error(method, err)
 		return nil, err
 	}
 
 	return obj, nil
 }
 
-func (r *Repository) UpdateObjectStatus(ctx context.Context, obj *request.Object) error {
+func (r *Repository) UpdateObjectStatus(ctx context.Context, obj *request.Object, method string) error {
 	query := `
         UPDATE "objects" SET "status" = $2, "updated_at" = $3
         WHERE "id" = $1
@@ -368,14 +381,20 @@ func (r *Repository) UpdateObjectStatus(ctx context.Context, obj *request.Object
 
 	_, err := r.db.Master.ExecContext(ctx, query, obj.ID, obj.Status, time.Now())
 
-	return err
+	if err != nil {
+		r.Log(ctx).Error(method, err)
+		return err
+	}
+
+	return nil
 }
 
-func (r *Repository) DeleteObject(ctx context.Context, id *uuid.UUID) error {
+func (r *Repository) DeleteObject(ctx context.Context, id *uuid.UUID, method string) error {
 	query := "DELETE FROM objects WHERE id = $1"
 
 	_, err := r.db.Master.ExecContext(ctx, query, id)
 	if err != nil {
+		r.Log(ctx).Error(method, err)
 		return err
 	}
 

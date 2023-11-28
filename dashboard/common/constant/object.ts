@@ -4,8 +4,9 @@ interface IObject {
     sortable?:boolean
 }
 export const objectHeaders: IObject[] = [
-    {label: "Nama Objek Wisata", key: "name", sortable:true},
-    {label: "Pengelola", key: "organizer", sortable:true},
-    {label: "Status", key: "status"},
-    {label: "Aksi",key: "actions"}
+    { label: "No", key: "no" },
+    { label: "Nama Objek Wisata", key: "name" },
+    { label: "Pengelola", key: "organizer" },
+    { label: "Status", key: "status" },
+    { label: "Aksi",key: "actions" }
 ]

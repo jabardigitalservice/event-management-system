@@ -5,8 +5,9 @@ interface IOrganizationHeader {
   }
   
 export const organisasiHeaders: IOrganizationHeader[] = [
-    { label: "Organisasi", key: "name", sortable: true },
-    { label: "Email", key: "email", sortable: true },
+    { label: "No", key: "no" },
+    { label: "Organisasi", key: "name" },
+    { label: "Email", key: "email" },
     { label: "Address", key: "address" },
     { label: "Aksi", key: 'actions' }
 ];

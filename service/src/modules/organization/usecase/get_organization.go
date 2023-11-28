@@ -8,12 +8,12 @@ import (
 )
 
 func (uc *Usecase) GetOrganizations(ctx context.Context, params request.QueryParam) ([]entity.Organization, int, error) {
-	organizations, err := uc.repo.GetOrganizations(ctx, params)
+	organizations, err := uc.repo.GetOrganizations(ctx, params, MethodGetOrganizations)
 	if err != nil {
 		return nil, 0, err
 	}
 
-	count, err := uc.repo.CountFilteredOrganizations(ctx, params)
+	count, err := uc.repo.CountFilteredOrganizations(ctx, params, MethodGetOrganizations)
 	if err != nil {
 		return nil, 0, err
 	}

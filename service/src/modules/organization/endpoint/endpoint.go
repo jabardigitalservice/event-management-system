@@ -5,6 +5,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jabardigitalservice/super-app-services/event/src/app"
+	"github.com/jabardigitalservice/super-app-services/event/src/constant"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/organization/transport/handler/http/request"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/organization/transport/handler/http/response"
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/organization/usecase"
@@ -22,6 +23,7 @@ type (
 	Endpoint struct {
 		app     *app.App
 		usecase usecase.UsecaseInterface
+		logger  *app.AppLogger
 	}
 )
 
@@ -29,5 +31,10 @@ func Init(app *app.App, usecase usecase.UsecaseInterface) EndpointInterface {
 	return &Endpoint{
 		app:     app,
 		usecase: usecase,
+		logger:  app.GetAppLogger(),
 	}
+}
+
+func (e *Endpoint) Log(ctx context.Context, category string) *app.AppLogger {
+	return e.logger.Log(ctx, category, constant.ModuleNameOrganization)
 }

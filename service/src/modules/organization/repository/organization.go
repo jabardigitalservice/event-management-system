@@ -12,7 +12,7 @@ import (
 	"github.com/jabardigitalservice/super-app-services/event/src/modules/organization/transport/handler/http/request"
 )
 
-func (r *Repository) CreateOrganization(ctx context.Context, obj entity.Organization) (*entity.Organization, error) {
+func (r *Repository) CreateOrganization(ctx context.Context, obj entity.Organization, method string) (*entity.Organization, error) {
 	insertQuery := `
         INSERT INTO organizations (name, email, address, pic_phone, description, logo, created_at, updated_at,
         province, city, district, village, google_map, pic_name, pic_position, province_id, city_id, district_id, village_id)
@@ -24,6 +24,7 @@ func (r *Repository) CreateOrganization(ctx context.Context, obj entity.Organiza
 		obj.Province, obj.City, obj.District, obj.Village, obj.GoogleMap, obj.PicName, obj.PicPosition, obj.ProvinceID, obj.CityID, obj.DistrictID, obj.VillageID)
 
 	if err != nil {
+		r.Log(ctx).Error(method, err)
 		return nil, err
 	}
 
@@ -36,13 +37,14 @@ func (r *Repository) CreateOrganization(ctx context.Context, obj entity.Organiza
 	err = r.db.Slave.QueryRowContext(ctx, selectQuery, obj.Name, obj.Email).Scan(&obj.Id, &obj.CreatedAt, &obj.UpdatedAt)
 
 	if err != nil {
+		r.Log(ctx).Error(method, err)
 		return nil, err
 	}
 
 	return &obj, nil
 }
 
-func (r *Repository) GetOrganizations(ctx context.Context, params request.QueryParam) ([]entity.Organization, error) {
+func (r *Repository) GetOrganizations(ctx context.Context, params request.QueryParam, method string) ([]entity.Organization, error) {
 	binds := make([]interface{}, 0)
 
 	storageURL := r.app.GetStorageBaseUrl()
@@ -73,8 +75,9 @@ func (r *Repository) GetOrganizations(ctx context.Context, params request.QueryP
     WHERE 1 = 1 %s `,
 		r.filterOrganizationQuery(params, &binds))
 
-	result, err := r.getOrganizations(ctx, query, binds...)
+	result, err := r.getOrganizations(ctx, query, method, binds...)
 	if err != nil {
+		r.Log(ctx).Error(method, err)
 		return nil, err
 	}
 
@@ -85,9 +88,11 @@ func (r *Repository) GetOrganizations(ctx context.Context, params request.QueryP
 	return result, nil
 }
 
-func (r *Repository) getOrganizations(ctx context.Context, query string, args ...interface{}) ([]entity.Organization, error) {
+func (r *Repository) getOrganizations(ctx context.Context, query string, method string, args ...interface{}) ([]entity.Organization, error) {
 	rows, err := r.db.Slave.QueryContext(ctx, query, args...)
 	if err != nil {
+		additionalInfo := map[string]interface{}{"query": query, "args": args}
+		r.Log(ctx).WithAdditionalInfo(additionalInfo).Error(method, err)
 		if err == sql.ErrNoRows {
 			return nil, _errors.ErrNotFound
 		}
@@ -122,6 +127,8 @@ func (r *Repository) getOrganizations(ctx context.Context, query string, args ..
 			&organization.DistrictID,
 			&organization.VillageID,
 		); err != nil {
+			additionalInfo := map[string]interface{}{"organization": organization}
+			r.Log(ctx).WithAdditionalInfo(additionalInfo).Error(method, err)
 			return nil, err
 		}
 
@@ -167,23 +174,26 @@ func (r *Repository) filterOrganizationQuery(params request.QueryParam, binds *[
 	return query
 }
 
-func (r *Repository) CountFilteredOrganizations(ctx context.Context, params request.QueryParam) (int, error) {
+func (r *Repository) CountFilteredOrganizations(ctx context.Context, params request.QueryParam, method string) (int, error) {
 	binds := make([]interface{}, 0)
 
 	query := fmt.Sprintf(`SELECT COUNT(1) FROM organizations WHERE 1 = 1 %s`, r.filterOrganizationCountQuery(params, &binds))
 
-	count, err := r.countFilteredOrganizations(ctx, query, binds...)
+	count, err := r.countFilteredOrganizations(ctx, query, method, binds...)
 	if err != nil {
+		r.Log(ctx).Error(method, err)
 		return 0, err
 	}
 
 	return count, nil
 }
 
-func (r *Repository) countFilteredOrganizations(ctx context.Context, query string, args ...interface{}) (int, error) {
+func (r *Repository) countFilteredOrganizations(ctx context.Context, query string, method string, args ...interface{}) (int, error) {
 	var count int
 	err := r.db.Slave.QueryRowContext(ctx, query, args...).Scan(&count)
 	if err != nil {
+		additionalInfo := map[string]interface{}{"filterCount": query, "args": args}
+		r.Log(ctx).WithAdditionalInfo(additionalInfo).Error(method, err)
 		return 0, err
 	}
 
@@ -214,7 +224,7 @@ func (r *Repository) filterOrganizationCountQuery(params request.QueryParam, bin
 	return query
 }
 
-func (r *Repository) GetOrganizationByID(ctx context.Context, id *uuid.UUID) (*entity.Organization, error) {
+func (r *Repository) GetOrganizationByID(ctx context.Context, id *uuid.UUID, method string) (*entity.Organization, error) {
 	query := `
         SELECT
         id,
@@ -271,6 +281,8 @@ func (r *Repository) GetOrganizationByID(ctx context.Context, id *uuid.UUID) (*e
 	result.Logo = storageURL + result.Logo
 
 	if err != nil {
+		additionalInfo := map[string]interface{}{"query": query}
+		r.Log(ctx).WithAdditionalInfo(additionalInfo).Error(method, err)
 		if err == sql.ErrNoRows {
 			return nil, _errors.ErrNotFound
 		}
@@ -280,7 +292,7 @@ func (r *Repository) GetOrganizationByID(ctx context.Context, id *uuid.UUID) (*e
 	return &result, nil
 }
 
-func (r *Repository) UpdateOrganization(ctx context.Context, obj *request.Organization) (*request.Organization, error) {
+func (r *Repository) UpdateOrganization(ctx context.Context, obj *request.Organization, method string) (*request.Organization, error) {
 	query := `
         UPDATE organizations
         SET name = $2, email = $3, address = $4, pic_phone = $5, description = $6, logo = $7,
@@ -293,17 +305,19 @@ func (r *Repository) UpdateOrganization(ctx context.Context, obj *request.Organi
 		obj.Province, obj.City, obj.District, obj.Village, obj.GoogleMap, obj.PicName, obj.PicPosition, obj.ProvinceID, obj.CityID, obj.DistrictID, obj.VillageID, time.Now())
 
 	if err != nil {
+		r.Log(ctx).Error(method, err)
 		return nil, err
 	}
 
 	return obj, nil
 }
 
-func (r *Repository) DeleteOrganization(ctx context.Context, id *uuid.UUID) error {
+func (r *Repository) DeleteOrganization(ctx context.Context, id *uuid.UUID, method string) error {
 	query := "DELETE FROM organizations WHERE id = $1"
 
 	_, err := r.db.Master.ExecContext(ctx, query, id)
 	if err != nil {
+		r.Log(ctx).Error(method, err)
 		return err
 	}
 

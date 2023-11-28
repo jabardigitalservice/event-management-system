@@ -14,7 +14,7 @@
         class="flex h-full w-full flex-col items-center justify-center rounded-lg border-2 border-dashed px-2"
         >
         <img
-          class="w-15 h-15"
+          class="max-w-[250px] max-h-[150px]"
           :src="dataFilesMultiple[0]?.url !== '' ? dataFilesMultiple[0].url : fileDocument(dataFilesMultiple[0])"
         />
 
@@ -39,13 +39,14 @@
       <label
         v-else
         :class="heightDragAndDrop"
-        class="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-4"
+        class="flex h-full w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-4"
         @dragover="dragover"
         @dragleave="dragleave"
         @drop="drop"
       >
         <div class="flex flex-col items-center justify-center">
           <NuxtIcon
+            filled
             name="common/default-photo"
             class="text-3xl text-gray-300"
           />
@@ -97,17 +98,11 @@
 <script setup lang="ts">
   import { useDataImage } from '@/store/index'
   import { base64ToBlobUrl } from '~/utils'
-  import {
-    RadioGroup,
-    RadioGroupLabel,
-    RadioGroupOption,
-  } from '@headlessui/vue'
-  import { array, object } from 'yup'
 
   const props = defineProps({
     detailDragAndDrop: {
       type: Object,
-      default: () => {},
+      default: () => ({}),
     },
     heightDragAndDrop: {
       type: String,
@@ -122,8 +117,8 @@
       default: '',
     },
     imageUrlMultiple: {
-      type: array,
-      default: [],
+      type: Array,
+      default: () => ([]),
     },
     disabled: {
       type: Boolean,
@@ -139,14 +134,12 @@
   const proggresBarIsSuccess = ref(false)
   const percentageProggres = ref(0)
   const intervalPercentage = ref(null)
-  const formatSizeFile = ['Bytes', 'KB', 'MB', 'GB', 'TB']
+  const formatSizeFile = ref(['Bytes', 'KB', 'MB', 'GB', 'TB'])
   const responseImage = ref('')
   const fileIsCorrect = ref(false)
   const disabledButton = ref(true)
   const dataImage = useDataImage()
   const counterImageLoad = ref(0)
-
-  const selected = ref(dataFilesMultiple.value[0])
 
   interface dataFile {
     name: string
@@ -271,12 +264,12 @@
       Math.floor(Math.log(sizeFile) / Math.log(1024)),
     )
     if (indexFileSize === 0) {
-      return sizeFile + ' ' + formatSizeFile[indexFileSize]
+      return sizeFile + ' ' + formatSizeFile.value[indexFileSize]
     }
     return (
       (sizeFile / Math.pow(1024, indexFileSize)).toFixed(1) +
       ' ' +
-      formatSizeFile[indexFileSize]
+      formatSizeFile.value[indexFileSize]
     )
   }
 

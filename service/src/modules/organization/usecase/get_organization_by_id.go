@@ -8,5 +8,5 @@ import (
 )
 
 func (uc *Usecase) GetOrganizationByID(ctx context.Context, id *uuid.UUID) (*entity.Organization, error) {
-	return uc.repo.GetOrganizationByID(ctx, id)
+	return uc.repo.GetOrganizationByID(ctx, id, MethodGetOrganizationByID)
 }

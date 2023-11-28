@@ -7,7 +7,7 @@ import (
 )
 
 func (uc *Usecase) CreateOrganization(ctx context.Context, obj entity.Organization) (*entity.Organization, error) {
-	createdObj, err := uc.repo.CreateOrganization(ctx, obj)
+	createdObj, err := uc.repo.CreateOrganization(ctx, obj, MethodCreateOrganization)
 	if err != nil {
 		return nil, err
 	}

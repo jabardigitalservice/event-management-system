@@ -13,7 +13,7 @@ import (
 func (e *Endpoint) GetObjects(ctx context.Context, params request.QueryParam) ([]response.Object, int, error) {
 	objects, count, err := e.usecase.GetObjects(ctx, params)
 	if err != nil {
-		e.Log(ctx, constant.LogCategoryUsecase).Error(usecase.MethodGetObjects, err)
+		e.usecase.Log(ctx, constant.LogCategoryUsecase).Error(usecase.MethodGetObjects, err)
 		return nil, 0, err
 	}
 
@@ -22,6 +22,7 @@ func (e *Endpoint) GetObjects(ctx context.Context, params request.QueryParam) ([
 	for i, obj := range objects {
 		responseObj := &response.Object{}
 		if err := copier.Copy(responseObj, obj); err != nil {
+			e.usecase.Log(ctx, constant.LogCategoryUsecase).Error(usecase.MethodGetObjects, err)
 			return nil, 0, err
 		}
 		responseObjects[i] = *responseObj

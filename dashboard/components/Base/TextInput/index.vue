@@ -2,7 +2,7 @@
   <label
     v-show="label"
     :for="name"
-    class="message-notif-form__label-required text-gray-800"
+    class="text-gray-800"
     >{{ label }}</label
   >
   <p v-show="sublabel" :for="name" class="text-[13px] text-gray-600">
@@ -12,7 +12,7 @@
     :id="name"
     v-model="value"
     :name="name"
-    :color="errorMessage ? 'red' : 'blue'"
+    :color="errorMessage ? 'red' : 'white'"
     :type="type"
     :placeholder="placeholder"
     class="mt-1"

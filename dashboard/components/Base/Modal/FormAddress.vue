@@ -35,7 +35,7 @@
                     v-model="state.selectedProvince"
                     :options="state.dataProvince"
                     searchable
-                    :ui="{ color: 'blue' }"
+                    color="white"
                     @click="getProvince"
                     @change="changeProvince"
                   >
@@ -55,7 +55,7 @@
                     :disabled="!state.selectedProvince?.id"
                     :options="state.dataCity"
                     searchable
-                    :ui="{ color: 'blue' }"
+                    color="white"
                     @click="getCity"
                     @change="changeCity"
                   >
@@ -75,7 +75,7 @@
                     :disabled="!state.selectedCity?.id"
                     :options="state.dataDistrict"
                     searchable
-                    :ui="{ color: 'blue' }"
+                    color="white"
                     @click="getDistrict"
                     @change="state.selectedVillage = []"
                   >
@@ -95,7 +95,7 @@
                     :disabled="!state.selectedDistrict?.id"
                     :options="state.dataVillage"
                     searchable
-                    :ui="{ color: 'blue' }"
+                    color="white"
                     @click="getVillage"
                   >
                     <template #label>
@@ -117,7 +117,7 @@
                     v-model="state.address"
                     placeholder="Masukan Alamat Lengkap Anda"
                     class="mt-1"
-                    :ui="{ color: 'blue' }"
+                    color="white"
                   />
                 </UFormGroup>
                 <UFormGroup
@@ -129,10 +129,11 @@
                     v-model="state.google_map"
                     placeholder="Masukan Link Google Maps Anda"
                     class="mt-1"
-                    :ui="{ color: 'blue' }"
+                    color="white"
                   >
                     <template #leading>
                       <NuxtIcon
+                        filled
                         name="common/map-icon"
                         class="text-2xl text-gray-300"
                       />

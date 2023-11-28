@@ -12,7 +12,7 @@
         class="flex h-full w-full flex-col items-center justify-center rounded-full border-2 border-dashed px-2"
       >
         <img
-          class="w-15 h-15"
+          class="max-w-11 max-h-11"
           :src="dataFiles?.url !== '' ? dataFiles.url : fileDocument(dataFiles)"
         />
 
@@ -37,13 +37,14 @@
       <label
         v-else
         :class="heightDragAndDrop"
-        class="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-full border-2 border-dashed border-gray-300 bg-gray-50 px-4"
+        class="flex h-full w-full flex-col items-center justify-center rounded-full border-2 border-dashed border-gray-300 bg-gray-50 px-4"
         @dragover="dragover"
         @dragleave="dragleave"
         @drop="drop"
       >
         <div class="flex flex-col items-center justify-center">
           <NuxtIcon
+            filled
             name="common/default-photo"
             class="text-3xl text-gray-300"
           />
@@ -98,7 +99,7 @@
   const props = defineProps({
     detailDragAndDrop: {
       type: Object,
-      default: () => {},
+      default: () => ({}),
     },
     heightDragAndDrop: {
       type: String,
@@ -126,7 +127,7 @@
 
   const files = ref()
   const dragAndDropFile = ref()
-  const dataFiles = ref({
+  const dataFiles = reactive({
     name: '',
     isConfidental: false,
     mimeType: '',
@@ -143,7 +144,7 @@
   const proggresBarIsSuccess = ref(false)
   const percentageProggres = ref(0)
   const intervalPercentage = ref(null)
-  const formatSizeFile = ['Bytes', 'KB', 'MB', 'GB', 'TB']
+  const formatSizeFile = ref(['Bytes', 'KB', 'MB', 'GB', 'TB'])
   const responseImage = ref('')
   const fileIsCorrect = ref(false)
   const disabledButton = ref(true)
@@ -152,15 +153,15 @@
     if (props.imageUrl) {
       const res = await $fetch(props.imageUrl)
 
-      dataFiles.value.name = ''
-      dataFiles.value.mimeType = res.type
-      dataFiles.value.size = res.size
-      dataFiles.value.url = props.imageUrl
-      dataFiles.value.fileSize = convertSize(res.size)
+      dataFiles.name = ''
+      dataFiles.mimeType = res.type
+      dataFiles.size = res.size
+      dataFiles.url = props.imageUrl
+      dataFiles.fileSize = convertSize(res.size)
       fileInputIsChange.value = true
       fileIsCorrect.value = true
 
-      dataFiles.value.fileCorrect = true
+      dataFiles.fileCorrect = true
     }
   })
 
@@ -172,23 +173,23 @@
     if (e.target.files[0]) {
       
       files.value = e.target.files[0]
-      dataFiles.value.url = ''
-      dataFiles.value.name = files.value.name
-      dataFiles.value.mimeType = files.value.type
-      dataFiles.value.fileSize = convertSize(files.value.size)
+      dataFiles.url = ''
+      dataFiles.name = files.value.name
+      dataFiles.mimeType = files.value.type
+      dataFiles.fileSize = convertSize(files.value.size)
       fileInputIsChange.value = true
       convertFileToBase64(files.value)
       let img = new Image()
       img.src = window.URL.createObjectURL(e.target.files[0])
       img.onload = () => {
-        dataFiles.value.width = img.width
-        dataFiles.value.height = img.height
+        dataFiles.width = img.width
+        dataFiles.height = img.height
 
-        dataFiles.value.fileCorrect = checkFileValidation(dataFiles)
+        dataFiles.fileCorrect = checkFileValidation(dataFiles)
       }
       runProgressBar()
       disabledButton.value = true
-      useDataImage().dataImage = JSON.parse(JSON.stringify(dataFiles.value))
+      useDataImage().dataImage = JSON.parse(JSON.stringify(dataFiles))
     }
   }
 
@@ -229,12 +230,12 @@
       Math.floor(Math.log(sizeFile) / Math.log(1024)),
     )
     if (indexFileSize === 0) {
-      return sizeFile + ' ' + formatSizeFile[indexFileSize]
+      return sizeFile + ' ' + formatSizeFile.value[indexFileSize]
     }
     return (
       (sizeFile / Math.pow(1024, indexFileSize)).toFixed(1) +
       ' ' +
-      formatSizeFile[indexFileSize]
+      formatSizeFile.value[indexFileSize]
     )
   }
 
@@ -264,10 +265,10 @@
     responseImage.value = ''
     fileIsCorrect.value = false
     disabledButton.value = true
-    dataFiles.value.url = ''
-    dataFiles.value.name = ''
-    dataFiles.value.mimeType = ''
-    dataFiles.value.fileSize = ''
+    dataFiles.url = ''
+    dataFiles.name = ''
+    dataFiles.mimeType = ''
+    dataFiles.fileSize = ''
 
     emit('deleteUrlFile')
 
@@ -281,9 +282,9 @@
   const convertFileToBase64 = (FileObject: Blob) => {
     const reader = new FileReader()
     reader.onload = () => {
-      dataFiles.value.data = reader.result.split(',')[1]
+      dataFiles.data = reader.result.split(',')[1]
 
-      useDataImage().dataImage = { ...dataFiles.value }
+      useDataImage().dataImage = { ...dataFiles }
     }
     reader.readAsDataURL(FileObject)
   }
@@ -302,20 +303,20 @@
   }
 
   const fileSizeIsCompatible = (file: Array) => {
-    return file.value.size <= props.detailDragAndDrop.maxSizeFile
+    return file.size <= props.detailDragAndDrop.maxSizeFile
   }
 
   const fileResolutionIsCompatible = (file: Array) => {
     const validate =
-    file.value.width > props.detailDragAndDrop.maxResolution &&
-    file.value.height > props.detailDragAndDrop.maxResolution
+    file.width > props.detailDragAndDrop.maxResolution &&
+    file.height > props.detailDragAndDrop.maxResolution
     
       return !validate
   }
 
   const formatFileIsCompatible = (file: Array) => {
     return props.detailDragAndDrop.formatTypeFile.includes(
-      file.value.mimeType,
+      file.mimeType,
     )
   }
 

@@ -7,7 +7,7 @@ import (
 )
 
 func (uc *Usecase) UpdateObject(ctx context.Context, obj *request.Object) (*request.Object, error) {
-	updatedObj, err := uc.repo.UpdateObject(ctx, obj)
+	updatedObj, err := uc.repo.UpdateObject(ctx, obj, MethodUpdateObject)
 
 	if err != nil {
 		return nil, err

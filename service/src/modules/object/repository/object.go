@@ -178,7 +178,7 @@ func (r *Repository) filterObjectQuery(params request.QueryParam, binds *[]inter
 	}
 	if params.Keyword != "" {
 		*binds = append(*binds, `%`+params.Keyword+`%`)
-		query = fmt.Sprintf(`%s AND (name ILIKE $%d OR description ILIKE $%d)`, query, counter, counter)
+		query = fmt.Sprintf(`%s AND (objects.name ILIKE $%d OR objects.description ILIKE $%d)`, query, counter, counter)
 		counter++
 	}
 

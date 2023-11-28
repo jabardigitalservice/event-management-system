@@ -17,20 +17,20 @@ func (e *Endpoint) CreateObject(ctx context.Context, objData request.Object) (in
 	var validates = validator.Validate(objData)
 
 	if validates != nil {
-		e.Log(ctx, constant.LogCategoryUsecase).Error(usecase.MethodCreateObject, _errors.ErrPayloadValidation)
+		e.usecase.Log(ctx, constant.LogCategoryUsecase).Error(usecase.MethodCreateObject, _errors.ErrPayloadValidation)
 		return validates, _errors.ErrPayloadValidation
 	}
 
 	createdObj, err := e.usecase.CreateObject(ctx, objData)
 	if err != nil {
-		e.Log(ctx, constant.LogCategoryUsecase).Error(usecase.MethodCreateObject, err)
+		e.usecase.Log(ctx, constant.LogCategoryUsecase).Error(usecase.MethodCreateObject, err)
 		return nil, err
 	}
 
 	responseObj := &response.Object{}
 
 	if err := copier.Copy(responseObj, createdObj); err != nil {
-		e.Log(ctx, constant.LogCategoryUsecase).Error(usecase.MethodCreateObject, err)
+		e.usecase.Log(ctx, constant.LogCategoryUsecase).Error(usecase.MethodCreateObject, err)
 		return nil, err
 	}
 

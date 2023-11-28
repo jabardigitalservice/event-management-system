@@ -13,7 +13,7 @@ func (e *Endpoint) DeleteOrganization(ctx context.Context, id *uuid.UUID) error 
 	err := e.usecase.DeleteOrganization(ctx, id)
 
 	if err != nil {
-		e.Log(ctx, constant.LogCategoryUsecase).Error(usecase.MethodDeleteOrganization, err)
+		e.usecase.Log(ctx, constant.LogCategoryUsecase).Error(usecase.MethodDeleteOrganization, err)
 		return _errors.ErrInvalidStatus
 	}
 

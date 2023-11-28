@@ -15,26 +15,26 @@ import (
 
 func (e *Endpoint) CreateOrganization(ctx context.Context, objData request.Organization) (interface{}, error) {
 	if err := validator.Validate(objData); err != nil {
-		e.Log(ctx, constant.LogCategoryUsecase).Error(usecase.MethodCreateOrganization, _errors.ErrPayloadValidation)
+		e.usecase.Log(ctx, constant.LogCategoryUsecase).Error(usecase.MethodCreateOrganization, _errors.ErrPayloadValidation)
 		return nil, _errors.ErrPayloadValidation
 	}
 
 	entityObj := entity.Organization{}
 
 	if err := copier.Copy(&entityObj, objData); err != nil {
-		e.Log(ctx, constant.LogCategoryUsecase).Error(usecase.MethodCreateOrganization, err)
+		e.usecase.Log(ctx, constant.LogCategoryUsecase).Error(usecase.MethodCreateOrganization, err)
 		return nil, err
 	}
 
 	createdObj, err := e.usecase.CreateOrganization(ctx, entityObj)
 	if err != nil {
-		e.Log(ctx, constant.LogCategoryUsecase).Error(usecase.MethodCreateOrganization, err)
+		e.usecase.Log(ctx, constant.LogCategoryUsecase).Error(usecase.MethodCreateOrganization, err)
 		return nil, err
 	}
 
 	responseObj := &response.Organization{}
 	if err := copier.Copy(responseObj, createdObj); err != nil {
-		e.Log(ctx, constant.LogCategoryUsecase).Error(usecase.MethodCreateOrganization, err)
+		e.usecase.Log(ctx, constant.LogCategoryUsecase).Error(usecase.MethodCreateOrganization, err)
 		return nil, err
 	}
 

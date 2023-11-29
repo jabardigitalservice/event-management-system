@@ -35,7 +35,7 @@
     definePageMeta({
       layout: false,
       auth: {
-        navigateAuthenticatedTo: '/',
+        navigateAuthenticatedTo: '/organisasi',
       },
     })
   </script>

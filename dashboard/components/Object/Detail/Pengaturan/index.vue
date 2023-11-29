@@ -117,11 +117,14 @@
     text-confirm="Delete"
     type-modal="danger"
     @close="state.isOpenDelete = false"
-    @confirm="deleteData()"
+    @confirm="confirmDelete()"
   />
   <UNotifications />
 </template>
 <script setup lang="ts">
+
+import { deleteData } from '~/utils'
+
   interface apiDataResponse {
     id: string
     name: string
@@ -140,9 +143,7 @@
     unpublished: { color: 'red', background: 'bg-red-100' },
   }
 
-  const router = useRouter()
   const urlAPI: string = '/v1/event/object'
-  const toast = useToast()
   const route = useRoute()
 
   const state = reactive({
@@ -158,41 +159,8 @@
     },
   })
 
-  function deleteData() {
-    let cancelled = false
-    toast.add({
-      icon: 'i-heroicons-exclamation-triangle',
-      title: 'data will be deleted',
-      color: 'yellow',
-      timeout: 2000,
-      callback: async () => {
-        if (!cancelled) {
-          await useDeleteData(urlAPI, route.query.id)
-          toast.add({
-            title: 'data successfully deleted',
-            icon: 'i-heroicons-check-circle',
-            timeout: 1000,
-          })
-          router.push({ path: '/object' })
-        }
-      },
-      actions: [
-        {
-          label: 'Undo',
-          variant: 'solid',
-          color: 'orange',
-          click: () => {
-            cancelled = true
-            toast.add({
-              title: 'data cancel deleted',
-              color: 'red',
-              icon: 'i-heroicons-x-circle',
-              timeout: 1000,
-            })
-          },
-        },
-      ],
-    })
+  function confirmDelete(){
+    deleteData({urlAPI, id: route.query.id, path: '/object'})
     state.isOpenDelete = false
   }
 

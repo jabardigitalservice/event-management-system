@@ -16,7 +16,9 @@
     </div>
   </div>
   <div v-if="!state.isLoading" class="pb-14 text-[14px] font-[400]">
-    <img :src="state.items.banner" class="mt-5 h-[264px] w-full rounded-md" />
+    <div class=" max-w-full flex items-center justify-center">
+      <img :src="state.items.banner" class="mt-5 h-[264px] max-w-full rounded-md" />
+    </div>
     <div class="mt-[30px] flex w-full items-center bg-white">
       <UAvatar
         icon="i-heroicons-photo"

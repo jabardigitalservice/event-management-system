@@ -33,16 +33,16 @@
     text-confirm="Delete"
     type-modal="danger"
     @close="state.isOpenDelete = false"
-    @confirm="deleteData()"
+    @confirm="confirmDelete()"
   />
 </template>
 
 <script setup lang="ts">
   import { useActivePage } from '@/store/index'
   import { organisasiHeaders } from "~/common/constant/organisasi"
+  import { deleteData } from '~/utils'
 
   const router = useRouter()
-  const toast = useToast()
   const state = reactive({
     isOpenDelete: false,
     idItems: '',
@@ -84,41 +84,9 @@
     state.fetchObject = fetch
   }
 
-  function deleteData() {
-    let cancelled = false
-    toast.add({
-      icon: 'i-heroicons-exclamation-triangle',
-      title: 'data will be deleted',
-      color: 'yellow',
-      timeout: 2000,
-      callback: async () => {
-        if (!cancelled) {
-          await useDeleteData(urlAPI, state.idItems)
-          state.fetchObject()
-          toast.add({
-            title: 'data successfully deleted',
-            icon: 'i-heroicons-check-circle',
-            timeout: 1000,
-          })
-        }
-      },
-      actions: [
-        {
-          label: 'Undo',
-          variant: 'solid',
-          color: 'orange',
-          click: () => {
-            cancelled = true
-            toast.add({
-              title: 'data cancel deleted',
-              color: 'red',
-              icon: 'i-heroicons-x-circle',
-              timeout: 1000,
-            })
-          },
-        },
-      ],
-    })
+  async function confirmDelete(){
+
+    deleteData({ urlAPI, id: state.idItems, fetch: state.fetchObject})
     state.isOpenDelete = false
   }
 

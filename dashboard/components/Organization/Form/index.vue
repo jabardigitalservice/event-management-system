@@ -156,10 +156,10 @@
     useGetData,
     usePutData,
   } from '~/composables/useFetchData'
+  import { alertDanger, alertSuccess } from '~/utils'
 
   const formContainer = ref<HTMLInputElement | null>(null)
   const submitForm = ref<HTMLInputElement>()
-  const toast = useToast()
 
   const schema = reactive({
     name: string().required('Nama Organisasi wajib diisi'),
@@ -310,12 +310,7 @@
       data.village_id = address.value.village_id
       data.google_map = address.value.google_map
     } else {
-      return toast.add({
-        title: 'Data Alamat Wajib Diisi',
-        color: 'red',
-        icon: 'i-heroicons-x-circle',
-        timeout: 2500,
-      })
+      return alertDanger('Data Alamat Wajib Diisi')
     }
 
     switch (method) {
@@ -324,45 +319,25 @@
           usePutData(`/v1/event/organization/${idData.value}`, data).then(
             (res) => {
               if (res.code === '2010800') {
-                toast.add({
-                  icon: 'i-heroicons-exclamation-triangle',
-                  title: 'Data Successfully Added',
-                  color: 'green',
-                  timeout: 2000,
-                })
+                alertSuccess('Data Successfully Added')
                 handleBack()
               }
             },
           )
         } catch (error) {
-          toast.add({
-            title: 'Data Failed to Add',
-            color: 'red',
-            icon: 'i-heroicons-x-circle',
-            timeout: 2000,
-          })
+          alertDanger('Data Failed to Add')
         }
         break
       default:
         try {
           usePostData('/v1/event/organization', data).then((res) => {
             if (res.code === '2010800') {
-              toast.add({
-                icon: 'i-heroicons-exclamation-triangle',
-                title: 'Data Successfully Added',
-                color: 'green',
-                timeout: 2000,
-              })
+              alertSuccess('Data Successfully Added')
               handleBack()
             }
           })
         } catch (error) {
-          toast.add({
-            title: 'Data Failed to Add',
-            color: 'red',
-            icon: 'i-heroicons-x-circle',
-            timeout: 2000,
-          })
+          alertDanger('Data Failed to Add')
         }
         break
     }
@@ -393,12 +368,7 @@
     const imageLength = Object.keys(image).length
 
     if (!image.fileCorrect) {
-      return toast.add({
-        title: 'Image Melanggar Rules',
-        color: 'red',
-        icon: 'i-heroicons-x-circle',
-        timeout: 2500,
-      })
+      alertDanger('Image Melanggar Rules')
     }
     if (imageLength > 0 && image.fileCorrect) {
       const result = await usePostServicePhoto(image)

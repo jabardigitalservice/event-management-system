@@ -169,9 +169,8 @@
     dragAndDropFile.value.click()
   }
 
-  const onChangeUpload = (e) => {
+  const onChangeUpload = async (e) => {
     if (e.target.files[0]) {
-      
       files.value = e.target.files[0]
       dataFiles.url = ''
       dataFiles.name = files.value.name
@@ -180,7 +179,7 @@
       fileInputIsChange.value = true
       convertFileToBase64(files.value)
       let img = new Image()
-      img.src = window.URL.createObjectURL(e.target.files[0])
+      img.src = await window.URL.createObjectURL(e.target.files[0])
       img.onload = () => {
         dataFiles.width = img.width
         dataFiles.height = img.height
@@ -293,7 +292,6 @@
     if (file) {
       if (fileSizeIsCompatible(file) && formatFileIsCompatible(file) && fileResolutionIsCompatible(file)) {
         return true
-        
       } else {
         return false
       }
